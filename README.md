@@ -34,3 +34,16 @@ mobile money, multilingual support, and offline-first capabilities.
 - **Real-time Dashboards** — WebSocket-powered live analytics
 
 ## 🏗️ Architecture
+─────────────────────────────────────────────────┐
+│                   SAIM AI Platform               │
+├─────────────┬───────────────┬───────────────────┤
+│  React.js   │   Node.js     │    Python/FastAPI  │
+│  Frontend   │   REST API    │    AI Engine       │
+├─────────────┴───────────────┴───────────────────┤
+│              PostgreSQL + Redis                  │
+├─────────────────────────────────────────────────┤
+│         LangChain + Claude AI + OpenAI           │
+│         Vector DB (Pinecone/Chroma)              │
+├─────────────────────────────────────────────────┤
+│              AWS (EC2, S3, Lambda, RDS)          │
+└─────────────────────────────────────────────────┘
