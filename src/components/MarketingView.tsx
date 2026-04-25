@@ -1,0 +1,738 @@
+"use client";
+
+import { useState } from "react";
+import { Loader2, BarChart2, CalendarDays, Sparkles, Users, RefreshCw } from "lucide-react";
+
+/* ─── Types ─── */
+interface Profile {
+  archetype: string; emoji: string; age_range: string; gender: string;
+  location: string; income: string; income_score: number;
+  interests: string[]; pain_points: string[]; buying_behavior: string;
+  preferred_channels: string[]; key_message: string; conversion_tips: string[];
+}
+interface CalendarRow {
+  date: string; day: string; week: number; theme: string;
+  content: string; type: string; objective: string;
+  hashtags?: string[]; cta?: string;
+}
+interface StrategyData {
+  title: string;
+  duration: string;
+  objective: string;
+  budget_estimate: string;
+  target_audience: string;
+  competitive_analysis: string;
+  pillars: Array<{
+    name: string;
+    description: string;
+    actions: string[];
+    kpis: string[];
+    timeline: string;
+  }>;
+  channels: string[];
+  content_strategy: string;
+  implementation_steps: string[];
+  risks_mitigation: string;
+  success_metrics: string[];
+}
+interface Question {
+  id: string;
+  question: string;
+  type: "select" | "text";
+  options?: string[];
+}
+
+/* ─── Color maps ─── */
+const TYPE_COLORS: Record<string, { bg: string; color: string; emoji: string }> = {
+  "Post Instagram":  { bg: "#fce7f3", color: "#be185d", emoji: "📸" },
+  "Reels":           { bg: "#fdf4ff", color: "#7e22ce", emoji: "🎬" },
+  "Story":           { bg: "#f5f3ff", color: "#6d28d9", emoji: "⭕" },
+  "Vidéo YouTube":   { bg: "#fef2f2", color: "#dc2626", emoji: "▶️" },
+  "Article Blog":    { bg: "#eff6ff", color: "#1d4ed8", emoji: "✍️" },
+  "Email":           { bg: "#fffbeb", color: "#b45309", emoji: "📧" },
+  "LinkedIn":        { bg: "#eff6ff", color: "#1e40af", emoji: "💼" },
+  "WhatsApp":        { bg: "#f0fdf4", color: "#15803d", emoji: "💬" },
+  "TikTok":          { bg: "#fdf2f8", color: "#9d174d", emoji: "🎵" },
+};
+const OBJ_COLORS: Record<string, string> = {
+  "Notoriété":    "#6366f1", "Engagement": "#f97316", "Conversion":  "#10b981",
+  "Fidélisation": "#ec4899", "Trafic":     "#06b6d4",
+};
+const INCOME_COLORS: Record<string, string> = { "Faible": "#ef4444", "Moyen": "#f59e0b", "Élevé": "#10b981" };
+const CHANNEL_ICONS: Record<string, string> = {
+  Instagram: "📸", WhatsApp: "💬", Facebook: "👥", LinkedIn: "💼",
+  YouTube: "▶️", TikTok: "🎵", Email: "📧", SMS: "📱", Blog: "✍️",
+};
+
+function Badge({ label, bg, color }: { label: string; bg: string; color: string }) {
+  return (
+    <span style={{ padding: "3px 9px", borderRadius: 999, background: bg, color, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+      {label}
+    </span>
+  );
+}
+
+/* ─── Rendu Profil ─── */
+function ProfileCard({ p, index }: { p: Profile; index: number }) {
+  const hue = [210, 150, 280][index % 3];
+  const accent = [`#6366f1`, `#10b981`, `#f97316`][index % 3];
+  const accentBg = [`#eef2ff`, `#f0fdf4`, `#fff7ed`][index % 3];
+
+  return (
+    <div style={{ background: "#fff", borderRadius: 20, border: "1px solid #e8e8e8", overflow: "hidden", boxShadow: "0 2px 16px rgba(0,0,0,0.05)" }}>
+      {/* Header */}
+      <div style={{ background: `linear-gradient(135deg, ${accent}22, ${accent}08)`, borderBottom: `2px solid ${accent}30`, padding: "20px 22px", display: "flex", alignItems: "center", gap: 14 }}>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: `${accent}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, flexShrink: 0 }}>
+          {p.emoji}
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 17, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{p.archetype}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
+            <Badge label={`🎂 ${p.age_range} ans`} bg="#f5f5f5" color="#555" />
+            <Badge label={`👤 ${p.gender}`} bg="#f5f5f5" color="#555" />
+            <Badge label={`📍 ${p.location}`} bg="#f5f5f5" color="#555" />
+          </div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <p style={{ fontSize: 10, color: "#aaa", margin: 0, marginBottom: 4 }}>Revenu</p>
+          <Badge label={p.income} bg={`${INCOME_COLORS[p.income] || "#888"}20`} color={INCOME_COLORS[p.income] || "#888"} />
+          <div style={{ marginTop: 6, height: 4, borderRadius: 999, background: "#f0f0f0", width: 80 }}>
+            <div style={{ height: "100%", borderRadius: 999, background: INCOME_COLORS[p.income] || "#888", width: `${p.income_score || 50}%`, transition: "width 0.6s ease" }} />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: "18px 22px", display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Intérêts */}
+        <div>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 8px" }}>🎯 Centres d'intérêt</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {(p.interests || []).map((i) => <Badge key={i} label={i} bg={`${accent}15`} color={accent} />)}
+          </div>
+        </div>
+
+        {/* Pain points */}
+        <div>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 8px" }}>⚡ Points de douleur</p>
+          <ul style={{ margin: 0, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 4 }}>
+            {(p.pain_points || []).map((pp) => (
+              <li key={pp} style={{ fontSize: 13, color: "#555", lineHeight: 1.5 }}>{pp}</li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Comportement d'achat */}
+        <div style={{ padding: "12px 14px", background: "#fafafa", borderRadius: 12, borderLeft: `3px solid ${accent}` }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 6px" }}>🛒 Comportement d'achat</p>
+          <p style={{ fontSize: 13, color: "#444", margin: 0, lineHeight: 1.6 }}>{p.buying_behavior}</p>
+        </div>
+
+        {/* Canaux */}
+        <div>
+          <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 8px" }}>📡 Canaux préférés</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {(p.preferred_channels || []).map((ch) => (
+              <div key={ch} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, background: "#f5f5f5" }}>
+                <span>{CHANNEL_ICONS[ch] || "📲"}</span>
+                <span style={{ fontSize: 12, fontWeight: 500, color: "#444" }}>{ch}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Message clé */}
+        <div style={{ padding: "14px 16px", background: `${accent}10`, borderRadius: 14, border: `1px solid ${accent}25` }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: accent, margin: "0 0 6px" }}>💬 MESSAGE CLÉ</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", margin: 0, fontStyle: "italic", lineHeight: 1.5 }}>"{p.key_message}"</p>
+        </div>
+
+        {/* Tips de conversion */}
+        {p.conversion_tips?.length > 0 && (
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.07em", margin: "0 0 8px" }}>✅ Conseils de conversion</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {p.conversion_tips.map((tip, i) => (
+                <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                  <div style={{ width: 20, height: 20, borderRadius: 6, background: `${accent}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: accent, flexShrink: 0 }}>{i + 1}</div>
+                  <p style={{ fontSize: 13, color: "#555", margin: 0, lineHeight: 1.5 }}>{tip}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Formulaire Analyse ─── */
+function AnalyseForm({ onSubmit, loading }: { onSubmit: (d: any) => void; loading: boolean }) {
+  const [form, setForm] = useState({ service: "", sector: "", price: "", description: "", zone: "Cameroun" });
+  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+  const canSubmit = form.service.trim().length > 0;
+
+  const SECTORS = ["Commerce & Distribution", "Services aux entreprises", "Technologies", "Santé", "Éducation", "Hôtellerie & Restauration", "Transport", "BTP & Immobilier", "Agriculture", "Autre"];
+
+  return (
+    <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+      <p style={{ fontSize: 13, fontWeight: 600, color: "#aaa", textTransform: "uppercase", letterSpacing: "0.06em", margin: 0 }}>Décrivez votre offre</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <Field label="Produit / Service *" placeholder="Ex: Formations en comptabilité" value={form.service} onChange={(v) => set("service", v)} />
+        <div>
+          <label style={{ fontSize: 12, color: "#888", display: "block", marginBottom: 5 }}>Secteur d'activité</label>
+          <select value={form.sector} onChange={(e) => set("sector", e.target.value)}
+            style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e8e8e8", fontSize: 13, outline: "none", background: "#fff", color: form.sector ? "#1a1a1a" : "#aaa" }}>
+            <option value="">Sélectionner…</option>
+            {SECTORS.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </div>
+        <Field label="Fourchette de prix" placeholder="Ex: 15 000 – 50 000 FCFA" value={form.price} onChange={(v) => set("price", v)} />
+        <Field label="Zone géographique" placeholder="Ex: Douala, Yaoundé" value={form.zone} onChange={(v) => set("zone", v)} />
+      </div>
+      <div>
+        <label style={{ fontSize: 12, color: "#888", display: "block", marginBottom: 5 }}>Description (optionnel)</label>
+        <textarea value={form.description} onChange={(e) => set("description", e.target.value)}
+          placeholder="Décrivez votre offre, sa valeur ajoutée, les avantages…"
+          rows={3}
+          style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e8e8e8", fontSize: 13, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }} />
+      </div>
+      <button onClick={() => onSubmit(form)} disabled={!canSubmit || loading}
+        style={{ alignSelf: "flex-end", display: "flex", alignItems: "center", gap: 8, padding: "11px 24px", borderRadius: 10, border: "none", background: canSubmit && !loading ? "#f97316" : "#e8e8e8", color: canSubmit && !loading ? "#fff" : "#aaa", fontSize: 14, fontWeight: 600, cursor: canSubmit && !loading ? "pointer" : "not-allowed" }}>
+        {loading ? <><Loader2 size={15} className="animate-spin" /> Analyse en cours…</> : <><Users size={15} /> Générer les profils</>}
+      </button>
+    </div>
+  );
+}
+
+/* ─── Rendu Planning ─── */
+function PlanningTable({ rows, title }: { rows: CalendarRow[]; title: string }) {
+  const weeks = [1, 2, 3, 4];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <div style={{ padding: "16px 20px", background: "linear-gradient(135deg, #6366f115, #f97316_10)", borderRadius: 14, border: "1px solid #6366f130" }}>
+        <p style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>📅 {title}</p>
+        <p style={{ fontSize: 12, color: "#888", margin: "4px 0 0" }}>{rows.length} publications sur 4 semaines</p>
+      </div>
+
+      {weeks.map((w) => {
+        const weekRows = rows.filter((r) => r.week === w);
+        if (weekRows.length === 0) return null;
+        return (
+          <div key={w}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+              <div style={{ width: 32, height: 32, borderRadius: 10, background: "#6366f1", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 13, fontWeight: 700 }}>{w}</div>
+              <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>Semaine {w}</p>
+              <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+              <span style={{ fontSize: 11, color: "#bbb" }}>{weekRows[0]?.theme || ""}</span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {weekRows.map((row, i) => {
+                const typeStyle = TYPE_COLORS[row.type] || { bg: "#f5f5f5", color: "#555", emoji: "📌" };
+                const objColor = OBJ_COLORS[row.objective] || "#888";
+                return (
+                  <div key={i} style={{ background: "#fff", borderRadius: 14, border: "1px solid #e8e8e8", padding: "14px 18px", display: "grid", gridTemplateColumns: "90px 1fr auto", gap: 16, alignItems: "start", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
+                    {/* Date */}
+                    <div>
+                      <p style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{row.date}</p>
+                      <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>{row.day}</p>
+                    </div>
+
+                    {/* Content */}
+                    <div>
+                      <p style={{ fontSize: 13, color: "#1a1a1a", margin: "0 0 8px", lineHeight: 1.5, fontWeight: 500 }}>{row.content}</p>
+                      {row.cta && (
+                        <p style={{ fontSize: 11, color: "#888", margin: "0 0 8px", fontStyle: "italic" }}>CTA : {row.cta}</p>
+                      )}
+                      {row.hashtags && row.hashtags.length > 0 && (
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                          {row.hashtags.map((h) => (
+                            <span key={h} style={{ fontSize: 11, color: "#6366f1", background: "#eef2ff", padding: "2px 7px", borderRadius: 6 }}>{h}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Badges */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
+                      <span style={{ padding: "4px 10px", borderRadius: 8, background: typeStyle.bg, color: typeStyle.color, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+                        {typeStyle.emoji} {row.type}
+                      </span>
+                      <span style={{ padding: "4px 10px", borderRadius: 8, background: `${objColor}15`, color: objColor, fontSize: 11, fontWeight: 600, whiteSpace: "nowrap" }}>
+                        {row.objective}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Field({ label, placeholder, value, onChange }: { label: string; placeholder: string; value: string; onChange: (v: string) => void }) {
+  return (
+    <div>
+      <label style={{ fontSize: 12, color: "#888", display: "block", marginBottom: 5 }}>{label}</label>
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
+        style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e8e8e8", fontSize: 13, outline: "none", boxSizing: "border-box" }} />
+    </div>
+  );
+}
+
+function QuestionField({ question, onResponse }: { question: Question; onResponse: (value: string) => void }) {
+  const [value, setValue] = useState("");
+
+  const handleQuestionSubmit = () => {
+    if (value.trim()) {
+      onResponse(value);
+      setValue("");
+    }
+  };
+
+  return (
+    <div style={{ padding: "16px", background: "#f8fafc", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+      <p style={{ fontSize: 14, fontWeight: 600, color: "#1a1a1a", margin: "0 0 12px" }}>{question.question}</p>
+      
+      {question.type === "select" && question.options ? (
+        <select 
+          value={value} 
+          onChange={(e) => setValue(e.target.value)}
+          style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e8e8e8", fontSize: 13, outline: "none", background: "#fff", marginBottom: 12 }}
+        >
+          <option value="">Sélectionner une option...</option>
+          {question.options.map((option) => (
+            <option key={option} value={option}>{option}</option>
+          ))}
+        </select>
+      ) : (
+        <input 
+          value={value} 
+          onChange={(e) => setValue(e.target.value)} 
+          placeholder="Votre réponse..."
+          style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "1px solid #e8e8e8", fontSize: 13, outline: "none", marginBottom: 12 }}
+        />
+      )}
+      
+      <button 
+        onClick={handleQuestionSubmit}
+        disabled={!value.trim()}
+        style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 8, border: "none", background: value.trim() ? "#10b981" : "#e8e8e8", color: value.trim() ? "#fff" : "#aaa", fontSize: 13, fontWeight: 600, cursor: value.trim() ? "pointer" : "not-allowed" }}
+      >
+        <Sparkles size={14} /> Répondre
+      </button>
+    </div>
+  );
+}
+
+/* ─── Composant principal ─── */
+export default function MarketingView() {
+  const [mode, setMode] = useState<"analyse" | "planning" | "stratégie">("analyse");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [profiles, setProfiles] = useState<Profile[] | null>(null);
+  const [calendar, setCalendar] = useState<{ title: string; rows: CalendarRow[] } | null>(null);
+  const [strategy, setStrategy] = useState<StrategyData | null>(null);
+  const [conversation, setConversation] = useState<Array<{type: 'user' | 'ai', content: string}>>([]);
+  const [currentQuestions, setCurrentQuestions] = useState<Question[] | null>(null);
+  const [prompt, setPrompt] = useState("");
+
+  const reset = () => { 
+    setProfiles(null); 
+    setCalendar(null); 
+    setStrategy(null);
+    setConversation([]);
+    setCurrentQuestions(null);
+    setError(""); 
+    setPrompt("");
+  };
+
+  const handleSubmit = async (formData?: any) => {
+    setLoading(true);
+    setError("");
+    
+    // Pour le mode stratégie, utiliser le prompt et les données de conversation
+    if (mode === "stratégie") {
+      const data: any = { prompt };
+      
+      // Ajouter les réponses des questions précédentes
+      if (conversation.length > 0) {
+        const lastUserMessage = conversation.filter(m => m.type === 'user').pop();
+        if (lastUserMessage) {
+          try {
+            // Parser les réponses (format: "question: réponse")
+            const responses = lastUserMessage.content.split('\n').reduce((acc: any, line: string) => {
+              const colonIndex = line.indexOf(': ');
+              if (colonIndex > 0) {
+                const key = line.substring(0, colonIndex).trim();
+                const value = line.substring(colonIndex + 2).trim();
+                if (key && value) {
+                  // Convertir la clé en format approprié pour l'API
+                  const apiKey = key.toLowerCase()
+                    .replace(/quelle est/i, '')
+                    .replace(/quel est/i, '')
+                    .replace(/\s+/g, '_')
+                    .replace(/[?]/g, '')
+                    .trim();
+                  acc[apiKey] = value;
+                }
+              }
+              return acc;
+            }, {});
+            Object.assign(data, responses);
+          } catch (e) {
+            console.error('Erreur lors du parsing des réponses:', e);
+            setError("Erreur lors du traitement des réponses. Veuillez réessayer.");
+            setLoading(false);
+            return;
+          }
+        }
+      }
+      
+      formData = data;
+    } else {
+      // Pour les modes analyse et planning, utiliser le prompt comme base
+      formData = { 
+        service: prompt,
+        sector: "Général",
+        target: "Public général",
+        channels: "Multicanal",
+        objective: mode === "analyse" ? "Comprendre le marché" : "Augmenter la visibilité",
+        tone: "Professionnel",
+        prompt: prompt
+      };
+    }
+    
+    try {
+      const res = await fetch("/api/marketing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode, data: formData }),
+      });
+      let data: any;
+      try { data = await res.json(); } catch { setError(`Erreur serveur ${res.status} — backend inaccessible.`); return; }
+      if (!res.ok || data.error) { setError(data.error || `Erreur ${res.status}`); return; }
+
+      // Gérer les questions du système de dialogue
+      if (data.type === "questions") {
+        setCurrentQuestions(data.questions);
+        setConversation(prev => [...prev, { type: 'ai', content: data.message }]);
+        return;
+      }
+
+      // Traiter les résultats selon le mode
+      if (mode === "analyse") {
+        setProfiles(data.profiles || []);
+      } else if (mode === "planning") {
+        setCalendar({ title: data.title || "Calendrier éditorial", rows: data.calendar || [] });
+      } else if (mode === "stratégie") {
+        setStrategy(data);
+        setConversation(prev => [...prev, { type: 'ai', content: `Stratégie générée : ${data.title}` }]);
+        setCurrentQuestions(null);
+      }
+    } catch {
+      setError("Impossible de joindre le serveur. Vérifiez que le backend est démarré.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleQuestionResponse = (responses: Record<string, string>) => {
+    const responseText = Object.entries(responses)
+      .map(([key, value]) => `${key}: ${value}`)
+      .join('\n');
+    
+    setConversation(prev => [...prev, { type: 'user', content: responseText }]);
+    setCurrentQuestions(null);
+    
+    // Relancer la génération avec les réponses
+    handleSubmit();
+  };
+
+  const handleExportWord = async () => {
+    if (!strategy) return;
+    
+    try {
+      const res = await fetch("/api/marketing/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ strategy }),
+      });
+      
+      if (!res.ok) {
+        setError("Erreur lors de l'export Word");
+        return;
+      }
+      
+      // Télécharger le fichier
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'strategie_marketing.docx';
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch {
+      setError("Erreur lors du téléchargement du fichier Word");
+    }
+  };
+
+  const hasResult = profiles !== null || calendar !== null || strategy !== null;
+
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", background: "#fafafa" }}>
+      {/* Header */}
+      <div style={{ padding: "20px 28px 0", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontSize: 22 }}>📣</span>
+            <h2 style={{ fontSize: 20, fontWeight: 600, color: "#1a1a1a", margin: 0 }}>Marketing & Contenus</h2>
+          </div>
+          {hasResult && (
+            <button onClick={reset} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: 8, border: "1px solid #e8e8e8", background: "#fff", color: "#666", fontSize: 12, cursor: "pointer" }}>
+              <RefreshCw size={13} /> Nouvelle analyse
+            </button>
+          )}
+        </div>
+        <p style={{ fontSize: 13, color: "#888", margin: "4px 0 16px" }}>Analysez votre marché ou planifiez vos contenus avec l'IA.</p>
+
+        {/* Mode tabs */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 4 }}>
+          {([
+            { id: "analyse", icon: <BarChart2 size={15} />, label: "Analyse Client", color: "#f97316" },
+            { id: "planning", icon: <CalendarDays size={15} />, label: "Planning de Contenu", color: "#6366f1" },
+            { id: "stratégie", icon: <Sparkles size={15} />, label: "Stratégie Marketing", color: "#10b981" },
+          ] as const).map((m) => (
+            <button key={m.id} onClick={() => { setMode(m.id); reset(); }}
+              style={{ display: "flex", alignItems: "center", gap: 7, padding: "10px 18px", borderRadius: 10, border: `2px solid ${mode === m.id ? m.color : "#e8e8e8"}`, background: mode === m.id ? `${m.color}10` : "#fff", color: mode === m.id ? m.color : "#888", fontSize: 13, fontWeight: mode === m.id ? 700 : 500, cursor: "pointer", transition: "all 0.15s" }}>
+              {m.icon} {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflow: "auto", padding: "16px 28px 28px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+        {/* Input Form */}
+        {!hasResult && !currentQuestions && (
+          <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 24, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div>
+              <label style={{ fontSize: 13, fontWeight: 600, color: "#1a1a1a", display: "block", marginBottom: 8 }}>
+                {mode === "analyse" && "Décrivez votre produit/service pour analyser les profils clients"}
+                {mode === "planning" && "Décrivez votre campagne de contenu à planifier"}
+                {mode === "stratégie" && "Décrivez votre projet pour générer une stratégie marketing complète"}
+              </label>
+              <textarea 
+                value={prompt} 
+                onChange={(e) => setPrompt(e.target.value)}
+                placeholder={
+                  mode === "analyse" ? "Ex: Formation en comptabilité pour PME camerounaises, prix 15000-50000 FCFA..." :
+                  mode === "planning" ? "Ex: Campagne Instagram pour promouvoir une application de gestion de stock..." :
+                  "Ex: Lancement d'une nouvelle plateforme e-commerce pour artisans camerounais..."
+                }
+                rows={4}
+                style={{ width: "100%", padding: "12px 16px", borderRadius: 12, border: "1px solid #e8e8e8", fontSize: 14, outline: "none", resize: "vertical", fontFamily: "inherit", boxSizing: "border-box" }}
+              />
+            </div>
+            <button 
+              onClick={() => handleSubmit()} 
+              disabled={!prompt.trim() || loading}
+              style={{ alignSelf: "flex-end", display: "flex", alignItems: "center", gap: 8, padding: "12px 24px", borderRadius: 10, border: "none", background: prompt.trim() && !loading ? (mode === "analyse" ? "#f97316" : mode === "planning" ? "#6366f1" : "#10b981") : "#e8e8e8", color: prompt.trim() && !loading ? "#fff" : "#aaa", fontSize: 14, fontWeight: 600, cursor: prompt.trim() && !loading ? "pointer" : "not-allowed" }}
+            >
+              {loading ? (
+                <><Loader2 size={15} className="animate-spin" /> Génération en cours…</>
+              ) : mode === "analyse" ? (
+                <><BarChart2 size={15} /> Analyser les profils</>
+              ) : mode === "planning" ? (
+                <><CalendarDays size={15} /> Générer le planning</>
+              ) : (
+                <><Sparkles size={15} /> Créer la stratégie</>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Questions Dialog */}
+        {currentQuestions && (
+          <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 24, display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Sparkles size={18} color="#10b981" />
+              <p style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>Informations complémentaires</p>
+            </div>
+            
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {currentQuestions.map((q) => (
+                <QuestionField key={q.id} question={q} onResponse={(value) => {
+                  const responses: Record<string, string> = {};
+                  responses[q.question] = value;
+                  handleQuestionResponse(responses);
+                }} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: 48 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: mode === "analyse" ? "#fff7ed" : "#eef2ff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Sparkles size={24} color={mode === "analyse" ? "#f97316" : "#6366f1"} />
+            </div>
+            <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", margin: 0 }}>
+              {mode === "analyse" ? "Analyse des profils clients en cours…" : "Génération du calendrier éditorial…"}
+            </p>
+            <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>Le modèle IA prépare votre stratégie</p>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && (
+          <div style={{ padding: "14px 18px", background: "#fef2f2", borderRadius: 12, border: "1px solid #fecaca", color: "#dc2626", fontSize: 13, lineHeight: 1.6 }}>
+            {error}
+          </div>
+        )}
+
+        {/* Results — Profiles */}
+        {profiles && profiles.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Users size={18} color="#f97316" />
+              <p style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{profiles.length} profils clients identifiés</p>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))", gap: 18 }}>
+              {profiles.map((p, i) => <ProfileCard key={i} p={p} index={i} />)}
+            </div>
+          </div>
+        )}
+
+        {/* Results — Strategy */}
+        {strategy && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Sparkles size={18} color="#10b981" />
+                <p style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: 0 }}>{strategy.title}</p>
+              </div>
+              <button 
+                onClick={handleExportWord}
+                style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 16px", borderRadius: 8, border: "1px solid #10b981", background: "#f0fdf4", color: "#10b981", fontSize: 13, fontWeight: 600, cursor: "pointer" }}
+              >
+                📄 Exporter en Word
+              </button>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16 }}>
+              {/* Vue d'ensemble */}
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 16px" }}>📊 Vue d'ensemble</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 13, color: "#666" }}>Durée :</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a1a" }}>{strategy.duration}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 13, color: "#666" }}>Objectif :</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a1a" }}>{strategy.objective}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: 13, color: "#666" }}>Budget estimé :</span>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: "#10b981" }}>{strategy.budget_estimate}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Public cible */}
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 16px" }}>🎯 Public cible</h3>
+                <p style={{ fontSize: 14, color: "#444", lineHeight: 1.6, margin: 0 }}>{strategy.target_audience}</p>
+              </div>
+
+              {/* Analyse concurrentielle */}
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 16px" }}>🏢 Analyse concurrentielle</h3>
+                <p style={{ fontSize: 14, color: "#444", lineHeight: 1.6, margin: 0 }}>{strategy.competitive_analysis}</p>
+              </div>
+
+              {/* Canaux */}
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 16px" }}>📡 Canaux recommandés</h3>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                  {strategy.channels.map((channel, i) => (
+                    <Badge key={i} label={channel} bg="#eef2ff" color="#6366f1" />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Piliers stratégiques */}
+            {strategy.pillars && strategy.pillars.length > 0 && (
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 20px" }}>🏗️ Piliers stratégiques</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))", gap: 20 }}>
+                  {strategy.pillars.map((pillar, i) => (
+                    <div key={i} style={{ padding: "16px", background: "#f8fafc", borderRadius: 12, border: "1px solid #e2e8f0" }}>
+                      <h4 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 12px" }}>{pillar.name}</h4>
+                      <p style={{ fontSize: 13, color: "#666", lineHeight: 1.5, margin: "0 0 16px" }}>{pillar.description}</p>
+                      
+                      {pillar.actions && pillar.actions.length > 0 && (
+                        <div style={{ marginBottom: 12 }}>
+                          <p style={{ fontSize: 12, fontWeight: 600, color: "#888", textTransform: "uppercase", margin: "0 0 8px" }}>Actions</p>
+                          <ul style={{ margin: 0, paddingLeft: 16 }}>
+                            {pillar.actions.map((action, j) => (
+                              <li key={j} style={{ fontSize: 13, color: "#444", marginBottom: 4 }}>{action}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {pillar.kpis && pillar.kpis.length > 0 && (
+                        <div>
+                          <p style={{ fontSize: 12, fontWeight: 600, color: "#888", textTransform: "uppercase", margin: "0 0 8px" }}>KPIs</p>
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                            {pillar.kpis.map((kpi, j) => (
+                              <Badge key={j} label={kpi} bg="#f0fdf4" color="#10b981" />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Métriques de succès */}
+            {strategy.success_metrics && strategy.success_metrics.length > 0 && (
+              <div style={{ background: "#fff", borderRadius: 16, border: "1px solid #e8e8e8", padding: 20 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a1a", margin: "0 0 16px" }}>📈 Métriques de succès</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+                  {strategy.success_metrics.map((metric, i) => (
+                    <div key={i} style={{ padding: "12px", background: "#f0fdf4", borderRadius: 8, border: "1px solid #bbf7d0" }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: "#166534", margin: 0 }}>{metric}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Show form again after result */}
+        {hasResult && !loading && (
+          <div style={{ background: "#fff", borderRadius: 16, border: "1px dashed #e8e8e8", padding: 20, textAlign: "center" }}>
+            <p style={{ fontSize: 13, color: "#aaa", margin: "0 0 10px" }}>Voulez-vous générer une nouvelle analyse ?</p>
+            <button onClick={reset} style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 18px", borderRadius: 8, border: "1px solid #e8e8e8", background: "#fff", color: "#555", fontSize: 13, cursor: "pointer" }}>
+              <RefreshCw size={13} /> Recommencer
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

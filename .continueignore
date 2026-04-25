@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.git/
+dist/
+build/
+coverage/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+backend/venv/
+backend/__pycache__/
+backend/chroma_db/
+impot-data/
+public/
+*.lock
+tsconfig.tsbuildinfo
+next-env.d.ts
