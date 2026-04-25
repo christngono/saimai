@@ -1,7 +1,7 @@
 "use client";
 
-import LandingPage from "@/components/LandingPage";
+import SaimAILanding from "@/components/SaimAILanding";
 
 export default function Home() {
-  return <LandingPage />;
+  return <SaimAILanding />;
 }

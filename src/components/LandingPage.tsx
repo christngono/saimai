@@ -1,9 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Menu, X, Globe, ChevronRight, ArrowRight } from "lucide-react";
+
+/* ── CHARTE GRAPHIQUE SAIM ── */
+const T  = "#C2562C";   // Terracotta — couleur signature
+const INK = "#1F1410";  // Encre — fond sombre
+const INK2 = "#3A1F14"; // Accent 2 — secondaire
+const SURF = "#EDE2CE"; // Surface — beige chaud
+const MUTED = "#73655A";// Texte secondaire
+const LINE = "#DCCFB8"; // Bordures
 
 const TASKS_ANIM = [
   {
@@ -11,33 +18,48 @@ const TASKS_ANIM = [
     label: "Fiscalité",
     question: "Quel est mon IGS pour un CA de 8 500 000 FCFA ?",
     answer: "Vous êtes en Classe 5 — 100 000 FCFA/an, soit 25 000 FCFA par trimestre.",
-    color: "#10b981",
+    color: T,
   },
   {
     icon: "💼",
     label: "Comptabilité",
     question: "Génère ma facture n°2025-047 avec TVA 19,25%",
     answer: "Facture générée avec en-tête ACME Sarl · Montant HT 450 000 · TVA 86 625 FCFA.",
-    color: "#6366f1",
+    color: "#A0845C",
   },
   {
     icon: "👥",
     label: "Ressources humaines",
     question: "Calcule la paie de mars pour 8 employés",
     answer: "Masse salariale : 3 840 000 FCFA · CNPS : 307 200 FCFA · Net à payer : 3 532 800 FCFA.",
-    color: "#f59e0b",
+    color: MUTED,
   },
   {
     icon: "📣",
-    label: "Marketing & contenus",
+    label: "Marketing",
     question: "Crée un post LinkedIn pour notre lancement",
     answer: "« Nous sommes fiers d'annoncer le lancement de notre nouvelle gamme… » — 3 variantes générées.",
-    color: "#ec4899",
+    color: "#8B6B4A",
   },
 ];
 
-const NAV_FR = ["À propos", "Services", "Contacts"];
-const NAV_EN = ["About", "Services", "Contact"];
+/* ── LOGO MARK ── */
+function LogoMark({ size = 26, color = T }: { size?: number; color?: string }) {
+  const rects: [number, number][] = [
+    [20,30],[64,30],[108,30],[152,30],[196,30],
+    [20,74],
+    [20,118],[64,118],[108,118],[196,118],
+    [196,162],
+    [20,206],[64,206],[108,206],[152,206],[196,206],
+  ];
+  return (
+    <svg width={size} height={size} viewBox="0 0 232 250" fill="none">
+      {rects.map(([x, y], i) => (
+        <rect key={i} x={x} y={y} width="36" height="36" rx="7" fill={color} />
+      ))}
+    </svg>
+  );
+}
 
 export default function LandingPage() {
   const router = useRouter();
@@ -57,120 +79,62 @@ export default function LandingPage() {
     return () => clearInterval(id);
   }, []);
 
-  const nav = lang === "fr" ? NAV_FR : NAV_EN;
   const task = TASKS_ANIM[taskIdx];
+  const nav = lang === "fr"
+    ? ["À propos", "Services", "Tarifs", "Contact"]
+    : ["About", "Services", "Pricing", "Contact"];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0a0a", color: "#fff", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: INK, color: SURF, overflowX: "hidden", fontFamily: "'Helvetica Neue', Arial, -apple-system, sans-serif" }}>
 
-      {/* ── NAVBAR ── */}
-      <header
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 32px",
-          height: 64,
-          background: "rgba(10,10,10,0.85)",
-          backdropFilter: "blur(12px)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        {/* Logo */}
-        <Image
-          src="/saim-logo-officiel.png"
-          alt="SAIM Conseil"
-          width={110}
-          height={36}
-          style={{ objectFit: "contain" }}
-          priority
-        />
+      {/* ══ NAVBAR ══ */}
+      <header style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        height: 62, display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 40px",
+        background: `rgba(31,20,16,0.92)`, backdropFilter: "blur(14px)",
+        borderBottom: `1px solid ${INK2}`,
+      }}>
+        {/* Logo + back link */}
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <a href="/" style={{ fontSize: 11, color: MUTED, textDecoration: "none", fontWeight: 600, letterSpacing: "0.06em", transition: "color 0.15s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = SURF)}
+            onMouseLeave={e => (e.currentTarget.style.color = MUTED)}>
+            ← saimAI
+          </a>
+          <div style={{ width: 1, height: 16, background: INK2 }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <LogoMark size={22} color={T} />
+            <span style={{ fontWeight: 900, fontSize: 16, color: SURF, letterSpacing: "-0.03em" }}>
+              SAIM <span style={{ color: T }}>Fiscal</span>
+            </span>
+          </div>
+        </div>
 
-        {/* Nav links — desktop */}
-        <nav style={{ display: "flex", gap: 32, alignItems: "center" }} className="hidden md:flex">
-          {nav.map((item) => (
-            <a
-              key={item}
-              href="#"
-              style={{
-                color: "rgba(255,255,255,0.7)",
-                fontSize: 14,
-                textDecoration: "none",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.7)")}
-            >
+        {/* Desktop nav */}
+        <nav style={{ display: "flex", gap: 28, alignItems: "center" }} className="fiscal-desk-nav">
+          {nav.map(item => (
+            <a key={item} href="#" style={{ fontSize: 13, color: MUTED, textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }}
+              onMouseEnter={e => (e.currentTarget.style.color = SURF)}
+              onMouseLeave={e => (e.currentTarget.style.color = MUTED)}>
               {item}
             </a>
           ))}
         </nav>
 
-        {/* Right: lang + CTA + burger */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          {/* Language toggle */}
-          <button
-            onClick={() => setLang((l) => (l === "fr" ? "en" : "fr"))}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 5,
-              padding: "5px 10px",
-              borderRadius: 8,
-              border: "1px solid rgba(255,255,255,0.15)",
-              background: "transparent",
-              color: "rgba(255,255,255,0.7)",
-              fontSize: 13,
-              cursor: "pointer",
-              transition: "all 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
-              (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-              (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.7)";
-            }}
-          >
-            <Globe size={13} />
-            {lang.toUpperCase()}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <button onClick={() => setLang(l => l === "fr" ? "en" : "fr")}
+            style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 8, border: `1px solid ${INK2}`, background: "transparent", color: MUTED, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>
+            <Globe size={12} />{lang.toUpperCase()}
           </button>
-
-          {/* Se connecter */}
-          <button
-            onClick={() => router.push("/dashboard")}
-            style={{
-              padding: "8px 18px",
-              borderRadius: 10,
-              border: "1px solid rgba(255,255,255,0.2)",
-              background: "transparent",
-              color: "#fff",
-              fontSize: 13,
-              cursor: "pointer",
-              transition: "all 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-            }}
-          >
+          <button onClick={() => router.push("/dashboard")}
+            style={{ padding: "8px 20px", borderRadius: 9, border: "none", background: T, color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", transition: "opacity 0.15s" }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
             {lang === "fr" ? "Se connecter" : "Sign in"}
           </button>
-
-          {/* Burger mobile */}
-          <button
-            className="flex md:hidden"
-            onClick={() => setMenuOpen((v) => !v)}
-            style={{ background: "transparent", border: "none", color: "#fff", cursor: "pointer", padding: 4 }}
-          >
+          <button className="fiscal-burger" onClick={() => setMenuOpen(v => !v)}
+            style={{ background: "none", border: "none", color: SURF, cursor: "pointer", display: "none" }}>
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
@@ -178,399 +142,138 @@ export default function LandingPage() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: 64,
-            left: 0,
-            right: 0,
-            zIndex: 99,
-            background: "#111",
-            padding: "16px 24px",
-            borderBottom: "1px solid rgba(255,255,255,0.08)",
-          }}
-        >
-          {nav.map((item) => (
-            <a
-              key={item}
-              href="#"
-              style={{
-                display: "block",
-                padding: "12px 0",
-                color: "rgba(255,255,255,0.8)",
-                textDecoration: "none",
-                fontSize: 15,
-                borderBottom: "1px solid rgba(255,255,255,0.05)",
-              }}
-            >
+        <div style={{ position: "fixed", top: 62, left: 0, right: 0, zIndex: 99, background: INK, borderBottom: `1px solid ${INK2}`, padding: "12px 24px" }}>
+          {nav.map(item => (
+            <a key={item} href="#" onClick={() => setMenuOpen(false)}
+              style={{ display: "block", padding: "12px 0", fontSize: 15, color: SURF, textDecoration: "none", borderBottom: `1px solid ${INK2}` }}>
               {item}
             </a>
           ))}
         </div>
       )}
 
-      {/* ── HERO ── */}
-      <section
-        style={{
-          minHeight: "100vh",
-          paddingTop: 64,
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          alignItems: "stretch",
-        }}
-        className="hero-grid"
-      >
-        {/* LEFT BLOC */}
-        <div
-          style={{
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: "80px 64px",
-            background: "linear-gradient(135deg, #0f1a2e 0%, #1a0a2e 50%, #0a1a1a 100%)",
-            overflow: "hidden",
-          }}
-        >
-          {/* Decorative circles */}
-          <div style={{ position: "absolute", top: -100, right: -100, width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: -80, left: -80, width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)", pointerEvents: "none" }} />
+      {/* ══ HERO ══ */}
+      <section style={{ minHeight: "100vh", paddingTop: 62, display: "grid", gridTemplateColumns: "1fr 1fr", alignItems: "stretch" }} className="fiscal-hero">
+
+        {/* LEFT */}
+        <div style={{ position: "relative", display: "flex", flexDirection: "column", justifyContent: "center", padding: "80px 60px", background: INK, overflow: "hidden" }}>
+          {/* Décoration terracotta radiale */}
+          <div style={{ position: "absolute", top: -120, right: -120, width: 480, height: 480, borderRadius: "50%", background: `radial-gradient(circle, ${T}18 0%, transparent 68%)`, pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: -80, left: -60, width: 300, height: 300, borderRadius: "50%", background: `radial-gradient(circle, ${INK2}60 0%, transparent 70%)`, pointerEvents: "none" }} />
 
           <div style={{ position: "relative", zIndex: 1 }}>
             {/* Badge */}
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "5px 12px",
-                borderRadius: 999,
-                border: "1px solid rgba(16,185,129,0.3)",
-                background: "rgba(16,185,129,0.08)",
-                marginBottom: 28,
-              }}
-            >
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block", animation: "pulse 1.5s infinite" }} />
-              <span style={{ fontSize: 12, color: "#10b981", fontWeight: 500, letterSpacing: "0.05em" }}>
-                {lang === "fr" ? "IA pour les PME africaines" : "AI for African SMEs"}
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "5px 13px", borderRadius: 999, border: `1px solid ${T}50`, background: `${T}15`, marginBottom: 28 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: T, display: "inline-block" }} />
+              <span style={{ fontSize: 11, color: T, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                {lang === "fr" ? "CGI 2025 · LF 2026 intégrés" : "CGI 2025 · LF 2026 integrated"}
               </span>
             </div>
 
-            <h1
-              style={{
-                fontSize: "clamp(28px, 4vw, 52px)",
-                fontWeight: 300,
-                lineHeight: 1.15,
-                letterSpacing: "-0.02em",
-                marginBottom: 24,
-                color: "#fff",
-              }}
-            >
+            <h1 style={{ fontSize: "clamp(28px, 4vw, 54px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.03em", marginBottom: 24, color: SURF }}>
               {lang === "fr" ? (
-                <>
-                  L'intelligence artificielle<br />
-                  <span style={{ fontWeight: 700, color: "#10b981" }}>au service</span><br />
-                  des PME africaines
-                </>
+                <>Votre conseiller fiscal<br /><span style={{ color: T }}>camerounais</span><br />disponible 24h/24</>
               ) : (
-                <>
-                  Artificial intelligence<br />
-                  <span style={{ fontWeight: 700, color: "#10b981" }}>empowering</span><br />
-                  African SMEs
-                </>
+                <>Your Cameroonian<br /><span style={{ color: T }}>tax advisor</span><br />available 24/7</>
               )}
             </h1>
 
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.55)", lineHeight: 1.7, marginBottom: 40, maxWidth: 420 }}>
+            <p style={{ fontSize: 16, color: MUTED, lineHeight: 1.75, marginBottom: 40, maxWidth: 400 }}>
               {lang === "fr"
-                ? "Fiscalité, comptabilité, RH, marketing — gérez tous les aspects de votre entreprise avec un assistant IA expert."
-                : "Tax, accounting, HR, marketing — manage every aspect of your business with an expert AI assistant."}
+                ? "Calculs fiscaux exacts, procédures DGI, calendrier des échéances — alimenté par les textes officiels à jour."
+                : "Exact tax calculations, DGI procedures, deadline calendar — powered by up-to-date official texts."}
             </p>
 
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <button
-                onClick={() => router.push("/onboarding")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "14px 28px",
-                  borderRadius: 12,
-                  border: "none",
-                  background: "#10b981",
-                  color: "#fff",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all 0.2s",
-                  boxShadow: "0 4px 24px rgba(16,185,129,0.35)",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "#059669";
-                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "#10b981";
-                  (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-                }}
-              >
-                {lang === "fr" ? "Démarrer" : "Get started"}
-                <ArrowRight size={16} />
+              <button onClick={() => router.push("/onboarding")}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 28px", borderRadius: 11, border: "none", background: T, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", boxShadow: `0 4px 24px ${T}40` }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = "0.88"; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-1px)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = "1"; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}>
+                {lang === "fr" ? "Démarrer gratuitement" : "Start for free"} <ArrowRight size={16} />
               </button>
-
-              <button
-                onClick={() => router.push("/dashboard")}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "14px 24px",
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,0.15)",
-                  background: "transparent",
-                  color: "rgba(255,255,255,0.8)",
-                  fontSize: 15,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)";
-                  (e.currentTarget as HTMLButtonElement).style.color = "#fff";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                  (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.8)";
-                }}
-              >
-                {lang === "fr" ? "Voir la démo" : "View demo"}
-                <ChevronRight size={15} />
+              <button onClick={() => router.push("/dashboard")}
+                style={{ display: "flex", alignItems: "center", gap: 8, padding: "14px 22px", borderRadius: 11, border: `1px solid ${LINE}30`, background: "transparent", color: SURF, fontSize: 15, fontWeight: 500, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = T; (e.currentTarget as HTMLButtonElement).style.color = T; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = `${LINE}30`; (e.currentTarget as HTMLButtonElement).style.color = SURF; }}>
+                {lang === "fr" ? "Voir la démo" : "View demo"} <ChevronRight size={15} />
               </button>
             </div>
 
             {/* Social proof */}
-            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 48 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 44 }}>
               <div style={{ display: "flex" }}>
-                {["#10b981", "#6366f1", "#f59e0b", "#ec4899"].map((c, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      borderRadius: "50%",
-                      background: c,
-                      border: "2px solid #0f1a2e",
-                      marginLeft: i === 0 ? 0 : -10,
-                    }}
-                  />
+                {[T, INK2, MUTED, "#A0845C"].map((c, i) => (
+                  <div key={i} style={{ width: 28, height: 28, borderRadius: "50%", background: c, border: `2px solid ${INK}`, marginLeft: i === 0 ? 0 : -9 }} />
                 ))}
               </div>
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.5)" }}>
-                {lang === "fr" ? "+500 entreprises nous font confiance" : "+500 companies trust us"}
+              <span style={{ fontSize: 13, color: MUTED }}>
+                {lang === "fr" ? "+2 500 utilisateurs actifs" : "+2,500 active users"}
               </span>
             </div>
           </div>
         </div>
 
-        {/* RIGHT BLOC — animation */}
-        <div
-          style={{
-            background: "#111",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "80px 48px",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Grid pattern background */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
+        {/* RIGHT — carte animée */}
+        <div style={{ background: INK2, display: "flex", alignItems: "center", justifyContent: "center", padding: "80px 48px", position: "relative", overflow: "hidden" }}>
+          {/* Grille décorative */}
+          <div style={{ position: "absolute", inset: 0, backgroundImage: `linear-gradient(${T}08 1px, transparent 1px), linear-gradient(90deg, ${T}08 1px, transparent 1px)`, backgroundSize: "44px 44px" }} />
 
-          {/* Animated task card */}
-          <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 400 }}>
-            {/* Header */}
-            <div style={{ marginBottom: 24, textAlign: "center" }}>
-              <p style={{ fontSize: 12, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                {lang === "fr" ? "Modules disponibles" : "Available modules"}
-              </p>
-            </div>
+          <div style={{ position: "relative", zIndex: 1, width: "100%", maxWidth: 390 }}>
+            <p style={{ fontSize: 11, color: MUTED, textTransform: "uppercase", letterSpacing: "0.1em", textAlign: "center", marginBottom: 20, fontWeight: 700 }}>
+              {lang === "fr" ? "Modules disponibles" : "Available modules"}
+            </p>
 
-            {/* Task dots */}
-            <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 28 }}>
+            {/* Dots */}
+            <div style={{ display: "flex", justifyContent: "center", gap: 7, marginBottom: 24 }}>
               {TASKS_ANIM.map((t, i) => (
-                <button
-                  key={i}
-                  onClick={() => setTaskIdx(i)}
-                  style={{
-                    width: i === taskIdx ? 24 : 7,
-                    height: 7,
-                    borderRadius: 999,
-                    background: i === taskIdx ? task.color : "rgba(255,255,255,0.15)",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "all 0.3s",
-                    padding: 0,
-                  }}
-                />
+                <button key={i} onClick={() => setTaskIdx(i)} style={{ width: i === taskIdx ? 22 : 6, height: 6, borderRadius: 999, background: i === taskIdx ? T : `${MUTED}50`, border: "none", cursor: "pointer", transition: "all 0.3s", padding: 0 }} />
               ))}
             </div>
 
-            {/* Animated chat card */}
-            <div
-              style={{
-                borderRadius: 20,
-                border: "1px solid rgba(255,255,255,0.08)",
-                background: "rgba(255,255,255,0.03)",
-                backdropFilter: "blur(20px)",
-                overflow: "hidden",
-                opacity: animating ? 0 : 1,
-                transform: animating ? "translateY(8px)" : "translateY(0)",
-                transition: "opacity 0.35s ease, transform 0.35s ease",
-              }}
-            >
+            {/* Carte animée */}
+            <div style={{ borderRadius: 18, border: `1px solid ${T}25`, background: `${INK}CC`, backdropFilter: "blur(20px)", overflow: "hidden", opacity: animating ? 0 : 1, transform: animating ? "translateY(8px)" : "translateY(0)", transition: "opacity 0.35s ease, transform 0.35s ease" }}>
               {/* Card header */}
-              <div
-                style={{
-                  padding: "14px 18px",
-                  borderBottom: "1px solid rgba(255,255,255,0.06)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  background: "rgba(255,255,255,0.02)",
-                }}
-              >
-                <div
-                  style={{
-                    width: 34,
-                    height: 34,
-                    borderRadius: 10,
-                    background: `${task.color}20`,
-                    border: `1px solid ${task.color}40`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 16,
-                  }}
-                >
+              <div style={{ padding: "13px 16px", borderBottom: `1px solid ${T}15`, display: "flex", alignItems: "center", gap: 10, background: `${INK2}80` }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: `${T}20`, border: `1px solid ${T}35`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15 }}>
                   {task.icon}
                 </div>
                 <div>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: "#fff", margin: 0 }}>{task.label}</p>
-                  <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: 0 }}>SAIM Conseil</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: SURF, margin: 0 }}>{task.label}</p>
+                  <p style={{ fontSize: 11, color: MUTED, margin: 0 }}>SAIM Fiscal</p>
                 </div>
-                <div style={{ marginLeft: "auto", width: 8, height: 8, borderRadius: "50%", background: task.color }} />
+                <div style={{ marginLeft: "auto", width: 7, height: 7, borderRadius: "50%", background: T }} />
               </div>
 
-              {/* Chat messages */}
-              <div style={{ padding: "18px 18px 8px" }}>
-                {/* User question */}
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14 }}>
-                  <div
-                    style={{
-                      padding: "10px 14px",
-                      borderRadius: "14px 14px 2px 14px",
-                      background: "rgba(255,255,255,0.08)",
-                      fontSize: 13,
-                      color: "rgba(255,255,255,0.85)",
-                      maxWidth: "80%",
-                      lineHeight: 1.5,
-                    }}
-                  >
+              {/* Messages */}
+              <div style={{ padding: "16px 16px 8px" }}>
+                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+                  <div style={{ padding: "9px 13px", borderRadius: "13px 13px 2px 13px", background: `${SURF}12`, fontSize: 13, color: `${SURF}CC`, maxWidth: "80%", lineHeight: 1.5 }}>
                     {task.question}
                   </div>
                 </div>
-
-                {/* AI answer */}
-                <div style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 16 }}>
-                  <div
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 8,
-                      background: `${task.color}25`,
-                      border: `1px solid ${task.color}50`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: 12,
-                      flexShrink: 0,
-                    }}
-                  >
+                <div style={{ display: "flex", gap: 9, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ width: 26, height: 26, borderRadius: 7, background: `${T}20`, border: `1px solid ${T}40`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, flexShrink: 0 }}>
                     {task.icon}
                   </div>
-                  <div
-                    style={{
-                      padding: "10px 14px",
-                      borderRadius: "2px 14px 14px 14px",
-                      background: `${task.color}12`,
-                      border: `1px solid ${task.color}20`,
-                      fontSize: 13,
-                      color: "rgba(255,255,255,0.8)",
-                      lineHeight: 1.6,
-                    }}
-                  >
+                  <div style={{ padding: "9px 13px", borderRadius: "2px 13px 13px 13px", background: `${T}15`, border: `1px solid ${T}25`, fontSize: 13, color: SURF, lineHeight: 1.6 }}>
                     {task.answer}
                   </div>
                 </div>
-
                 {/* Input mock */}
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    padding: "10px 14px",
-                    borderRadius: 12,
-                    border: "1px solid rgba(255,255,255,0.08)",
-                    background: "rgba(255,255,255,0.03)",
-                    marginBottom: 6,
-                  }}
-                >
-                  <span style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", flex: 1 }}>
-                    {lang === "fr" ? "Posez votre question…" : "Ask your question…"}
-                  </span>
-                  <div
-                    style={{
-                      width: 26,
-                      height: 26,
-                      borderRadius: 8,
-                      background: task.color,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <ArrowRight size={12} color="#fff" />
+                <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 11, border: `1px solid ${T}20`, background: `${SURF}06`, marginBottom: 6 }}>
+                  <span style={{ fontSize: 12, color: MUTED, flex: 1 }}>{lang === "fr" ? "Posez votre question…" : "Ask your question…"}</span>
+                  <div style={{ width: 24, height: 24, borderRadius: 7, background: T, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <ArrowRight size={11} color="#fff" />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Task chips below card */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 20, justifyContent: "center" }}>
+            {/* Chips */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 7, marginTop: 18, justifyContent: "center" }}>
               {TASKS_ANIM.map((t, i) => (
-                <button
-                  key={i}
-                  onClick={() => setTaskIdx(i)}
-                  style={{
-                    padding: "5px 12px",
-                    borderRadius: 999,
-                    border: `1px solid ${i === taskIdx ? t.color + "60" : "rgba(255,255,255,0.08)"}`,
-                    background: i === taskIdx ? `${t.color}15` : "transparent",
-                    color: i === taskIdx ? t.color : "rgba(255,255,255,0.35)",
-                    fontSize: 12,
-                    cursor: "pointer",
-                    transition: "all 0.2s",
-                  }}
-                >
+                <button key={i} onClick={() => setTaskIdx(i)}
+                  style={{ padding: "5px 12px", borderRadius: 999, border: `1px solid ${i === taskIdx ? T + "70" : MUTED + "30"}`, background: i === taskIdx ? `${T}18` : "transparent", color: i === taskIdx ? T : MUTED, fontSize: 12, cursor: "pointer", transition: "all 0.2s", fontFamily: "inherit" }}>
                   {t.icon} {t.label}
                 </button>
               ))}
@@ -579,142 +282,80 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FEATURES SECTION ── */}
-      <section style={{ padding: "80px 32px", background: "#0d0d0d", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <h2
-            style={{
-              textAlign: "center",
-              fontSize: "clamp(22px, 3vw, 36px)",
-              fontWeight: 300,
-              color: "#fff",
-              marginBottom: 12,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {lang === "fr" ? "Tout ce dont votre entreprise a besoin" : "Everything your business needs"}
-          </h2>
-          <p style={{ textAlign: "center", color: "rgba(255,255,255,0.4)", fontSize: 15, marginBottom: 56 }}>
-            {lang === "fr" ? "Une plateforme, plusieurs experts IA à votre service" : "One platform, multiple AI experts at your service"}
-          </p>
+      {/* ══ FEATURES ══ */}
+      <section style={{ padding: "88px 40px", background: SURF }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <span style={{ fontSize: 11, fontWeight: 800, color: T, letterSpacing: "0.12em", textTransform: "uppercase" }}>MODULES</span>
+            <h2 style={{ fontSize: "clamp(24px, 3vw, 38px)", fontWeight: 900, color: INK, marginTop: 10, letterSpacing: "-0.03em" }}>
+              {lang === "fr" ? "Tout ce dont votre entreprise a besoin" : "Everything your business needs"}
+            </h2>
+            <p style={{ color: MUTED, fontSize: 15, marginTop: 10 }}>
+              {lang === "fr" ? "Une plateforme, plusieurs experts IA à votre service" : "One platform, multiple AI experts at your service"}
+            </p>
+          </div>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-              gap: 20,
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
             {[
-              { icon: "🧾", title: lang === "fr" ? "Fiscalité" : "Tax", desc: lang === "fr" ? "IGS, TVA, IRPP, IS — calculez et déclarez en toute conformité." : "IGS, VAT, IRPP, IS — calculate and file in full compliance.", color: "#10b981", live: true },
-              { icon: "💼", title: lang === "fr" ? "Comptabilité" : "Accounting", desc: lang === "fr" ? "Factures, bilans, rapports financiers automatisés." : "Invoices, balance sheets, automated financial reports.", color: "#6366f1", live: false },
-              { icon: "👥", title: "RH", desc: lang === "fr" ? "Paie, contrats, gestion des congés simplifiée." : "Payroll, contracts, simplified leave management.", color: "#f59e0b", live: false },
-              { icon: "📣", title: "Marketing", desc: lang === "fr" ? "Contenus, campagnes, réseaux sociaux pilotés par IA." : "Content, campaigns, social media driven by AI.", color: "#ec4899", live: false },
-              { icon: "📋", title: lang === "fr" ? "Gestion de projets" : "Project management", desc: lang === "fr" ? "Planifiez, suivez et livrez vos projets dans les délais." : "Plan, track and deliver your projects on time.", color: "#3b82f6", live: false },
-              { icon: "📄", title: lang === "fr" ? "Rapports & synthèses" : "Reports & summaries", desc: lang === "fr" ? "Résumez documents et données en secondes." : "Summarize documents and data in seconds.", color: "#8b5cf6", live: false },
+              { icon: "🧾", title: lang === "fr" ? "Fiscalité" : "Tax", desc: lang === "fr" ? "IGS, TVA, IRPP, IS — calculs exacts selon CGI 2025 et LF 2026." : "IGS, VAT, IRPP, IS — exact calculations per CGI 2025 and LF 2026.", live: true },
+              { icon: "💼", title: lang === "fr" ? "Comptabilité" : "Accounting", desc: lang === "fr" ? "Factures, bilans, rapports financiers automatisés." : "Invoices, balance sheets, automated financial reports.", live: false },
+              { icon: "👥", title: "RH", desc: lang === "fr" ? "Paie CNPS, contrats, gestion des congés simplifiée." : "CNPS payroll, contracts, simplified leave management.", live: false },
+              { icon: "📣", title: "Marketing", desc: lang === "fr" ? "Contenus, campagnes et réseaux sociaux pilotés par IA." : "Content, campaigns, and social media driven by AI.", live: false },
+              { icon: "📋", title: lang === "fr" ? "Projets" : "Projects", desc: lang === "fr" ? "Planifiez et livrez vos projets dans les délais." : "Plan and deliver your projects on time.", live: false },
+              { icon: "📄", title: lang === "fr" ? "Rapports" : "Reports", desc: lang === "fr" ? "Synthétisez vos documents et données en secondes." : "Summarize your documents and data in seconds.", live: false },
             ].map((f, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: "24px",
-                  borderRadius: 16,
-                  border: `1px solid ${f.live ? f.color + "30" : "rgba(255,255,255,0.05)"}`,
-                  background: f.live ? `${f.color}08` : "rgba(255,255,255,0.02)",
-                  transition: "all 0.2s",
-                  cursor: "default",
-                  position: "relative",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.border = `1px solid ${f.color}50`;
-                  (e.currentTarget as HTMLDivElement).style.background = `${f.color}10`;
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(-2px)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLDivElement).style.border = `1px solid ${f.live ? f.color + "30" : "rgba(255,255,255,0.05)"}`;
-                  (e.currentTarget as HTMLDivElement).style.background = f.live ? `${f.color}08` : "rgba(255,255,255,0.02)";
-                  (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-                }}
-              >
-                {f.live && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: 14,
-                      right: 14,
-                      padding: "2px 8px",
-                      borderRadius: 999,
-                      background: `${f.color}20`,
-                      color: f.color,
-                      fontSize: 10,
-                      fontWeight: 600,
-                      letterSpacing: "0.08em",
-                      border: `1px solid ${f.color}30`,
-                    }}
-                  >
-                    LIVE
-                  </span>
-                )}
-                <div style={{ fontSize: 28, marginBottom: 12 }}>{f.icon}</div>
-                <h3 style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 8 }}>{f.title}</h3>
-                <p style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", lineHeight: 1.6 }}>{f.desc}</p>
+              <div key={i} style={{ padding: "22px", borderRadius: 14, border: `1px solid ${f.live ? T + "40" : LINE}`, background: f.live ? `${T}0A` : "#fff", transition: "all 0.2s", position: "relative", cursor: "default" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = T + "60"; el.style.transform = "translateY(-2px)"; el.style.boxShadow = `0 8px 24px ${T}10`; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLDivElement; el.style.borderColor = f.live ? T + "40" : LINE; el.style.transform = "translateY(0)"; el.style.boxShadow = "none"; }}>
+                {f.live && <span style={{ position: "absolute", top: 12, right: 12, padding: "2px 8px", borderRadius: 999, background: `${T}15`, color: T, fontSize: 10, fontWeight: 800, letterSpacing: "0.08em" }}>LIVE</span>}
+                <div style={{ fontSize: 26, marginBottom: 10 }}>{f.icon}</div>
+                <h3 style={{ fontSize: 15, fontWeight: 800, color: INK, marginBottom: 6, letterSpacing: "-0.02em" }}>{f.title}</h3>
+                <p style={{ fontSize: 13, color: MUTED, lineHeight: 1.65 }}>{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA SECTION ── */}
-      <section
-        style={{
-          padding: "80px 32px",
-          background: "linear-gradient(135deg, #0f1a2e, #1a0a2e)",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
-          textAlign: "center",
-        }}
-      >
-        <h2 style={{ fontSize: "clamp(24px, 3.5vw, 42px)", fontWeight: 300, color: "#fff", marginBottom: 16, letterSpacing: "-0.02em" }}>
-          {lang === "fr" ? "Prêt à transformer votre PME ?" : "Ready to transform your SME?"}
-        </h2>
-        <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 16, marginBottom: 40 }}>
-          {lang === "fr" ? "Commencez gratuitement en moins de 2 minutes." : "Get started for free in less than 2 minutes."}
-        </p>
-        <button
-          onClick={() => router.push("/onboarding")}
-          style={{
-            padding: "16px 40px",
-            borderRadius: 14,
-            border: "none",
-            background: "#10b981",
-            color: "#fff",
-            fontSize: 16,
-            fontWeight: 600,
-            cursor: "pointer",
-            transition: "all 0.2s",
-            boxShadow: "0 8px 32px rgba(16,185,129,0.4)",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#059669";
-            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#10b981";
-            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-          }}
-        >
-          {lang === "fr" ? "Démarrer maintenant" : "Start now"}
-        </button>
+      {/* ══ CTA ══ */}
+      <section style={{ padding: "88px 40px", background: INK2, textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: -100, left: "50%", transform: "translateX(-50%)", width: 600, height: 400, borderRadius: "50%", background: `radial-gradient(circle, ${T}20 0%, transparent 65%)`, pointerEvents: "none" }} />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <span style={{ fontSize: 11, fontWeight: 800, color: T, letterSpacing: "0.12em", textTransform: "uppercase" }}>COMMENCER</span>
+          <h2 style={{ fontSize: "clamp(26px, 4vw, 44px)", fontWeight: 900, color: SURF, marginTop: 12, marginBottom: 14, letterSpacing: "-0.03em" }}>
+            {lang === "fr" ? "Prêt à maîtriser votre fiscalité ?" : "Ready to master your taxes?"}
+          </h2>
+          <p style={{ color: MUTED, fontSize: 16, marginBottom: 36 }}>
+            {lang === "fr" ? "Commencez gratuitement — 10 questions offertes par jour." : "Start for free — 10 questions per day included."}
+          </p>
+          <button onClick={() => router.push("/onboarding")}
+            style={{ padding: "15px 40px", borderRadius: 12, border: "none", background: T, color: "#fff", fontSize: 16, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", transition: "all 0.2s", boxShadow: `0 8px 32px ${T}45` }}
+            onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.opacity = "0.88"; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)"; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.opacity = "1"; (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)"; }}>
+            {lang === "fr" ? "Démarrer maintenant" : "Start now"}
+          </button>
+        </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer style={{ padding: "32px", background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.05)", textAlign: "center" }}>
-        <p style={{ fontSize: 12, color: "rgba(255,255,255,0.25)" }}>
-          © 2025 SAIM Conseil · {lang === "fr" ? "Tous droits réservés" : "All rights reserved"}
-        </p>
+      {/* ══ FOOTER ══ */}
+      <footer style={{ padding: "28px 40px", background: INK, borderTop: `1px solid ${INK2}`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <LogoMark size={18} color={T} />
+          <span style={{ fontSize: 14, fontWeight: 900, color: SURF, letterSpacing: "-0.02em" }}>SAIM <span style={{ color: T }}>Fiscal</span></span>
+        </div>
+        <p style={{ fontSize: 12, color: MUTED, margin: 0 }}>© 2025 SAIM AI · {lang === "fr" ? "Tous droits réservés" : "All rights reserved"} · Yaoundé, Cameroun</p>
+        <a href="/" style={{ fontSize: 12, color: MUTED, textDecoration: "none", transition: "color 0.15s" }}
+          onMouseEnter={e => (e.currentTarget.style.color = T)}
+          onMouseLeave={e => (e.currentTarget.style.color = MUTED)}>
+          ← saimAI
+        </a>
       </footer>
 
       <style>{`
         @media (max-width: 768px) {
-          .hero-grid { grid-template-columns: 1fr !important; }
+          .fiscal-hero { grid-template-columns: 1fr !important; }
+          .fiscal-desk-nav { display: none !important; }
+          .fiscal-burger { display: flex !important; }
         }
       `}</style>
     </div>
