@@ -158,9 +158,9 @@ export default function SaimAILanding() {
             SAIM AI connecte vos données d'entreprise à l'IA pour automatiser, analyser et accélérer votre croissance.
           </p>
 
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
             <BtnPrimary href="#solutions">Découvrir nos solutions <ArrowRight size={15} /></BtnPrimary>
-            <BtnGhost href="/fiscal">Essayer SAIM Fiscal gratuitement <ChevronRight size={14} /></BtnGhost>
+
           </div>
         </div>
 
@@ -458,7 +458,7 @@ export default function SaimAILanding() {
               Parlons de votre projet
             </h2>
             <p style={{ fontSize: 16, color: GRAY, marginTop: 12 }}>
-              Première consultation gratuite. Notre équipe à Yaoundé vous répond sous 24h.
+              Première consultation gratuite. Notre équipe vous répond sous .
             </p>
           </div>
 
@@ -479,7 +479,7 @@ export default function SaimAILanding() {
                 <label style={{ display: "block", fontSize: 13, fontWeight: 700, color: DARK, marginBottom: 6 }}>Sujet</label>
                 <select value={form.sujet} onChange={e => setForm(p => ({ ...p, sujet: e.target.value }))}
                   style={{ width: "100%", padding: "10px 12px", borderRadius: 9, border: `1.5px solid ${BORDER}`, fontSize: 14, color: DARK, background: "#fff", outline: "none", fontFamily: "inherit", cursor: "pointer" }}>
-                  {["Conseil IA", "Intégration IA", "SAIM Fiscal", "SAIM Course", "SAIM Data Lab", "Autre"].map(s => <option key={s}>{s}</option>)}
+                  {["Conseil IA", "Intégration IA", "SAIM Fiscal", "SAIM Course", "SAIM Data Lab","projet d'entreprise","partenariats","Autre"].map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
               <div>
@@ -491,7 +491,7 @@ export default function SaimAILanding() {
                   onBlur={e => (e.target.style.borderColor = BORDER)} />
               </div>
               <BtnPrimary>Envoyer <ArrowRight size={15} /></BtnPrimary>
-              <p style={{ textAlign: "center", fontSize: 12, color: GRAY, margin: 0 }}>📍 Yaoundé, Cameroun · contact@mysaim.cm</p>
+              <p style={{ textAlign: "center", fontSize: 12, color: GRAY, margin: 0 }}>contact@mysaim.cm</p>
             </form>
           )}
         </div>
