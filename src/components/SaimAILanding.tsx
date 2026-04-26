@@ -192,13 +192,13 @@ export default function SaimAILanding() {
           <div>
             <SectionLabel>À PROPOS</SectionLabel>
             <h2 style={{ fontSize: "clamp(28px, 3.5vw, 44px)", fontWeight: 900, letterSpacing: "-0.04em", color: DARK, margin: "14px 0 20px", lineHeight: 1.1 }}>
-              Une startup africaine<br />spécialisée dans l'IA
+              Une plateforme<br />spécialisée dans l'IA
             </h2>
             <p style={{ fontSize: 16, color: GRAY, lineHeight: 1.8, marginBottom: 14 }}>
-              SAIM AI est une entreprise technologique spécialisée dans l'intelligence artificielle appliquée aux entreprises africaines. Elle développe des <strong style={{ color: DARK }}>agents IA spécialisés</strong>, des <strong style={{ color: DARK }}>plateformes SaaS intelligentes</strong> et des <strong style={{ color: DARK }}>solutions RAG</strong> sur documents locaux.
+              SAIM AI est une entreprise technologique spécialisée dans l'intelligence artificielle appliquée aux entreprises. Elle développe des <strong style={{ color: DARK }}>agents IA spécialisés</strong>, des <strong style={{ color: DARK }}>plateformes SaaS intelligentes</strong> et des <strong style={{ color: DARK }}>solutions RAG</strong> sur documents locaux.
             </p>
             <p style={{ fontSize: 16, color: GRAY, lineHeight: 1.8, marginBottom: 36 }}>
-              Basée à Yaoundé, Cameroun, SAIM AI rend l'IA accessible et rentable — avec une philosophie claire : open source, économique et adapté aux réalités africaines.
+             SAIM AI rend l'IA accessible et rentable — avec une philosophie claire : open source, économique et adapté aux réalités africaines.
             </p>
             <BtnGhost href="#contact">En savoir plus <ArrowRight size={14} /></BtnGhost>
           </div>
@@ -208,7 +208,6 @@ export default function SaimAILanding() {
               { v: "100 000+", l: "Documents indexés et entraînés" },
               { v: "50+", l: "Entreprises clientes" },
               { v: "2 500+", l: "Utilisateurs actifs" },
-              { v: "48h", l: "Délai d'intégration d'une nouvelle loi" },
             ].map(s => (
               <div key={s.v} style={{ padding: "28px 22px", borderRadius: 14, border: `1px solid ${BORDER}`, background: SAND }}>
                 <div style={{ fontSize: 32, fontWeight: 900, color: O, letterSpacing: "-0.04em", lineHeight: 1, marginBottom: 8 }}>{s.v}</div>
@@ -506,7 +505,7 @@ export default function SaimAILanding() {
             <div>
               <Logo dark={false} />
               <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", lineHeight: 1.75, maxWidth: 260, marginTop: 16 }}>
-                L'intelligence artificielle au service de la croissance africaine.
+                L'intelligence artificielle au service de la croissance.
               </p>
             </div>
             {[
