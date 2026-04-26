@@ -155,7 +155,7 @@ export default function SaimAILanding() {
           </h1>
 
           <p style={{ fontSize: 18, color: GRAY, lineHeight: 1.75, maxWidth: 560, margin: "0 auto 44px", fontWeight: 400 }}>
-            SAIM AI connecte vos données d'entreprise à l'IA pour automatiser, analyser et accélérer votre croissance — partout en Afrique.
+            SAIM AI connecte vos données d'entreprise à l'IA pour automatiser, analyser et accélérer votre croissance.
           </p>
 
           <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
@@ -240,19 +240,18 @@ export default function SaimAILanding() {
                 cta: "Essayer gratuitement", href: "/fiscal", ext: false,
               },
               {
-                icon: "", accent: "#3B82F6",
+                icon: "", accent: 0,
                 title: "SAIM Conseil", badge: null,
                 desc: "Développement d'agents IA et chatbots sur mesure. Intégration d'infrastructure RAG sur vos documents internes et données métier.",
                 cta: "Nous contacter", href: "#contact", ext: false,
               },
               {
-                icon: "", accent: "#7C3AED",
+                icon: "", accent: 0,
                 title: "SAIM Course", badge: null,
                 desc: "Maîtrisez l'IA selon votre métier: formations IA pour professionnels et équipes d'entreprises.",
                 cta: "Découvrir", href: "https://course.mysaim.cm", ext: true,
               },
               {
-                icon: "", accent: "#059669",
                 title: "SAIM Data Lab", badge: null,
                 desc: "Production de datasets, annotation, et fine-tuning de modèles IA",
                 cta: "En savoir plus", href: "#contact", ext: false,
