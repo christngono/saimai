@@ -234,27 +234,27 @@ export default function SaimAILanding() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
             {[
               {
-                icon: "🧾", accent: O,
-                title: "SAIM Fiscal", badge: "Disponible",
+                icon: "", accent: O,
+                title: "SAIM Fiscal", badge: null,
                 desc: "Assistant IA dédié à la fiscalité camerounaise à jour — CGI 2025, LF 2026, circulaires DGI. Calculs exacts, sources citées, 24h/24.",
                 cta: "Essayer gratuitement", href: "/fiscal", ext: false,
               },
               {
-                icon: "🤖", accent: "#3B82F6",
+                icon: "", accent: "#3B82F6",
                 title: "SAIM Conseil", badge: null,
                 desc: "Développement d'agents IA et chatbots sur mesure. Intégration d'infrastructure RAG sur vos documents internes et données métier.",
                 cta: "Nous contacter", href: "#contact", ext: false,
               },
               {
-                icon: "🎓", accent: "#7C3AED",
-                title: "SAIM Course", badge: "Bientôt",
-                desc: "Formations IA pratiques en français, adaptées au contexte africain — pour professionnels et équipes d'entreprises.",
+                icon: "", accent: "#7C3AED",
+                title: "SAIM Course", badge: null,
+                desc: "Maîtrisez l'IA selon votre métier: formations IA pour professionnels et équipes d'entreprises.",
                 cta: "Découvrir", href: "https://course.mysaim.cm", ext: true,
               },
               {
-                icon: "🔬", accent: "#059669",
+                icon: "", accent: "#059669",
                 title: "SAIM Data Lab", badge: null,
-                desc: "Production de datasets, annotation, et fine-tuning de modèles IA adaptés aux réalités et langues africaines.",
+                desc: "Production de datasets, annotation, et fine-tuning de modèles IA",
                 cta: "En savoir plus", href: "#contact", ext: false,
               },
             ].map(s => (
@@ -269,7 +269,7 @@ export default function SaimAILanding() {
                 </div>
                 <a href={s.href} target={s.ext ? "_blank" : undefined} rel={s.ext ? "noopener noreferrer" : undefined}
                   style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: 5, fontSize: 13, fontWeight: 700, color: s.accent, textDecoration: "none" }}>
-                  {s.cta} <ChevronRight size={13} />
+                 <ChevronRight size={13} />
                 </a>
               </div>
             ))}
