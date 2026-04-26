@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "kill": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true",
+    "fresh": "npm run kill && next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

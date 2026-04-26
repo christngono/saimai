@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SAIM Conseil — L'intelligence fiscale à portée de main",
-  description: "Assistant virtuel spécialisé dans la fiscalité camerounaise",
+  title: "SAIM AI — L'assistant intelligent pour les PME africaines",
+  description: "Plateforme IA pour la gestion fiscale, comptable et commerciale des entreprises africaines",
 };
 
 export default function RootLayout({

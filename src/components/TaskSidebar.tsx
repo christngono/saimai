@@ -1,7 +1,25 @@
 "use client";
 
-import Image from "next/image";
 import { Plus, Trash2, ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
+
+const T = "#C2562C";
+
+function LogoMark({ size = 24 }: { size?: number }) {
+  const rects: [number, number][] = [
+    [20,30],[64,30],[108,30],[152,30],[196,30],
+    [20,74],
+    [20,118],[64,118],[108,118],[196,118],
+    [196,162],
+    [20,206],[64,206],[108,206],[152,206],[196,206],
+  ];
+  return (
+    <svg width={size} height={size} viewBox="0 0 232 250" fill="none">
+      {rects.map(([x, y], i) => (
+        <rect key={i} x={x} y={y} width="36" height="36" rx="7" fill={T} />
+      ))}
+    </svg>
+  );
+}
 import { Conversation } from "@/lib/types";
 
 export interface Task {
@@ -70,11 +88,14 @@ export default function TaskSidebar({
         }}
       >
         {!collapsed && (
-          <Image src="/saim-logo-officiel.png" alt="SAIM Conseil" width={90} height={30} style={{ objectFit: "contain", objectPosition: "left" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <LogoMark size={22} />
+            <span style={{ fontWeight: 900, fontSize: 16, color: "#1F1410", letterSpacing: "-0.03em" }}>
+              saim<span style={{ color: T }}>AI</span>
+            </span>
+          </div>
         )}
-        {collapsed && (
-          <Image src="/saim-logo-officiel.png" alt="S" width={26} height={26} style={{ objectFit: "contain" }} />
-        )}
+        {collapsed && <LogoMark size={24} />}
         {!collapsed ? (
           <button onClick={onToggle} style={{ background: "transparent", border: "none", cursor: "pointer", color: "#999", padding: 4 }}>
             <ChevronLeft size={16} />
@@ -126,7 +147,7 @@ export default function TaskSidebar({
             >
               <span style={{ fontSize: 15, lineHeight: 1 }}>{task.icon}</span>
               {!collapsed && (
-                <span style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#10b981" : "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <span style={{ fontSize: 13, fontWeight: active ? 600 : 400, color: active ? "#C2562C" : "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {task.label}
                 </span>
               )}
@@ -170,7 +191,7 @@ export default function TaskSidebar({
                 <MessageSquare size={13} style={{ color: "#bbb", flexShrink: 0 }} />
                 {!collapsed && (
                   <>
-                    <span style={{ flex: 1, fontSize: 12, color: activeConvId === conv.id ? "#10b981" : "#555", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    <span style={{ flex: 1, fontSize: 12, color: activeConvId === conv.id ? "#C2562C" : "#555", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                       {conv.title}
                     </span>
                     <button

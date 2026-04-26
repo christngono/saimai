@@ -1,17 +1,19 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import TaskSidebar, { TASKS } from "@/components/TaskSidebar";
 import ChatArea from "@/components/ChatArea";
-import InvoiceGenerator from "@/components/InvoiceGenerator";
-import FilesView from "@/components/FilesView";
-import FormationsView from "@/components/FormationsView";
-import MarketingView from "@/components/MarketingView";
-import AccountingView from "@/components/AccountingView";
-import CommercialView from "@/components/CommercialView";
-import ProjectManagementView from "@/components/ProjectManagementView";
 import { Conversation, Message } from "@/lib/types";
+
+const InvoiceGenerator     = dynamic(() => import("@/components/InvoiceGenerator"));
+const FilesView            = dynamic(() => import("@/components/FilesView"));
+const FormationsView       = dynamic(() => import("@/components/FormationsView"));
+const MarketingView        = dynamic(() => import("@/components/MarketingView"));
+const AccountingView       = dynamic(() => import("@/components/AccountingView"));
+const CommercialView       = dynamic(() => import("@/components/CommercialView"));
+const ProjectManagementView = dynamic(() => import("@/components/ProjectManagementView"));
 
 function generateId() {
   return Math.random().toString(36).slice(2, 10);
@@ -132,7 +134,7 @@ function CompanyBadge({ company }: { company: CompanyProfile | null }) {
             width: 28,
             height: 28,
             borderRadius: 6,
-            background: "linear-gradient(135deg, #10b981, #6366f1)",
+            background: "#C2562C",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -310,8 +312,6 @@ export default function Dashboard() {
             <AccountingView />
           ) : activeTask === "commercial" ? (
             <CommercialView />
-          ) : activeTask === "projects" ? (
-            <ProjectManagementView />
           ) : (
             <ComingSoon task={currentTask} />
           )}
