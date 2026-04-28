@@ -32,8 +32,8 @@ export default function AboutPage() {
       {/* ── Vision ── */}
       <SectionBlock
         kicker="Notre vision"
-        title={<>Le partenaire IA de référence <em style={{ fontStyle: "italic", color: SAIM.accent }}>des entreprises africaines.</em></>}
-        lead="Donner accès à des outils IA de niveau mondial, adaptés aux réalités locales et aux budgets des PME."
+        title={<>Le partenaire IA de référence <em style={{ fontStyle: "italic", color: SAIM.accent }}>de votre entreprise.</em></>}
+        lead="Donner accès à des outils IA de niveau mondial, adaptés aux réalités concrètes et aux budgets des PME."
         bg={SAIM.paperAlt}
       >
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
