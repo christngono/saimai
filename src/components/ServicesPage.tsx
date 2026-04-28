@@ -61,7 +61,7 @@ export default function ServicesPage() {
             Six agents. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Un système.</em>
           </h1>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 20, lineHeight: 1.5, color: SAIM.inkSoft, maxWidth: 580, margin: "0 auto" }}>
-            Chaque agent est un expert dans son domaine, formé au contexte camerounais. Assemblez-les selon vos besoins.
+            Chaque agent est un expert dans son domaine, formé aux réalités concrètes de votre secteur. Assemblez-les selon vos besoins.
           </p>
         </div>
       </section>
