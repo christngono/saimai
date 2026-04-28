@@ -78,11 +78,11 @@ function TrustBar() {
 
 function ServicesPreview() {
   const services = [
-    { t: "SAIM Fiscal",     d: "Calcul d'impôts, TVA, IRPP, IS. Calendrier fiscal automatique. CGI 2025 indexé.", icon: "📊" },
+    { t: "SAIM Fiscal",     d: "Calcul d'impôts, TVA, IS. Calendrier fiscal automatique et alertes d'échéances.", icon: "📊" },
     { t: "SAIM Marketing",  d: "Contenu réseaux sociaux, propositions commerciales, newsletters en un clic.", icon: "📣" },
-    { t: "SAIM RH",         d: "Contrats de travail, fiches de paie CNPS, gestion des congés.", icon: "👥" },
+    { t: "SAIM RH",         d: "Contrats de travail, fiches de paie, gestion des congés et absences.", icon: "👥" },
     { t: "SAIM Commercial", d: "Scoring prospects, relances automatiques, suivi pipeline.", icon: "🤝" },
-    { t: "SAIM Juridique",  d: "Contrats, CGV, statuts, veille OHADA et CEMAC.", icon: "⚖️" },
+    { t: "SAIM Juridique",  d: "Contrats, CGV, statuts, conformité réglementaire.", icon: "⚖️" },
     { t: "SAIM Documents",  d: "Synthèse de PDF, transcription audio, comptes-rendus.", icon: "📄" },
   ];
   return (
@@ -105,9 +105,9 @@ function ServicesPreview() {
 
 function PricingSection() {
   const plans = [
-    { name: "Starter",  price: "5 000",  unit: "FCFA/mois", items: ["SAIM Fiscal", "SAIM Documents", "10 questions/jour", "Support email"], pop: false },
-    { name: "PME",      price: "15 000", unit: "FCFA/mois", items: ["Fiscal + RH + Commercial", "Marketing + Documents", "Questions illimitées", "Support prioritaire"], pop: true },
-    { name: "Business", price: "35 000", unit: "FCFA/mois", items: ["Tous les 6 agents", "Questions illimitées", "Multi-utilisateurs", "Support dédié + formation"], pop: false },
+    { name: "Starter",  price: "9",    unit: "€/mois", items: ["SAIM Fiscal", "SAIM Documents", "10 questions/jour", "Support email"], pop: false },
+    { name: "Pro",      price: "24",   unit: "€/mois", items: ["Fiscal + RH + Commercial", "Marketing + Documents", "Questions illimitées", "Support prioritaire"], pop: true },
+    { name: "Business", price: "49",  unit: "€/mois", items: ["Tous les 6 agents", "Questions illimitées", "Multi-utilisateurs", "Support dédié + formation"], pop: false },
   ];
   return (
     <SectionBlock
