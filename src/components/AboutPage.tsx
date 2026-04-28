@@ -39,7 +39,7 @@ export default function AboutPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
           {[
             { t: "Accessibilité",      d: "L'IA à la portée de toutes les entreprises, pas seulement des multinationales." },
-            { t: "Pertinence locale",  d: "Solutions intégrant réglementations, langues et contextes africains." },
+            { t: "Pertinence métier",  d: "Solutions intégrant les réglementations et les réalités de chaque secteur." },
             { t: "Open source first",  d: "Modèles ouverts pour garantir souveraineté et réduire les coûts." },
             { t: "Impact mesurable",   d: "Chaque solution génère un gain de productivité concret et mesurable." },
           ].map((v, i) => (
@@ -56,7 +56,7 @@ export default function AboutPage() {
       <SectionBlock
         kicker="Fondatrice"
         title="Christina Ngono"
-        lead="CEO & Fondatrice de SAIM AI. Basée à Yaoundé, Cameroun."
+        lead="CEO & Fondatrice de SAIM AI."
       >
         <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: 40, alignItems: "center" }}>
           <div style={{
@@ -67,13 +67,13 @@ export default function AboutPage() {
           }}>CN</div>
           <div>
             <p style={{ fontSize: 17, lineHeight: 1.65, color: SAIM.inkSoft, margin: 0, maxWidth: 640 }}>
-              Convaincue que les PME africaines méritent les mêmes outils que les grandes entreprises, Christina a fondé SAIM AI avec une philosophie claire : des solutions open source, efficaces et économiques, conçues pour le contexte local.
+              Convaincue que toutes les PME méritent les mêmes outils que les grandes entreprises, Christina a fondé SAIM AI avec une philosophie claire : des solutions open source, efficaces et économiques, adaptées à la réalité de chaque entreprise.
             </p>
             <div style={{ display: "flex", gap: 32, marginTop: 28 }}>
               {[
-                { n: "300 000", l: "PME ciblées au Cameroun" },
-                { n: "6 pays",  l: "Expansion zone CEMAC" },
-                { n: "20+",     l: "Pays Afrique francophone" },
+                { n: "300 000", l: "entreprises ciblées" },
+                { n: "6",       l: "agents spécialisés" },
+                { n: "24/7",    l: "disponibilité" },
               ].map(s => (
                 <div key={s.l}>
                   <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, fontWeight: 400, color: SAIM.accent }}>{s.n}</div>
