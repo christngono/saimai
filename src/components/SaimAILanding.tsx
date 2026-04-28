@@ -69,7 +69,7 @@ function HeroB() {
 function TrustBar() {
   return (
     <div style={{ background: SAIM.paperAlt, padding: "28px 48px", display: "flex", justifyContent: "center", gap: 56, alignItems: "center", flexWrap: "wrap" as const }}>
-      {["Open source first", "Données souveraines", "Contexte OHADA & DGI", "Mobile Money ready"].map(t => (
+      {["Open source first", "Données souveraines", "Conformité réglementaire", "Multidevise"].map(t => (
         <span key={t} style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: SAIM.muted }}>✓ {t}</span>
       ))}
     </div>
@@ -89,7 +89,7 @@ function ServicesPreview() {
     <SectionBlock
       kicker="Services"
       title={<>Six agents. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Un abonnement.</em></>}
-      lead="Chaque agent est un expert dans son domaine, formé aux réglementations camerounaises et africaines."
+      lead="Chaque agent est un expert dans son domaine, formé aux réglementations et aux besoins concrets des entreprises."
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         {services.map(s => <MiniCard key={s.t} icon={s.icon} title={s.t} desc={s.d} />)}
