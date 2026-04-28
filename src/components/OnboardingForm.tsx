@@ -109,7 +109,7 @@ interface FormData {
 
 const INITIAL: FormData = {
   companyName: "", sector: "", employees: "", founded: "",
-  city: "", country: "Cameroun", email: "", phone: "",
+  city: "", country: "", email: "", phone: "",
   logo: null, departments: ["fiscal"],
 };
 
