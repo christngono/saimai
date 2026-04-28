@@ -113,7 +113,7 @@ function PricingSection() {
     <SectionBlock
       kicker="Tarifs"
       title={<>Simple. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Accessible.</em></>}
-      lead="Le prix d'un repas par semaine pour des outils qui remplacent des expertises à 150 000+ FCFA/mois."
+      lead="Des outils qui remplacent des expertises à 500€+/mois, pour une fraction du prix."
       bg={SAIM.paperAlt}
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
@@ -156,7 +156,7 @@ function FAQSection() {
     { q: "SAIM remplace-t-il un comptable ou un avocat ?", a: "Non. SAIM est une première ligne d'intelligence pour les tâches courantes. Pour les cas complexes, consultez un professionnel." },
     { q: "Mes données sont-elles sécurisées ?",            a: "Oui. Nous utilisons des modèles open source et vos données ne quittent jamais notre infrastructure souveraine." },
     { q: "Puis-je tester avant de payer ?",                a: "Bien sûr. L'offre gratuite donne accès à 10 questions par jour pendant 2 mois, sans carte bancaire." },
-    { q: "Les calculs fiscaux sont-ils fiables ?",          a: "Nos calculs sont déterministes — pas d'hallucination. Ils sont basés sur le CGI 2025 et la LF 2026 indexés." },
+    { q: "Les calculs fiscaux sont-ils fiables ?",          a: "Nos calculs sont déterministes — pas d'hallucination. Ils s'appuient sur des textes fiscaux officiels indexés et mis à jour régulièrement." },
   ];
   return (
     <SectionBlock
@@ -204,7 +204,7 @@ function ContactSection() {
             { label: "Email",        value: "partners@mysaim.cm" },
             { label: "Plateforme",   value: "mysaim.cm" },
             { label: "Formation",    value: "course.mysaim.cm" },
-            { label: "Localisation", value: "Yaoundé, Cameroun" },
+            { label: "Site",         value: "mysaim.cm" },
           ].map(c => (
             <div key={c.label}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.muted, marginBottom: 4 }}>{c.label}</div>

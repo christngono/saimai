@@ -13,10 +13,10 @@ export default function AboutPage() {
           <div>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 20 }}>À propos</div>
             <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 64, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1, margin: 0, marginBottom: 28 }}>
-              Fait au Cameroun,<br /><em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>pour l'Afrique.</em>
+              Conçu pour <em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>chaque entreprise.</em>
             </h1>
             <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 19, lineHeight: 1.6, color: SAIM.inkSoft, maxWidth: 520 }}>
-              SAIM AI est une entreprise technologique camerounaise spécialisée dans l'intelligence artificielle appliquée aux entreprises africaines. Notre mission : rendre l'IA accessible, pratique et rentable pour les PME.
+              SAIM AI est une plateforme d'intelligence artificielle conçue pour les entrepreneurs et les PME. Notre mission : rendre l'IA accessible, pratique et rentable pour toutes les entreprises, partout dans le monde.
             </p>
           </div>
           <div style={{
