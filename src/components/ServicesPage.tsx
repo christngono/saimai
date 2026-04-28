@@ -5,9 +5,9 @@ import { SAIM, Nav, Footer, SectionBlock } from "./SaimUI";
 
 const AGENTS = [
   { name: "SAIM Fiscal",     tag: "Fiscalité",           icon: "📊",
-    headline: "Votre conseiller fiscal camerounais, 24h/24.",
-    desc: "Alimenté par le CGI 2025, la Loi de Finances 2026 et les circulaires DGI. Calculs déterministes — pas d'hallucination sur les montants.",
-    features: ["Calcul exact : IGS, TVA, IRPP, IS, Patente", "Procédures Fiscalis / Harmony 2", "Calendrier fiscal + alertes", "Analyse de documents DGI", "Commande vocale", "Modes : création, contentieux, CGA"],
+    headline: "Votre conseiller fiscal expert, disponible 24h/24.",
+    desc: "Alimenté par les textes fiscaux officiels mis à jour. Calculs déterministes — pas d'hallucination sur les montants.",
+    features: ["Calcul exact : TVA, IS, IRPP et taxes locales", "Calendrier fiscal + alertes d'échéances", "Analyse de documents fiscaux", "Modes : création, contentieux, révision", "Commande vocale", "Export PDF des simulations"],
   },
   { name: "SAIM Marketing",  tag: "Marketing",            icon: "📣",
     headline: "Du contenu professionnel en un clic.",
@@ -16,8 +16,8 @@ const AGENTS = [
   },
   { name: "SAIM RH",         tag: "Ressources humaines",  icon: "👥",
     headline: "Gérez vos équipes sans service RH.",
-    desc: "Du contrat de travail aux fiches de paie CNPS, en conformité avec le Code du Travail camerounais.",
-    features: ["Contrats de travail conformes", "Calcul CNPS et fiches de paie", "Gestion congés et absences", "Offres d'emploi et analyse de CV"],
+    desc: "Du contrat de travail aux fiches de paie, en conformité avec la législation du travail en vigueur.",
+    features: ["Contrats de travail conformes", "Calcul charges sociales et fiches de paie", "Gestion congés et absences", "Offres d'emploi et analyse de CV"],
   },
   { name: "SAIM Commercial", tag: "Ventes",               icon: "🤝",
     headline: "Prospectez et relancez sans effort.",
