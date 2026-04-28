@@ -119,7 +119,7 @@ export default function ServicesPage() {
           <div style={{ background: "rgba(245,241,232,0.06)", borderRadius: 18, padding: 36, border: "1px solid rgba(245,241,232,0.08)" }}>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 12 }}>SAIM Data Lab</div>
             <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: 12 }}>Des données de qualité pour des IA performantes.</div>
-            <p style={{ fontSize: 14, lineHeight: 1.55, opacity: 0.7 }}>Génération de données synthétiques, annotation, collecte terrain, fine-tuning de modèles open source — en langues locales africaines.</p>
+            <p style={{ fontSize: 14, lineHeight: 1.55, opacity: 0.7 }}>Génération de données synthétiques, annotation, collecte terrain, fine-tuning de modèles open source — dans votre langue et votre contexte.</p>
             <div style={{ marginTop: 20, fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: SAIM.accent }}>Contactez-nous →</div>
           </div>
         </div>
