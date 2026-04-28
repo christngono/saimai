@@ -26,7 +26,7 @@ function HeroB() {
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 20, lineHeight: 1.55, opacity: 0.72, maxWidth: 460, marginBottom: 40 }}>
             Un comptable, un juriste, un commercial — disponibles 24h/24. Six agents IA spécialisés, prêts à répondre à chaque besoin de votre entreprise.
           </p>
-          <Link href="/dashboard" style={{
+          <Link href="/dashboard" prefetch={false} style={{
             display: "inline-block", background: SAIM.accent, color: SAIM.paper,
             padding: "14px 28px", borderRadius: 12,
             fontSize: 16, fontWeight: 500,
@@ -137,7 +137,7 @@ function PricingSection() {
                 <div key={it} style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 10, color: p.pop ? "rgba(245,241,232,0.8)" : SAIM.inkSoft }}>✓ {it}</div>
               ))}
             </div>
-            <Link href="/dashboard" style={{
+            <Link href="/dashboard" prefetch={false} style={{
               marginTop: 24, textAlign: "center" as const, padding: "12px 0", borderRadius: 10, display: "block",
               background: p.pop ? SAIM.accent : "transparent",
               border: `1px solid ${p.pop ? SAIM.accent : SAIM.border}`,

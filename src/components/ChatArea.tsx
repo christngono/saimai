@@ -46,7 +46,7 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
           alt="SAIM Conseil"
           width={110}
           height={36}
-          style={{ objectFit: "contain", objectPosition: "left" }}
+          style={{ objectFit: "contain", objectPosition: "left", width: "auto" }}
           priority
         />
         <span style={{ fontSize: 12, color: "#aaa" }}>Agent fiscal</span>

@@ -90,7 +90,7 @@ export default function ServicesPage() {
               </div>
               <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, fontWeight: 400, letterSpacing: "-0.025em", lineHeight: 1.1, margin: 0, marginBottom: 16 }}>{a.headline}</h2>
               <p style={{ fontSize: 16, lineHeight: 1.6, color: SAIM.inkSoft, maxWidth: 480, marginBottom: 28 }}>{a.desc}</p>
-              <Link href="/dashboard" style={{
+              <Link href="/dashboard" prefetch={false} style={{
                 display: "inline-block",
                 background: SAIM.accent, color: SAIM.paper,
                 padding: "10px 20px", borderRadius: 10,

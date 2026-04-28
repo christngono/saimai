@@ -81,7 +81,7 @@ export function Nav({ activePage = "home", dark = false }: { activePage?: string
             textDecoration: "none", letterSpacing: "-0.01em",
           }}>{p.label}</Link>
         ))}
-        <Link href="/dashboard" style={{
+        <Link href="/dashboard" prefetch={false} style={{
           background: SAIM.accent, color: SAIM.paper,
           padding: "10px 20px", borderRadius: 10,
           fontSize: 14, fontWeight: 500,
