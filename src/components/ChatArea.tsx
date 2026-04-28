@@ -72,7 +72,7 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
                       alt="SAIM Conseil"
                       width={80}
                       height={28}
-                      style={{ objectFit: "contain", objectPosition: "left" }}
+                      style={{ objectFit: "contain", objectPosition: "left", width: "auto" }}
                     />
                   </div>
                   <div style={{ color: "#1a1a1a", fontSize: 16, lineHeight: 1.75 }}>
