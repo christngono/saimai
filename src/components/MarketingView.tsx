@@ -167,7 +167,7 @@ function ProfileCard({ p, index }: { p: Profile; index: number }) {
 
 /* ─── Formulaire Analyse ─── */
 function AnalyseForm({ onSubmit, loading }: { onSubmit: (d: any) => void; loading: boolean }) {
-  const [form, setForm] = useState({ service: "", sector: "", price: "", description: "", zone: "Cameroun" });
+  const [form, setForm] = useState({ service: "", sector: "", price: "", description: "", zone: "" });
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
   const canSubmit = form.service.trim().length > 0;
 
@@ -187,8 +187,8 @@ function AnalyseForm({ onSubmit, loading }: { onSubmit: (d: any) => void; loadin
             {SECTORS.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
-        <Field label="Fourchette de prix" placeholder="Ex: 15 000 – 50 000 FCFA" value={form.price} onChange={(v) => set("price", v)} />
-        <Field label="Zone géographique" placeholder="Ex: Douala, Yaoundé" value={form.zone} onChange={(v) => set("zone", v)} />
+        <Field label="Fourchette de prix" placeholder="Ex: 150 – 500 €" value={form.price} onChange={(v) => set("price", v)} />
+        <Field label="Zone géographique" placeholder="Ex: France, Europe, international" value={form.zone} onChange={(v) => set("zone", v)} />
       </div>
       <div>
         <label style={{ fontSize: 12, color: "#888", display: "block", marginBottom: 5 }}>Description (optionnel)</label>
