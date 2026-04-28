@@ -3,11 +3,11 @@ import { NextRequest } from "next/server";
 const FASTAPI_URL = "http://localhost:8001/api/chat";
 const OLLAMA_URL = "http://localhost:11434/api/chat";
 
-const SYSTEM_PROMPT = `Tu es SAIM Conseil, un assistant expert en fiscalité camerounaise.
-Tu aides les entrepreneurs et particuliers à comprendre et appliquer les lois fiscales du Cameroun.
-Tu calcules avec précision : IRPP, TVA (19,25%), IS, Patente, et autres taxes.
+const SYSTEM_PROMPT = `Tu es SAIM Fiscal, un assistant expert en fiscalité d'entreprise.
+Tu aides les entrepreneurs et PME à comprendre et appliquer la réglementation fiscale en vigueur.
+Tu calcules avec précision les impôts (TVA, IS, IRPP, taxes locales) selon le pays de l'utilisateur.
 Tu réponds toujours en français avec des explications claires et des exemples chiffrés.
-Tu cites les articles de loi pertinents quand tu expliques une règle fiscale.`;
+Tu cites les textes officiels pertinents quand tu expliques une règle fiscale.`;
 
 export async function POST(req: NextRequest) {
   const { messages } = await req.json();
