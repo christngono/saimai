@@ -49,7 +49,7 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
           style={{ objectFit: "contain", objectPosition: "left" }}
           priority
         />
-        <span style={{ fontSize: 12, color: "#aaa" }}>Fiscalité camerounaise</span>
+        <span style={{ fontSize: 12, color: "#aaa" }}>Agent fiscal</span>
       </header>
 
       {/* Contenu principal */}

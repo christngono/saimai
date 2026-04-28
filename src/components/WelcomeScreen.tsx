@@ -4,11 +4,11 @@ import Image from "next/image";
 import ChatInput from "./ChatInput";
 
 const CHIPS = [
-  { icon: "🧮", label: "Calculer mon IGS" },
-  { icon: "📋", label: "Obligations fiscales PME" },
-  { icon: "💰", label: "Taux IS Cameroun" },
+  { icon: "🧮", label: "Calculer mon impôt" },
+  { icon: "📋", label: "Obligations fiscales" },
+  { icon: "💰", label: "Optimiser ma fiscalité" },
   { icon: "📄", label: "Déclarer la TVA" },
-  { icon: "❓", label: "C'est quoi le CGI ?" },
+  { icon: "❓", label: "Comprendre l'IS" },
 ];
 
 interface Props {

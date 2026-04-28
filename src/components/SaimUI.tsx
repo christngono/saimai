@@ -111,7 +111,7 @@ export function Footer() {
               L'intelligence artificielle au service de votre croissance.
             </p>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, opacity: 0.4, marginTop: 16, lineHeight: 1.6 }}>
-              Yaoundé, Cameroun<br />partners@mysaim.cm
+              partners@mysaim.cm
             </div>
           </div>
           {FOOTER_COLS.map(col => (
@@ -124,7 +124,7 @@ export function Footer() {
           ))}
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", paddingTop: 20, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", opacity: 0.35 }}>
-          <span>© 2026 SAIM AI · Fait au Cameroun, pour l'Afrique</span>
+          <span>© 2026 SAIM AI</span>
           <span>mysaim.cm</span>
         </div>
       </div>

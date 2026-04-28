@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SAIM AI — L'assistant intelligent pour les PME africaines",
-  description: "Plateforme IA pour la gestion fiscale, comptable et commerciale des entreprises africaines",
+  title: "SAIM AI — L'assistant intelligent pour votre entreprise",
+  description: "Plateforme IA pour la gestion fiscale, comptable et commerciale de votre entreprise",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
