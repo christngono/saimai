@@ -103,10 +103,12 @@ export async function POST(req: NextRequest) {
 function getDemoReply(message: string): string {
   const msg = message.toLowerCase();
   if (msg.includes("tva"))
-    return "La **TVA au Cameroun** est fixée à **19,25%** (16,5% TVA + 2,75% CAC). Seuil d'assujettissement : 50 millions FCFA de CA annuel HT (article 125 du CGI).";
-  if (msg.includes("irpp"))
-    return "L'**IRPP** est calculé sur un barème progressif : 10% jusqu'à 2M, 15% de 2M à 3M, 25% de 3M à 5M, 35% au-delà.";
+    return "La **TVA** (Taxe sur la Valeur Ajoutée) est un impôt indirect prélevé sur la consommation. Son taux varie selon votre pays. Précisez votre pays pour une réponse exacte.";
+  if (msg.includes("irpp") || msg.includes("impôt sur le revenu"))
+    return "L'**impôt sur le revenu des personnes physiques** est calculé sur un barème progressif. Les tranches et taux varient selon votre pays. Précisez votre pays pour un calcul exact.";
   if (msg.includes("regime") || msg.includes("régime"))
-    return "Trois régimes fiscaux au Cameroun :\n- **Libératoire** : CA < 10M FCFA\n- **Simplifié** : CA entre 10M et 50M FCFA\n- **Réel** : CA > 50M FCFA";
-  return "Bonjour ! Je suis **SAIM Conseil**. Posez-moi vos questions sur la fiscalité camerounaise (TVA, IRPP, IS, Patente, régimes fiscaux...).";
+    return "Les **régimes fiscaux** (forfaitaire, simplifié, réel) dépendent du chiffre d'affaires et de votre pays. Quel est votre CA annuel et dans quel pays exercez-vous ?";
+  if (msg.includes("is") || msg.includes("impôt sur les sociétés"))
+    return "L'**IS (Impôt sur les Sociétés)** est un impôt sur les bénéfices de l'entreprise. Le taux standard varie selon les pays (généralement 25–33%). Précisez votre pays pour plus de détails.";
+  return "Bonjour ! Je suis **SAIM Fiscal**. Posez-moi vos questions sur la fiscalité de votre entreprise (TVA, IS, IRPP, régimes fiscaux, optimisation fiscale...). Précisez votre pays pour des réponses adaptées.";
 }
