@@ -83,7 +83,7 @@ const SECTORS = [
 ];
 
 const DEPARTMENTS = [
-  { id: "fiscal",     icon: "🧾", label: "Fiscalité",            desc: "IGS, TVA, IRPP, IS" },
+  { id: "fiscal",     icon: "🧾", label: "Fiscalité",            desc: "TVA, IS, IRPP, taxes" },
   { id: "accounting", icon: "💼", label: "Comptabilité",         desc: "Factures, bilan, trésorerie" },
   { id: "hr",         icon: "👥", label: "Ressources humaines",  desc: "Paie, congés, contrats" },
   { id: "marketing",  icon: "📣", label: "Marketing & contenus", desc: "Campagnes, réseaux sociaux" },
@@ -240,11 +240,11 @@ export default function OnboardingForm() {
                 <p style={{ fontSize: 14, color: MUTED }}>Comment vous contacter</p>
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-                <InputField icon={<MapPin size={16} />} label="Ville *" value={data.city} onChange={(v) => set("city", v)} placeholder="Ex: Douala" />
-                <InputField icon={<Briefcase size={16} />} label="Pays" value={data.country} onChange={(v) => set("country", v)} placeholder="Ex: Cameroun" />
+                <InputField icon={<MapPin size={16} />} label="Ville *" value={data.city} onChange={(v) => set("city", v)} placeholder="Ex: Paris" />
+                <InputField icon={<Briefcase size={16} />} label="Pays" value={data.country} onChange={(v) => set("country", v)} placeholder="Ex: France" />
               </div>
               <InputField icon={<Mail size={16} />} label="Email professionnel *" value={data.email} onChange={(v) => set("email", v)} placeholder="contact@monentreprise.com" type="email" />
-              <InputField icon={<Phone size={16} />} label="Téléphone" value={data.phone} onChange={(v) => set("phone", v)} placeholder="+237 6XX XXX XXX" type="tel" />
+              <InputField icon={<Phone size={16} />} label="Téléphone" value={data.phone} onChange={(v) => set("phone", v)} placeholder="+33 6 XX XX XX XX" type="tel" />
             </div>
           )}
 

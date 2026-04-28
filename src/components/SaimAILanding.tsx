@@ -6,11 +6,11 @@ import { SAIM, SaimMark, Nav, Footer, SectionBlock, MiniCard } from "./SaimUI";
 /* ─── Hero Variation B — éditorial sombre ─── */
 function HeroB() {
   const agents = [
-    { name: "SAIM Fiscal",     desc: "CGI 2025 · Calcul d'impôts exact",             active: true },
+    { name: "SAIM Fiscal",     desc: "TVA · IS · Calcul d'impôts exact",             active: true },
     { name: "SAIM Marketing",  desc: "Contenu réseaux · Propositions commerciales" },
-    { name: "SAIM RH",         desc: "Contrats · CNPS · Fiches de paie" },
+    { name: "SAIM RH",         desc: "Contrats · Charges sociales · Fiches de paie" },
     { name: "SAIM Commercial", desc: "Prospection · Relances · Pipeline" },
-    { name: "SAIM Juridique",  desc: "Contrats · CGV · OHADA" },
+    { name: "SAIM Juridique",  desc: "Contrats · CGV · Conformité" },
     { name: "SAIM Documents",  desc: "Synthèse · Extraction · Transcription" },
   ];
   return (
