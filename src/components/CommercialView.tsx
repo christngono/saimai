@@ -257,15 +257,15 @@ function PromptBox({ mode, onSubmit, loading }: { mode: "analyse" | "proposition
 
   const config = {
     analyse: {
-      placeholder: "Décrivez le prospect…\n\nEx : « Analyser Techno Plus SARL, PME 20 employés à Douala, secteur IT, cherche une solution de gestion comptable »",
-      chips: [["PME", "PME d'environ 20 employés"], ["Grande entreprise", "grande entreprise"], ["Startup", "startup en phase de lancement"], ["Douala", "basée à Douala"], ["Yaoundé", "basée à Yaoundé"], ["Secteur IT", "dans le secteur des technologies"]],
+      placeholder: "Décrivez le prospect…\n\nEx : « Analyser Techno Plus SARL, PME 20 employés, secteur IT, cherche une solution de gestion comptable »",
+      chips: [["PME", "PME d'environ 20 employés"], ["Grande entreprise", "grande entreprise"], ["Startup", "startup en phase de lancement"], ["Secteur IT", "dans le secteur des technologies"], ["Secteur Commerce", "dans le secteur du commerce"], ["B2B", "entreprise B2B"]],
       btnLabel: "Analyser le prospect",
       btnColor: "#f97316",
       icon: <Target size={15} />,
     },
     proposition: {
-      placeholder: "Décrivez le prospect et le canal souhaité…\n\nEx : « Message WhatsApp pour ACME SA, distributeur alimentaire Yaoundé, présentez nos services de livraison rapide »",
-      chips: [["💬 WhatsApp", " via WhatsApp"], ["📧 Email", " par email"], ["📞 Téléphone", " par téléphone"], ["🤝 Face à face", " en rendez-vous physique"], ["Douala", " à Douala"], ["PME", " pour une PME"]],
+      placeholder: "Décrivez le prospect et le canal souhaité…\n\nEx : « Message WhatsApp pour ACME SA, distributeur alimentaire, présentez nos services de livraison rapide »",
+      chips: [["💬 WhatsApp", " via WhatsApp"], ["📧 Email", " par email"], ["📞 Téléphone", " par téléphone"], ["🤝 Face à face", " en rendez-vous physique"], ["PME", " pour une PME"], ["Grand compte", " pour un grand compte"]],
       btnLabel: "Générer la proposition",
       btnColor: "#6366f1",
       icon: <MessageSquare size={15} />,
@@ -340,7 +340,7 @@ export default function CommercialView() {
           <span style={{ fontSize: 22 }}>📦</span>
           <h2 style={{ fontSize: 20, fontWeight: 600, color: "#1a1a1a", margin: 0 }}>Gestion commerciale</h2>
         </div>
-        <p style={{ fontSize: 13, color: "#888", margin: "4px 0 16px" }}>Analysez vos prospects et créez des propositions percutantes adaptées au marché camerounais.</p>
+        <p style={{ fontSize: 13, color: "#888", margin: "4px 0 16px" }}>Analysez vos prospects et créez des propositions commerciales percutantes adaptées à votre marché.</p>
         <div style={{ display: "flex", gap: 8 }}>
           {([
             { id: "analyse",     label: "Analyse prospect",       color: "#f97316" },
@@ -365,7 +365,7 @@ export default function CommercialView() {
             <p style={{ fontSize: 15, fontWeight: 600, color: "#1a1a1a", margin: 0 }}>
               {mode === "analyse" ? "Analyse du prospect en cours…" : "Rédaction de la proposition…"}
             </p>
-            <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>Le modèle IA analyse le contexte camerounais</p>
+            <p style={{ fontSize: 13, color: "#aaa", margin: 0 }}>Le modèle IA analyse le contexte de votre marché</p>
           </div>
         )}
 
