@@ -13,15 +13,15 @@ function titleFromMessage(msg: string) { return msg.length > 42 ? msg.slice(0, 4
 
 /* ─── Agents ─── */
 const AGENTS = [
-  { id: "fiscal",    name: "SAIM Fiscal",     icon: "📊", desc: "CGI 2025 · LF 2026",        live: true },
+  { id: "fiscal",    name: "SAIM Fiscal",     icon: "📊", desc: "Fiscalité · Calculs",       live: true },
   { id: "marketing", name: "SAIM Marketing",  icon: "📣", desc: "Contenu · Réseaux",          live: false },
-  { id: "rh",        name: "SAIM RH",         icon: "👥", desc: "Contrats · CNPS",            live: false },
+  { id: "rh",        name: "SAIM RH",         icon: "👥", desc: "Contrats · Paie",            live: false },
   { id: "commercial",name: "SAIM Commercial", icon: "🤝", desc: "Prospects · Pipeline",       live: false },
-  { id: "juridique", name: "SAIM Juridique",  icon: "⚖️", desc: "OHADA · CEMAC",              live: false },
+  { id: "juridique", name: "SAIM Juridique",  icon: "⚖️", desc: "Contrats · Conformité",      live: false },
   { id: "documents", name: "SAIM Documents",  icon: "📄", desc: "PDF · Audio · Résumé",       live: false },
 ];
 
-const SOURCES = ["CGI 2025 (1 004 p.)", "LF 2026", "Circulaires DGI", "Guide Fiscalis"];
+const SOURCES = ["Code Général des Impôts", "Loi de Finances", "Circulaires fiscales", "Guides officiels"];
 
 /* ─── Coming soon ─── */
 function ComingSoon({ agent }: { agent: typeof AGENTS[0] }) {
