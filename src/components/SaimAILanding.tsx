@@ -24,7 +24,7 @@ function HeroB() {
             Votre PME<br />mérite <em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>mieux.</em>
           </h1>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 20, lineHeight: 1.55, opacity: 0.72, maxWidth: 460, marginBottom: 40 }}>
-            Un comptable, un juriste, un commercial — à 15 000 FCFA/mois. Six agents IA formés au contexte camerounais, disponibles 24h/24.
+            Un comptable, un juriste, un commercial — disponibles 24h/24. Six agents IA spécialisés, prêts à répondre à chaque besoin de votre entreprise.
           </p>
           <Link href="/dashboard" style={{
             display: "inline-block", background: SAIM.accent, color: SAIM.paper,
