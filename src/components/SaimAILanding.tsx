@@ -46,7 +46,7 @@ function IconAgent() {
   );
 }
 
-/* ─── Nav spécifique landing ─── */
+/* ─── Nav ─── */
 const SOLUTIONS = [
   { label: "Audit et conseil en stratégie IA", desc: "Analyse et feuille de route IA",       href: "/services",                icon: <IconAudit /> },
   { label: "Formation SAIM Course",             desc: "Apprenez l'IA à votre rythme",         href: "https://course.mysaim.cm", icon: <IconCourse />,  external: true },
@@ -61,7 +61,7 @@ function LandingNav() {
   const linkStyle = {
     fontFamily: "'Inter Tight', system-ui, sans-serif",
     fontSize: 14, fontWeight: 500,
-    color: "rgba(245,241,232,0.65)",
+    color: "#73726C",
     textDecoration: "none",
     letterSpacing: "-0.01em",
   } as const;
@@ -70,12 +70,11 @@ function LandingNav() {
     <nav style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "14px 48px",
-      background: "rgba(26,22,18,0.96)",
-      backdropFilter: "blur(12px)",
-      borderBottom: "1px solid rgba(245,241,232,0.08)",
+      background: "#FBFAF7",
+      borderBottom: "1px solid #DEDEDD",
       position: "sticky", top: 0, zIndex: 100,
     }}>
-      <SaimLogoH size={28} dark={false} />
+      <SaimLogoH size={28} dark={true} />
 
       {/* Liens centraux */}
       <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
@@ -90,7 +89,7 @@ function LandingNav() {
             display: "flex", alignItems: "center", gap: 4,
             background: "none", border: "none", cursor: "pointer",
             ...linkStyle,
-            color: open ? SAIM.paper : "rgba(245,241,232,0.65)",
+            color: open ? "#1A1612" : "#73726C",
           }}>
             Solutions
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
@@ -102,19 +101,19 @@ function LandingNav() {
             <div style={{
               position: "absolute", top: "calc(100% + 4px)", left: "50%",
               transform: "translateX(-50%)",
-              background: "#ffffff",
-              border: "1px solid #e8e8e8",
+              background: "#FBFAF7",
+              border: "1px solid #DEDEDD",
               borderRadius: 16,
               padding: "8px",
               minWidth: 320,
-              boxShadow: "0 8px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06)",
+              boxShadow: "0 8px 40px rgba(26,22,18,0.10), 0 2px 8px rgba(26,22,18,0.04)",
             }}>
               {/* Petite flèche */}
               <div style={{
                 position: "absolute", top: -5, left: "50%", transform: "translateX(-50%) rotate(45deg)",
                 width: 10, height: 10,
-                background: "#ffffff",
-                border: "1px solid #e8e8e8",
+                background: "#FBFAF7",
+                border: "1px solid #DEDEDD",
                 borderRight: "none", borderBottom: "none",
               }} />
 
@@ -127,34 +126,32 @@ function LandingNav() {
                   style={{
                     display: "flex", alignItems: "center", gap: 14,
                     padding: "10px 12px", borderRadius: 10,
-                    textDecoration: "none", color: "#1a1a1a",
+                    textDecoration: "none", color: "#1A1612",
                     transition: "background 0.12s",
                   }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#f5f5f5"; }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#F0EEE9"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
                 >
-                  {/* Icône dans un carré arrondi */}
                   <div style={{
                     width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-                    background: "#f3f4f6",
+                    background: "#F0EEE9",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     color: SAIM.accent,
                   }}>
                     {s.icon}
                   </div>
 
-                  {/* Titre + sous-titre */}
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.3 }}>
+                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1A1612", lineHeight: 1.3 }}>
                       {s.label}
                     </div>
-                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#888", marginTop: 2, lineHeight: 1.3 }}>
+                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2, lineHeight: 1.3 }}>
                       {s.desc}
                     </div>
                   </div>
 
                   {s.external && (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEDEDD" strokeWidth="2" strokeLinecap="round">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                       <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
                     </svg>
@@ -172,20 +169,22 @@ function LandingNav() {
       {/* Boutons */}
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
         <Link href="/dashboard" prefetch={false} style={{
-          ...linkStyle,
-          color: "rgba(245,241,232,0.8)",
+          fontFamily: "'Inter Tight', system-ui, sans-serif",
+          fontSize: 14, fontWeight: 500,
+          color: "#73726C",
+          textDecoration: "none",
           padding: "9px 18px", borderRadius: 10,
-          border: "1px solid rgba(245,241,232,0.18)",
+          border: "1px solid #DEDEDD",
         }}>
           Connexion
         </Link>
         <Link href="/dashboard" prefetch={false} style={{
           fontFamily: "'Inter Tight', system-ui, sans-serif",
           fontSize: 14, fontWeight: 600,
-          color: "#1A1612",
+          color: "#FBFAF7",
           textDecoration: "none",
           padding: "9px 20px", borderRadius: 10,
-          background: "#FBFAF7",
+          background: "#1A1612",
         }}>
           Essayer SAIM
         </Link>
@@ -217,9 +216,9 @@ const DEMOS = [
 ];
 
 function PlatformDemo() {
-  const [idx, setIdx]         = useState(0);
-  const [phase, setPhase]     = useState(0); // 0 init · 1 user · 2 typing · 3 ai
-  const [aiText, setAiText]   = useState("");
+  const [idx, setIdx]       = useState(0);
+  const [phase, setPhase]   = useState(0);
+  const [aiText, setAiText] = useState("");
 
   useEffect(() => {
     setPhase(0);
@@ -249,7 +248,6 @@ function PlatformDemo() {
   return (
     <div style={{
       background: "#1A1612",
-      border: "1px solid rgba(26,22,18,0.12)",
       borderRadius: 20, overflow: "hidden",
       fontFamily: "'Inter Tight', system-ui, sans-serif",
       boxShadow: "0 24px 64px rgba(26,22,18,0.18), 0 4px 16px rgba(26,22,18,0.08)",
@@ -277,7 +275,6 @@ function PlatformDemo() {
       {/* Zone chat */}
       <div style={{ padding: "20px 18px", minHeight: 220, display: "flex", flexDirection: "column", gap: 14 }}>
 
-        {/* Message utilisateur */}
         {phase >= 1 && (
           <div className="demo-appear" style={{ display: "flex", justifyContent: "flex-end" }}>
             <div style={{
@@ -292,7 +289,6 @@ function PlatformDemo() {
           </div>
         )}
 
-        {/* Points de saisie */}
         {phase === 2 && (
           <div className="demo-appear" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{
@@ -310,7 +306,6 @@ function PlatformDemo() {
           </div>
         )}
 
-        {/* Réponse IA */}
         {phase >= 3 && (
           <div className="demo-appear" style={{ display: "flex", gap: 10 }}>
             <div style={{
@@ -363,7 +358,7 @@ function PlatformDemo() {
         </div>
       </div>
 
-      {/* Indicateurs de démo (points de navigation) */}
+      {/* Indicateurs */}
       <div style={{ display: "flex", justifyContent: "center", gap: 6, paddingBottom: 14 }}>
         {DEMOS.map((_, i) => (
           <div key={i} style={{
@@ -384,7 +379,6 @@ function Hero() {
     <section style={{ background: "#FBFAF7", padding: "88px 48px 104px" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 72, alignItems: "center" }}>
 
-        {/* Texte gauche */}
         <div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 24 }}>
             Super Agent Intelligent Multimodal
@@ -406,7 +400,8 @@ function Hero() {
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
             <Link href="/dashboard" prefetch={false} style={{
-              display: "inline-block", background: SAIM.accent, color: "#FBFAF7",
+              display: "inline-block",
+              background: "#1A1612", color: "#FBFAF7",
               padding: "14px 28px", borderRadius: 12,
               fontSize: 15, fontWeight: 600,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -416,9 +411,8 @@ function Hero() {
             </Link>
             <a href="#tarifs" style={{
               display: "inline-block",
-              background: "#FBFAF7",
-              border: "1px solid #DEDEDD",
-              color: "#73726C",
+              background: "#1A1612", color: "#FBFAF7",
+              border: "none",
               padding: "14px 28px", borderRadius: 12,
               fontSize: 15, fontWeight: 500,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -429,7 +423,6 @@ function Hero() {
           </div>
         </div>
 
-        {/* Démo animée droite */}
         <PlatformDemo />
       </div>
     </section>
@@ -464,14 +457,11 @@ function FAQSection() {
       id="faq"
       kicker="FAQ"
       title={<>Questions <em style={{ fontStyle: "italic", color: SAIM.accent }}>fréquentes.</em></>}
-      bg={SAIM.paperAlt}
+      bg="#FBFAF7"
     >
-      <div>
+      <div style={{ borderTop: "1px solid #DEDEDD" }}>
         {faqs.map((f, i) => (
-          <div
-            key={i}
-            style={{ borderBottom: `1px solid ${SAIM.border}` }}
-          >
+          <div key={i} style={{ borderBottom: "1px solid #DEDEDD" }}>
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
               style={{
@@ -480,14 +470,14 @@ function FAQSection() {
                 textAlign: "left" as const,
               }}
             >
-              <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 400, letterSpacing: "-0.02em", color: SAIM.ink }}>
+              <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 20, fontWeight: 400, letterSpacing: "-0.02em", color: "#1A1612" }}>
                 {f.q}
               </span>
-              <span style={{ fontSize: 22, color: SAIM.accent, flexShrink: 0, marginLeft: 24, transition: "transform 0.2s", transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)" }}>+</span>
+              <span style={{ fontSize: 22, color: "#1A1612", flexShrink: 0, marginLeft: 24, transition: "transform 0.2s", transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)" }}>+</span>
             </button>
             {openIndex === i && (
               <div style={{ paddingBottom: 24, paddingRight: 48 }}>
-                <p style={{ fontSize: 16, lineHeight: 1.65, color: SAIM.inkSoft, margin: 0 }}>{f.a}</p>
+                <p style={{ fontSize: 16, lineHeight: 1.65, color: "#73726C", margin: 0 }}>{f.a}</p>
               </div>
             )}
           </div>
@@ -516,41 +506,42 @@ function PricingSection() {
       pop: false,
     },
   ];
+
   return (
     <SectionBlock
       id="tarifs"
       kicker="Découvrir nos tarifs"
       title={<>Simple. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Accessible.</em></>}
       lead="Des outils qui remplacent des expertises à 500€+/mois, pour une fraction du prix."
+      bg="#FBFAF7"
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         {plans.map(p => (
           <div key={p.name} style={{
-            background: p.pop ? SAIM.ink : SAIM.paperHi,
-            color: p.pop ? SAIM.paper : SAIM.ink,
-            border: `1px solid ${p.pop ? SAIM.ink : SAIM.border}`,
+            background: "#FBFAF7",
+            color: "#1A1612",
+            border: p.pop ? "2px solid #1A1612" : "1px solid #DEDEDD",
             borderRadius: 18, padding: 32,
             display: "flex", flexDirection: "column",
             position: "relative",
           }}>
             {p.pop && (
-              <div style={{ position: "absolute", top: -12, left: 24, background: SAIM.accent, color: SAIM.paper, padding: "4px 14px", borderRadius: 999, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>
+              <div style={{ position: "absolute", top: -12, left: 24, background: "#1A1612", color: "#FBFAF7", padding: "4px 14px", borderRadius: 999, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>
                 Populaire
               </div>
             )}
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: p.pop ? SAIM.accentLight : SAIM.muted, marginBottom: 16 }}>{p.name}</div>
-            <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 44, fontWeight: 400, letterSpacing: "-0.03em", marginBottom: 4 }}>{p.price}</div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: p.pop ? "rgba(245,241,232,0.5)" : SAIM.faint, marginBottom: 28 }}>{p.unit}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#73726C", marginBottom: 16 }}>{p.name}</div>
+            <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 44, fontWeight: 400, letterSpacing: "-0.03em", marginBottom: 4, color: "#1A1612" }}>{p.price}</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#73726C", marginBottom: 28 }}>{p.unit}</div>
             <div style={{ flex: 1 }}>
               {p.items.map(it => (
-                <div key={it} style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 10, color: p.pop ? "rgba(245,241,232,0.8)" : SAIM.inkSoft }}>✓ {it}</div>
+                <div key={it} style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 10, color: "#73726C" }}>✓ {it}</div>
               ))}
             </div>
             <Link href="/dashboard" prefetch={false} style={{
               marginTop: 24, textAlign: "center" as const, padding: "12px 0", borderRadius: 10, display: "block",
-              background: p.pop ? SAIM.accent : "transparent",
-              border: `1px solid ${p.pop ? SAIM.accent : SAIM.border}`,
-              color: p.pop ? SAIM.paper : SAIM.ink,
+              background: "#1A1612",
+              color: "#FBFAF7",
               fontSize: 14, fontWeight: 500, textDecoration: "none",
             }}>
               Commencer
@@ -558,7 +549,7 @@ function PricingSection() {
           </div>
         ))}
       </div>
-      <p style={{ textAlign: "center" as const, marginTop: 24, fontSize: 13, color: SAIM.faint }}>
+      <p style={{ textAlign: "center" as const, marginTop: 24, fontSize: 13, color: "#73726C" }}>
         Offre gratuite disponible — 10 questions/jour · Sans carte bancaire
       </p>
     </SectionBlock>
@@ -568,7 +559,7 @@ function PricingSection() {
 /* ─── Page principale ─── */
 export default function SaimAILanding() {
   return (
-    <div style={{ background: SAIM.paper, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+    <div style={{ background: "#FBFAF7", fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <LandingNav />
       <Hero />
       <FAQSection />
