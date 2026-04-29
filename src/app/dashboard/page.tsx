@@ -11,6 +11,13 @@ const ChatArea = dynamic(() => import("@/components/ChatArea"));
 function generateId() { return Math.random().toString(36).slice(2, 10); }
 function titleFromMessage(msg: string) { return msg.length > 44 ? msg.slice(0, 44) + "…" : msg; }
 
+/** Estime les crédits consommés : 1 crédit = 800 tokens ≈ 3200 caractères */
+function estimateCredits(userText: string, aiText: string): number {
+  const chars = userText.length + aiText.length;
+  const tokens = Math.ceil(chars / 4);
+  return Math.max(1, Math.ceil(tokens / 800));
+}
+
 /* ─── Agents ─── */
 const AGENTS = [
   { id: "fiscal",     name: "SAIM Fiscal",     color: "#C2562C", live: true },
@@ -61,11 +68,18 @@ function FilterSvg() {
     </svg>
   );
 }
+function LightningSvg({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="none">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+    </svg>
+  );
+}
 
 const NAV = [
-  { label: "Agent IA",      icon: <AgentSvg /> },
-  { label: "Rechercher",    icon: <SearchSvg /> },
-  { label: "Bibliothèque",  icon: <BookSvg /> },
+  { label: "Agent IA",     icon: <AgentSvg /> },
+  { label: "Rechercher",   icon: <SearchSvg /> },
+  { label: "Bibliothèque", icon: <BookSvg /> },
 ];
 
 /* ─── Coming soon ─── */
@@ -73,33 +87,56 @@ function ComingSoon({ name, color }: { name: string; color: string }) {
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, background: "#FBFAF7" }}>
       <div style={{ width: 56, height: 56, borderRadius: 16, background: color, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <AgentSvg />
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+        </svg>
       </div>
       <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: "#141413" }}>{name}</div>
       <p style={{ fontSize: 14, color: "#73726C", maxWidth: 360, textAlign: "center" as const, lineHeight: 1.6 }}>
-        Cet agent est en cours de développement. Seul <strong>SAIM Fiscal</strong> est disponible pour le moment.
+        Cet agent est en cours de développement. Seul <strong>SAIM Fiscal</strong> est disponible.
       </p>
-      <span style={{ padding: "5px 14px", borderRadius: 999, background: "#fff", border: "1px solid #D9D8D5", fontSize: 11, color: "#73726C", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+      <span style={{ padding: "5px 14px", borderRadius: 999, background: "#FBFAF7", border: "1px solid #D9D8D5", fontSize: 11, color: "#73726C", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
         Bientôt disponible
       </span>
     </div>
   );
 }
 
+/* ─── Badge crédits ─── */
+function CreditBadge({ credits }: { credits: number }) {
+  const color  = credits <= 3 ? "#dc2626" : credits <= 8 ? "#ea580c" : "#73726C";
+  const bg     = credits <= 3 ? "#fef2f2" : credits <= 8 ? "#fff7ed" : "rgba(20,20,19,0.05)";
+  const border = credits <= 3 ? "#fecaca" : credits <= 8 ? "#fed7aa" : "#D9D8D5";
+
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 5,
+      padding: "5px 12px", borderRadius: 999,
+      background: bg, border: `1px solid ${border}`,
+      fontSize: 12.5, color, fontWeight: 500,
+      fontFamily: "'Inter Tight', system-ui, sans-serif",
+    }}>
+      <LightningSvg />
+      {credits} crédit{credits !== 1 ? "s" : ""}
+    </div>
+  );
+}
+
 /* ─── Dashboard ─── */
 export default function Dashboard() {
-  const [activeAgent, setActiveAgent]   = useState("fiscal");
+  const [activeAgent, setActiveAgent]     = useState("fiscal");
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [activeConvId, setActiveConvId] = useState<string | null>(null);
-  const [loading, setLoading]           = useState(false);
+  const [activeConvId, setActiveConvId]   = useState<string | null>(null);
+  const [loading, setLoading]             = useState(false);
   const [streamingText, setStreamingText] = useState("");
+  const [credits, setCredits]             = useState(20);
 
   const activeConversation = conversations.find(c => c.id === activeConvId) ?? null;
   const active = AGENTS.find(a => a.id === activeAgent)!;
 
-  const newTask = () => { setActiveConvId(null); };
-
   const sendMessage = useCallback(async (content: string) => {
+    if (credits <= 0) return;
+
     let convId = activeConvId;
     if (!convId) {
       convId = generateId();
@@ -126,7 +163,7 @@ export default function Dashboard() {
       });
       if (!res.body) throw new Error("No stream");
 
-      const reader = res.body.getReader();
+      const reader  = res.body.getReader();
       const decoder = new TextDecoder();
       let full = "";
       let sources: string[] = [];
@@ -143,6 +180,10 @@ export default function Dashboard() {
         setStreamingText(full);
       }
 
+      /* ── Décrémenter les crédits ── */
+      const cost = estimateCredits(content, full.trim());
+      setCredits(prev => Math.max(0, prev - cost));
+
       setConversations(prev => prev.map(c =>
         c.id === convId
           ? { ...c, messages: [...c.messages, { id: generateId(), role: "assistant" as const, content: full.trim(), timestamp: new Date(), sources: sources.length > 0 ? sources : undefined }] }
@@ -154,9 +195,7 @@ export default function Dashboard() {
       setLoading(false);
       setStreamingText("");
     }
-  }, [activeConvId, conversations]);
-
-  const hasMessages = activeConversation && activeConversation.messages.length > 0;
+  }, [activeConvId, conversations, credits]);
 
   return (
     <div style={{ display: "flex", height: "100vh", background: "#FBFAF7", fontFamily: "'Inter Tight', system-ui, sans-serif", overflow: "hidden" }}>
@@ -177,7 +216,7 @@ export default function Dashboard() {
         {/* Nouvelle tâche */}
         <div style={{ padding: "0 12px 8px" }}>
           <button
-            onClick={newTask}
+            onClick={() => setActiveConvId(null)}
             style={{
               width: "100%", display: "flex", alignItems: "center", gap: 10,
               padding: "9px 14px", borderRadius: 10, cursor: "pointer",
@@ -214,7 +253,7 @@ export default function Dashboard() {
 
         {/* Agents */}
         <div style={{ flex: 1, overflowY: "auto", padding: "0 12px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 14px 6px", marginBottom: 2 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 14px", marginBottom: 2 }}>
             <span style={{ fontSize: 12, color: "#73726C", fontWeight: 500 }}>Agents</span>
             <button style={{ background: "none", border: "none", color: "#73726C", fontSize: 18, cursor: "pointer", lineHeight: 1, padding: 0 }}>+</button>
           </div>
@@ -229,10 +268,7 @@ export default function Dashboard() {
               onMouseEnter={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLButtonElement).style.background = "rgba(20,20,19,0.04)"; }}
               onMouseLeave={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
             >
-              <div style={{
-                width: 22, height: 22, borderRadius: 6, background: a.color,
-                flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: a.color, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
                 </svg>
@@ -276,7 +312,7 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Bottom user */}
+        {/* User */}
         <div style={{ padding: "12px 16px", borderTop: "1px solid #D9D8D5", display: "flex", alignItems: "center", gap: 10 }}>
           <div style={{ width: 30, height: 30, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -293,25 +329,29 @@ export default function Dashboard() {
         {/* Top bar */}
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "center",
-          padding: "12px 24px",
+          padding: "10px 24px", flexShrink: 0,
+          borderBottom: "1px solid #D9D8D5",
           position: "relative" as const,
-          borderBottom: hasMessages ? "1px solid #D9D8D5" : "none",
-          flexShrink: 0,
         }}>
-          {/* Plan badges - centered */}
+          {/* Plan badges — centrés */}
           <div style={{ display: "flex", gap: 4, background: "rgba(20,20,19,0.05)", borderRadius: 999, padding: 4 }}>
-            <span style={{ padding: "4px 14px", borderRadius: 999, fontSize: 13, color: "#73726C", cursor: "default" }}>Plan gratuit</span>
-            <Link href="/#tarifs" style={{
+            <span style={{ padding: "4px 14px", borderRadius: 999, fontSize: 13, color: "#73726C" }}>Plan gratuit</span>
+            <a href="/#tarifs" style={{
               padding: "4px 14px", borderRadius: 999, fontSize: 13,
               background: "#141413", color: "#FBFAF7",
               textDecoration: "none", fontWeight: 500,
             }}>
               Mise à niveau
-            </Link>
+            </a>
           </div>
-          {/* Avatar right */}
-          <div style={{ position: "absolute" as const, right: 24 }}>
-            <div style={{ width: 32, height: 32, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center" }}>
+
+          {/* Droite — crédits + avatar */}
+          <div style={{ position: "absolute" as const, right: 24, display: "flex", alignItems: "center", gap: 10 }}>
+            <CreditBadge credits={credits} />
+            <div title="Mon compte" style={{
+              width: 32, height: 32, borderRadius: 999, background: "#141413",
+              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+            }}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
@@ -319,7 +359,19 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Content */}
+        {/* Alerte zéro crédit */}
+        {credits === 0 && (
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+            padding: "10px 24px", background: "#fef2f2", borderBottom: "1px solid #fecaca",
+            fontSize: 13, color: "#dc2626",
+          }}>
+            <LightningSvg />
+            <span>Vous n'avez plus de crédits. <a href="/#tarifs" style={{ color: "#dc2626", fontWeight: 600, textDecoration: "underline" }}>Passer au plan Pro</a> pour continuer.</span>
+          </div>
+        )}
+
+        {/* Contenu */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
           {activeAgent !== "fiscal" ? (
             <ComingSoon name={active.name} color={active.color} />
@@ -336,9 +388,4 @@ export default function Dashboard() {
       </main>
     </div>
   );
-}
-
-/* tiny Link shim for the upgrade button */
-function Link({ href, style, children }: { href: string; style?: React.CSSProperties; children: React.ReactNode }) {
-  return <a href={href} style={style}>{children}</a>;
 }
