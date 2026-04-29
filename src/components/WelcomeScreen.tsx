@@ -109,10 +109,10 @@ export default function WelcomeScreen({ onSend, loading }: Props) {
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) return;
     transcriptRef.current = "";
-    const rec = new SR() as SpeechRecognition;
+    const rec = new SR();
     rec.lang = "fr-FR"; rec.continuous = false; rec.interimResults = true;
     rec.onstart = () => setIsRecording(true);
-    rec.onresult = (e: SpeechRecognitionEvent) => {
+    rec.onresult = (e: any) => {
       let final = ""; let interim = "";
       for (let i = e.resultIndex; i < e.results.length; i++) {
         const t = e.results[i][0].transcript;
