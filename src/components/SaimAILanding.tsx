@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SAIM, SaimLogoH, SaimMark, Footer, SectionBlock } from "./SaimUI";
 
@@ -194,34 +194,220 @@ function LandingNav() {
   );
 }
 
+/* ─── Animation démo plateforme ─── */
+const DEMOS = [
+  {
+    agent: "SAIM Fiscal",
+    color: "#C2562C",
+    userMsg: "Quel est mon IS sur un bénéfice de 45 000 € ?",
+    aiLines: "IS calculé : 15 000 € (taux 33%)\nMinimum de perception : 450 € (1% CA)\n→ Formulaire 2065 prêt à télécharger",
+  },
+  {
+    agent: "SAIM RH",
+    color: "#6366f1",
+    userMsg: "Génère un contrat CDI pour mon nouveau commercial.",
+    aiLines: "Contrat CDI généré ✓\nPoste : Commercial · 2 800 € brut/mois\n→ Prêt à signer — format Word & PDF",
+  },
+  {
+    agent: "SAIM Juridique",
+    color: "#0891b2",
+    userMsg: "Rédige des CGV pour mon activité de consulting.",
+    aiLines: "CGV rédigées — 9 clauses essentielles ✓\nRGPD, responsabilité, litiges inclus\n→ Télécharger · Personnaliser",
+  },
+];
+
+function PlatformDemo() {
+  const [idx, setIdx]         = useState(0);
+  const [phase, setPhase]     = useState(0); // 0 init · 1 user · 2 typing · 3 ai
+  const [aiText, setAiText]   = useState("");
+
+  useEffect(() => {
+    setPhase(0);
+    setAiText("");
+
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    timers.push(setTimeout(() => setPhase(1), 400));
+    timers.push(setTimeout(() => setPhase(2), 1500));
+    timers.push(setTimeout(() => setPhase(3), 2700));
+
+    let charIdx = 0;
+    const full = DEMOS[idx].aiLines;
+    timers.push(setTimeout(() => {
+      const iv = setInterval(() => {
+        charIdx++;
+        setAiText(full.slice(0, charIdx));
+        if (charIdx >= full.length) clearInterval(iv);
+      }, 20);
+    }, 2700));
+
+    timers.push(setTimeout(() => setIdx(i => (i + 1) % DEMOS.length), 7200));
+    return () => timers.forEach(clearTimeout);
+  }, [idx]);
+
+  const demo = DEMOS[idx];
+
+  return (
+    <div style={{
+      background: "rgba(245,241,232,0.04)",
+      border: "1px solid rgba(245,241,232,0.10)",
+      borderRadius: 20, overflow: "hidden",
+      fontFamily: "'Inter Tight', system-ui, sans-serif",
+    }}>
+      {/* Barre titre façon macOS */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 10,
+        padding: "12px 18px",
+        borderBottom: "1px solid rgba(245,241,232,0.07)",
+        background: "rgba(245,241,232,0.03)",
+      }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {["#ef4444","#f59e0b","#22c55e"].map(c => (
+            <div key={c} style={{ width: 10, height: 10, borderRadius: "50%", background: c, opacity: 0.6 }} />
+          ))}
+        </div>
+        <div style={{ flex: 1, textAlign: "center" as const }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(245,241,232,0.35)", letterSpacing: "0.1em" }}>
+            {demo.agent}
+          </span>
+        </div>
+        <div style={{ width: 42 }} />
+      </div>
+
+      {/* Zone chat */}
+      <div style={{ padding: "20px 18px", minHeight: 220, display: "flex", flexDirection: "column", gap: 14 }}>
+
+        {/* Message utilisateur */}
+        {phase >= 1 && (
+          <div className="demo-appear" style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{
+              background: "rgba(245,241,232,0.11)",
+              border: "1px solid rgba(245,241,232,0.07)",
+              borderRadius: "16px 16px 4px 16px",
+              padding: "10px 14px", maxWidth: "88%",
+              fontSize: 13, color: "rgba(245,241,232,0.82)", lineHeight: 1.5,
+            }}>
+              {demo.userMsg}
+            </div>
+          </div>
+        )}
+
+        {/* Points de saisie */}
+        {phase === 2 && (
+          <div className="demo-appear" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+              background: demo.color,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <SaimMark size={16} fg="#fff" />
+            </div>
+            <div style={{ display: "flex", gap: 5, padding: "8px 12px", background: "rgba(245,241,232,0.06)", borderRadius: 10 }}>
+              <div className="dot-bounce" style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(245,241,232,0.5)" }} />
+              <div className="dot-bounce" style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(245,241,232,0.5)" }} />
+              <div className="dot-bounce" style={{ width: 7, height: 7, borderRadius: "50%", background: "rgba(245,241,232,0.5)" }} />
+            </div>
+          </div>
+        )}
+
+        {/* Réponse IA */}
+        {phase >= 3 && (
+          <div className="demo-appear" style={{ display: "flex", gap: 10 }}>
+            <div style={{
+              width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+              background: demo.color,
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <SaimMark size={16} fg="#fff" />
+            </div>
+            <div style={{
+              background: "rgba(245,241,232,0.06)",
+              border: "1px solid rgba(245,241,232,0.07)",
+              borderRadius: "4px 16px 16px 16px",
+              padding: "10px 14px", flex: 1,
+              fontSize: 13, color: "rgba(245,241,232,0.82)",
+              lineHeight: 1.65, whiteSpace: "pre-line" as const,
+            }}>
+              {aiText}
+              {aiText.length < demo.aiLines.length && (
+                <span className="cursor-blink" style={{
+                  display: "inline-block", width: 2, height: 13,
+                  background: demo.color, marginLeft: 2, verticalAlign: "middle",
+                }} />
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Barre d'input décorative */}
+      <div style={{
+        margin: "0 14px 14px",
+        padding: "10px 14px",
+        background: "rgba(245,241,232,0.04)",
+        border: "1px solid rgba(245,241,232,0.08)",
+        borderRadius: 12,
+        display: "flex", alignItems: "center", gap: 10,
+      }}>
+        <span style={{ flex: 1, fontSize: 12, color: "rgba(245,241,232,0.2)", fontStyle: "italic" }}>
+          Posez votre question…
+        </span>
+        <div style={{
+          width: 28, height: 28, borderRadius: 8,
+          background: demo.color,
+          display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+        }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Indicateurs de démo (points de navigation) */}
+      <div style={{ display: "flex", justifyContent: "center", gap: 6, paddingBottom: 14 }}>
+        {DEMOS.map((_, i) => (
+          <div key={i} style={{
+            width: i === idx ? 18 : 6, height: 6, borderRadius: 3,
+            background: i === idx ? demo.color : "rgba(245,241,232,0.15)",
+            transition: "all 0.4s ease",
+            cursor: "pointer",
+          }} onClick={() => setIdx(i)} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ─── Hero ─── */
 function Hero() {
-  const agents = [
-    { name: "SAIM Fiscal",     desc: "TVA · IS · Calcul d'impôts exact",            active: true },
-    { name: "SAIM Marketing",  desc: "Contenu réseaux · Propositions commerciales" },
-    { name: "SAIM RH",         desc: "Contrats · Charges sociales · Fiches de paie" },
-    { name: "SAIM Commercial", desc: "Prospection · Relances · Pipeline" },
-    { name: "SAIM Juridique",  desc: "Contrats · CGV · Conformité" },
-    { name: "SAIM Documents",  desc: "Synthèse · Extraction · Transcription" },
-  ];
   return (
-    <section style={{ background: SAIM.ink, color: SAIM.paper, padding: "80px 48px 96px" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 80, alignItems: "center" }}>
+    <section style={{ background: SAIM.ink, color: SAIM.paper, padding: "88px 48px 104px" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 72, alignItems: "center" }}>
+
+        {/* Texte gauche */}
         <div>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 28 }}>
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 24 }}>
             Super Agent Intelligent Multimodal
           </div>
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 80, fontWeight: 300, letterSpacing: "-0.04em", lineHeight: 0.95, margin: 0, marginBottom: 32 }}>
-            Votre PME<br />mérite <em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>mieux.</em>
+
+          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px" }}>
+            SAIM AI gère<br />votre entreprise.
           </h1>
-          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 20, lineHeight: 1.55, opacity: 0.72, maxWidth: 460, marginBottom: 40 }}>
-            Un comptable, un juriste, un commercial — disponibles 24h/24. Six agents IA spécialisés, prêts à répondre à chaque besoin de votre entreprise.
+          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
+            Vous, vous la<br />faites grandir.
+          </h2>
+
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "rgba(245,241,232,0.65)", maxWidth: 440, marginBottom: 8 }}>
+            Fiscalité, RH, comptabilité — <strong style={{ color: "rgba(245,241,232,0.85)", fontWeight: 500 }}>automatisés.</strong>
           </p>
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "rgba(245,241,232,0.65)", maxWidth: 440, marginBottom: 40 }}>
+            Sans recruter. Sans exploser votre budget.
+          </p>
+
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
             <Link href="/dashboard" prefetch={false} style={{
               display: "inline-block", background: SAIM.accent, color: SAIM.paper,
               padding: "14px 28px", borderRadius: 12,
-              fontSize: 16, fontWeight: 600,
+              fontSize: 15, fontWeight: 600,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               textDecoration: "none",
             }}>
@@ -229,42 +415,29 @@ function Hero() {
             </Link>
             <a href="#tarifs" style={{
               display: "inline-block",
-              border: "1px solid rgba(245,241,232,0.2)",
-              color: "rgba(245,241,232,0.8)",
+              border: "1px solid rgba(245,241,232,0.18)",
+              color: "rgba(245,241,232,0.75)",
               padding: "14px 28px", borderRadius: 12,
-              fontSize: 16, fontWeight: 500,
+              fontSize: 15, fontWeight: 500,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               textDecoration: "none",
             }}>
               Voir les tarifs
             </a>
           </div>
-          <div style={{ display: "flex", gap: 32, marginTop: 48 }}>
+
+          <div style={{ display: "flex", gap: 36, marginTop: 52 }}>
             {[{ n: "300K", l: "PME ciblées" }, { n: "6", l: "agents spécialisés" }, { n: "24/7", l: "disponibilité" }].map(s => (
               <div key={s.l}>
-                <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 36, fontWeight: 400, color: SAIM.accent }}>{s.n}</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, opacity: 0.5 }}>{s.l}</div>
+                <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 34, fontWeight: 400, color: SAIM.accent }}>{s.n}</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(245,241,232,0.4)", marginTop: 2 }}>{s.l}</div>
               </div>
             ))}
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {agents.map(a => (
-            <div key={a.name} style={{
-              display: "flex", alignItems: "center", gap: 16,
-              padding: "18px 22px", borderRadius: 14,
-              background: a.active ? SAIM.accent : "rgba(245,241,232,0.06)",
-              border: `1px solid ${a.active ? SAIM.accent : "rgba(245,241,232,0.08)"}`,
-            }}>
-              <SaimMark size={32} fg={a.active ? SAIM.paper : SAIM.accent} />
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, color: SAIM.paper }}>{a.name}</div>
-                <div style={{ fontSize: 12, opacity: a.active ? 0.85 : 0.5, marginTop: 2, color: SAIM.paper }}>{a.desc}</div>
-              </div>
-              <span style={{ fontSize: 16, opacity: 0.4, color: SAIM.paper }}>→</span>
-            </div>
-          ))}
-        </div>
+
+        {/* Démo animée droite */}
+        <PlatformDemo />
       </div>
     </section>
   );
