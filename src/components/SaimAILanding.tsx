@@ -182,10 +182,10 @@ function LandingNav() {
         <Link href="/dashboard" prefetch={false} style={{
           fontFamily: "'Inter Tight', system-ui, sans-serif",
           fontSize: 14, fontWeight: 600,
-          color: SAIM.paper,
+          color: "#1A1612",
           textDecoration: "none",
           padding: "9px 20px", borderRadius: 10,
-          background: SAIM.accent,
+          background: "#FBFAF7",
         }}>
           Essayer SAIM
         </Link>
@@ -248,10 +248,11 @@ function PlatformDemo() {
 
   return (
     <div style={{
-      background: "rgba(245,241,232,0.04)",
-      border: "1px solid rgba(245,241,232,0.10)",
+      background: "#1A1612",
+      border: "1px solid rgba(26,22,18,0.12)",
       borderRadius: 20, overflow: "hidden",
       fontFamily: "'Inter Tight', system-ui, sans-serif",
+      boxShadow: "0 24px 64px rgba(26,22,18,0.18), 0 4px 16px rgba(26,22,18,0.08)",
     }}>
       {/* Barre titre façon macOS */}
       <div style={{
@@ -380,7 +381,7 @@ function PlatformDemo() {
 /* ─── Hero ─── */
 function Hero() {
   return (
-    <section style={{ background: SAIM.ink, color: SAIM.paper, padding: "88px 48px 104px" }}>
+    <section style={{ background: "#FBFAF7", padding: "88px 48px 104px" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 72, alignItems: "center" }}>
 
         {/* Texte gauche */}
@@ -389,23 +390,23 @@ function Hero() {
             Super Agent Intelligent Multimodal
           </div>
 
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px" }}>
+          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px", color: "#1A1612" }}>
             SAIM AI gère<br />votre entreprise.
           </h1>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
             Vous, vous la<br />faites grandir.
           </h2>
 
-          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "rgba(245,241,232,0.65)", maxWidth: 440, marginBottom: 8 }}>
-            Fiscalité, RH, comptabilité — <strong style={{ color: "rgba(245,241,232,0.85)", fontWeight: 500 }}>automatisés.</strong>
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 8 }}>
+            Fiscalité, RH, comptabilité — <strong style={{ color: "#1A1612", fontWeight: 500 }}>automatisés.</strong>
           </p>
-          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "rgba(245,241,232,0.65)", maxWidth: 440, marginBottom: 40 }}>
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
             Sans recruter. Sans exploser votre budget.
           </p>
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
             <Link href="/dashboard" prefetch={false} style={{
-              display: "inline-block", background: SAIM.accent, color: SAIM.paper,
+              display: "inline-block", background: SAIM.accent, color: "#FBFAF7",
               padding: "14px 28px", borderRadius: 12,
               fontSize: 15, fontWeight: 600,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -415,8 +416,9 @@ function Hero() {
             </Link>
             <a href="#tarifs" style={{
               display: "inline-block",
-              border: "1px solid rgba(245,241,232,0.18)",
-              color: "rgba(245,241,232,0.75)",
+              background: "#FBFAF7",
+              border: "1px solid #DEDEDD",
+              color: "#73726C",
               padding: "14px 28px", borderRadius: 12,
               fontSize: 15, fontWeight: 500,
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -424,15 +426,6 @@ function Hero() {
             }}>
               Voir les tarifs
             </a>
-          </div>
-
-          <div style={{ display: "flex", gap: 36, marginTop: 52 }}>
-            {[{ n: "300K", l: "PME ciblées" }, { n: "6", l: "agents spécialisés" }, { n: "24/7", l: "disponibilité" }].map(s => (
-              <div key={s.l}>
-                <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 34, fontWeight: 400, color: SAIM.accent }}>{s.n}</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "rgba(245,241,232,0.4)", marginTop: 2 }}>{s.l}</div>
-              </div>
-            ))}
           </div>
         </div>
 
