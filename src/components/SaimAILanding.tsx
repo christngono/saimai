@@ -4,22 +4,72 @@ import { useState } from "react";
 import Link from "next/link";
 import { SAIM, SaimLogoH, SaimMark, Footer, SectionBlock } from "./SaimUI";
 
+/* ─── Icônes SVG du dropdown ─── */
+function IconAudit() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" />
+    </svg>
+  );
+}
+function IconCourse() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+      <path d="M6 12v5c3 3 9 3 12 0v-5" />
+    </svg>
+  );
+}
+function IconDataLab() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18" />
+    </svg>
+  );
+}
+function IconSaimAI() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+    </svg>
+  );
+}
+function IconAgent() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" />
+      <path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z" />
+      <circle cx="9" cy="16" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="16" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
 /* ─── Nav spécifique landing ─── */
 const SOLUTIONS = [
-  { label: "Audit et conseil en stratégie IA", href: "/services",                         icon: "🎯" },
-  { label: "Formation SAIM Course",             href: "https://course.mysaim.cm",          icon: "🎓", external: true },
-  { label: "Data Lab",                          href: "/services",                         icon: "🔬" },
-  { label: "SAIM AI",                           href: "/services",                         icon: "🤖" },
-  { label: "Agent IA",                          href: "/dashboard",                        icon: "⚡" },
+  { label: "Audit et conseil en stratégie IA", desc: "Analyse et feuille de route IA",       href: "/services",                icon: <IconAudit /> },
+  { label: "Formation SAIM Course",             desc: "Apprenez l'IA à votre rythme",         href: "https://course.mysaim.cm", icon: <IconCourse />,  external: true },
+  { label: "Data Lab",                          desc: "Données synthétiques & annotation",    href: "/services",                icon: <IconDataLab /> },
+  { label: "SAIM AI",                           desc: "La plateforme complète pour les PME",  href: "/services",                icon: <IconSaimAI /> },
+  { label: "Agent IA",                          desc: "Six agents experts, disponibles 24h",  href: "/dashboard",               icon: <IconAgent /> },
 ];
 
 function LandingNav() {
   const [open, setOpen] = useState(false);
 
+  const linkStyle = {
+    fontFamily: "'Inter Tight', system-ui, sans-serif",
+    fontSize: 14, fontWeight: 500,
+    color: "rgba(245,241,232,0.65)",
+    textDecoration: "none",
+    letterSpacing: "-0.01em",
+  } as const;
+
   return (
     <nav style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "16px 48px",
+      padding: "14px 48px",
       background: "rgba(26,22,18,0.96)",
       backdropFilter: "blur(12px)",
       borderBottom: "1px solid rgba(245,241,232,0.08)",
@@ -34,78 +84,97 @@ function LandingNav() {
         <div
           onMouseEnter={() => setOpen(true)}
           onMouseLeave={() => setOpen(false)}
-          style={{ position: "relative" }}
+          style={{ position: "relative", paddingBottom: 14, marginBottom: -14 }}
         >
           <button style={{
-            display: "flex", alignItems: "center", gap: 5,
+            display: "flex", alignItems: "center", gap: 4,
             background: "none", border: "none", cursor: "pointer",
-            fontFamily: "'Inter Tight', system-ui, sans-serif",
-            fontSize: 14, fontWeight: 500,
+            ...linkStyle,
             color: open ? SAIM.paper : "rgba(245,241,232,0.65)",
-            letterSpacing: "-0.01em", padding: 0,
-            transition: "color 0.15s",
           }}>
             Solutions
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
               <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
           {open && (
             <div style={{
-              position: "absolute", top: "calc(100% + 14px)", left: "50%",
+              position: "absolute", top: "calc(100% + 4px)", left: "50%",
               transform: "translateX(-50%)",
-              background: SAIM.paperHi,
-              border: `1px solid ${SAIM.border}`,
-              borderRadius: 16, padding: 8,
-              minWidth: 290,
-              boxShadow: "0 24px 64px rgba(0,0,0,0.18)",
+              background: "#ffffff",
+              border: "1px solid #e8e8e8",
+              borderRadius: 16,
+              padding: "8px",
+              minWidth: 320,
+              boxShadow: "0 8px 40px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.06)",
             }}>
-              {/* flèche */}
+              {/* Petite flèche */}
               <div style={{
-                position: "absolute", top: -6, left: "50%", transform: "translateX(-50%)",
-                width: 12, height: 12,
-                background: SAIM.paperHi,
-                border: `1px solid ${SAIM.border}`,
+                position: "absolute", top: -5, left: "50%", transform: "translateX(-50%) rotate(45deg)",
+                width: 10, height: 10,
+                background: "#ffffff",
+                border: "1px solid #e8e8e8",
                 borderRight: "none", borderBottom: "none",
-                rotate: "45deg",
               }} />
-              {SOLUTIONS.map(s => (
+
+              {SOLUTIONS.map((s) => (
                 <Link
                   key={s.label}
                   href={s.href}
                   prefetch={false}
                   {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 14px", borderRadius: 10, textDecoration: "none", color: SAIM.ink, transition: "background 0.12s" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = SAIM.paperAlt; }}
+                  style={{
+                    display: "flex", alignItems: "center", gap: 14,
+                    padding: "10px 12px", borderRadius: 10,
+                    textDecoration: "none", color: "#1a1a1a",
+                    transition: "background 0.12s",
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#f5f5f5"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
                 >
-                  <span style={{ fontSize: 18, width: 28, textAlign: "center" as const }}>{s.icon}</span>
-                  <span style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500 }}>{s.label}</span>
-                  {s.external && <span style={{ marginLeft: "auto", fontSize: 10, color: SAIM.faint }}>↗</span>}
+                  {/* Icône dans un carré arrondi */}
+                  <div style={{
+                    width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                    background: "#f3f4f6",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: SAIM.accent,
+                  }}>
+                    {s.icon}
+                  </div>
+
+                  {/* Titre + sous-titre */}
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1a1a1a", lineHeight: 1.3 }}>
+                      {s.label}
+                    </div>
+                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#888", marginTop: 2, lineHeight: 1.3 }}>
+                      {s.desc}
+                    </div>
+                  </div>
+
+                  {s.external && (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#bbb" strokeWidth="2" strokeLinecap="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  )}
                 </Link>
               ))}
             </div>
           )}
         </div>
 
-        <a href="#tarifs" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "rgba(245,241,232,0.65)", textDecoration: "none", letterSpacing: "-0.01em" }}>
-          Tarifs
-        </a>
-        <a href="#contact" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "rgba(245,241,232,0.65)", textDecoration: "none", letterSpacing: "-0.01em" }}>
-          Contact
-        </a>
+        <a href="#tarifs" style={linkStyle}>Tarifs</a>
+        <a href="#contact" style={linkStyle}>Contact</a>
       </div>
 
       {/* Boutons */}
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
         <Link href="/dashboard" prefetch={false} style={{
-          fontFamily: "'Inter Tight', system-ui, sans-serif",
-          fontSize: 14, fontWeight: 500,
+          ...linkStyle,
           color: "rgba(245,241,232,0.8)",
-          textDecoration: "none",
-          padding: "9px 18px",
-          borderRadius: 10,
+          padding: "9px 18px", borderRadius: 10,
           border: "1px solid rgba(245,241,232,0.18)",
         }}>
           Connexion
@@ -115,8 +184,7 @@ function LandingNav() {
           fontSize: 14, fontWeight: 600,
           color: SAIM.paper,
           textDecoration: "none",
-          padding: "9px 20px",
-          borderRadius: 10,
+          padding: "9px 20px", borderRadius: 10,
           background: SAIM.accent,
         }}>
           Essayer SAIM
