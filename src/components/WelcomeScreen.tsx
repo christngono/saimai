@@ -37,7 +37,7 @@ export default function WelcomeScreen({ onSend, loading }: Props) {
           alt="SAIM Conseil"
           width={160}
           height={56}
-          style={{ objectFit: "contain" }}
+          style={{ objectFit: "contain", width: "auto" }}
           priority
         />
       </div>
