@@ -2,51 +2,102 @@
 
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { SAIM, SaimLogoH } from "@/components/SaimUI";
+import { SaimLogoH } from "@/components/SaimUI";
 import { Conversation, Message } from "@/lib/types";
 
 const ChatArea = dynamic(() => import("@/components/ChatArea"));
 
 /* ─── Helpers ─── */
 function generateId() { return Math.random().toString(36).slice(2, 10); }
-function titleFromMessage(msg: string) { return msg.length > 42 ? msg.slice(0, 42) + "…" : msg; }
+function titleFromMessage(msg: string) { return msg.length > 44 ? msg.slice(0, 44) + "…" : msg; }
 
 /* ─── Agents ─── */
 const AGENTS = [
-  { id: "fiscal",    name: "SAIM Fiscal",     icon: "📊", desc: "Fiscalité · Calculs",       live: true },
-  { id: "marketing", name: "SAIM Marketing",  icon: "📣", desc: "Contenu · Réseaux",          live: false },
-  { id: "rh",        name: "SAIM RH",         icon: "👥", desc: "Contrats · Paie",            live: false },
-  { id: "commercial",name: "SAIM Commercial", icon: "🤝", desc: "Prospects · Pipeline",       live: false },
-  { id: "juridique", name: "SAIM Juridique",  icon: "⚖️", desc: "Contrats · Conformité",      live: false },
-  { id: "documents", name: "SAIM Documents",  icon: "📄", desc: "PDF · Audio · Résumé",       live: false },
+  { id: "fiscal",     name: "SAIM Fiscal",     color: "#C2562C", live: true },
+  { id: "marketing",  name: "SAIM Marketing",  color: "#6366f1", live: false },
+  { id: "rh",         name: "SAIM RH",         color: "#0891b2", live: false },
+  { id: "commercial", name: "SAIM Commercial", color: "#059669", live: false },
+  { id: "juridique",  name: "SAIM Juridique",  color: "#7c3aed", live: false },
+  { id: "documents",  name: "SAIM Documents",  color: "#d97706", live: false },
 ];
 
-const SOURCES = ["Code Général des Impôts", "Loi de Finances", "Circulaires fiscales", "Guides officiels"];
+/* ─── Icônes sidebar ─── */
+function EditSvg() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+  );
+}
+function AgentSvg() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2"/>
+      <path d="M12 2a3 3 0 0 1 3 3v6H9V5a3 3 0 0 1 3-3z"/>
+      <circle cx="9" cy="16" r="1" fill="currentColor" stroke="none"/>
+      <circle cx="15" cy="16" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  );
+}
+function SearchSvg() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  );
+}
+function BookSvg() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    </svg>
+  );
+}
+function FilterSvg() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="9" y2="12"/><line x1="18" y1="18" x2="6" y2="18"/>
+    </svg>
+  );
+}
+
+const NAV = [
+  { label: "Agent IA",      icon: <AgentSvg /> },
+  { label: "Rechercher",    icon: <SearchSvg /> },
+  { label: "Bibliothèque",  icon: <BookSvg /> },
+];
 
 /* ─── Coming soon ─── */
-function ComingSoon({ agent }: { agent: typeof AGENTS[0] }) {
+function ComingSoon({ name, color }: { name: string; color: string }) {
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, background: SAIM.paper }}>
-      <div style={{ width: 72, height: 72, borderRadius: 20, background: SAIM.paperAlt, border: `1px solid ${SAIM.border}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 32 }}>{agent.icon}</div>
-      <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: SAIM.ink }}>{agent.name}</div>
-      <p style={{ fontSize: 15, color: SAIM.muted, maxWidth: 380, textAlign: "center", lineHeight: 1.6 }}>
-        Cet agent est en cours de développement. Seul <strong>SAIM Fiscal</strong> est actif pour le moment.
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, background: "#FBFAF7" }}>
+      <div style={{ width: 56, height: 56, borderRadius: 16, background: color, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <AgentSvg />
+      </div>
+      <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: "#141413" }}>{name}</div>
+      <p style={{ fontSize: 14, color: "#73726C", maxWidth: 360, textAlign: "center" as const, lineHeight: 1.6 }}>
+        Cet agent est en cours de développement. Seul <strong>SAIM Fiscal</strong> est disponible pour le moment.
       </p>
-      <div style={{ padding: "6px 16px", borderRadius: 999, background: SAIM.paperAlt, border: `1px solid ${SAIM.border}`, fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: SAIM.faint }}>Bientôt disponible</div>
+      <span style={{ padding: "5px 14px", borderRadius: 999, background: "#fff", border: "1px solid #D9D8D5", fontSize: 11, color: "#73726C", fontFamily: "'JetBrains Mono', monospace", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>
+        Bientôt disponible
+      </span>
     </div>
   );
 }
 
-/* ─── Dashboard principal ─── */
+/* ─── Dashboard ─── */
 export default function Dashboard() {
-  const [activeAgent, setActiveAgent] = useState("fiscal");
+  const [activeAgent, setActiveAgent]   = useState("fiscal");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading]           = useState(false);
   const [streamingText, setStreamingText] = useState("");
 
   const activeConversation = conversations.find(c => c.id === activeConvId) ?? null;
   const active = AGENTS.find(a => a.id === activeAgent)!;
+
+  const newTask = () => { setActiveConvId(null); };
 
   const sendMessage = useCallback(async (content: string) => {
     let convId = activeConvId;
@@ -105,65 +156,174 @@ export default function Dashboard() {
     }
   }, [activeConvId, conversations]);
 
-  /* Sources actives depuis la dernière réponse */
-  const lastSources = activeConversation?.messages.filter(m => m.role === "assistant").at(-1)?.sources ?? [];
-  const displayedSources = lastSources.length > 0 ? lastSources : (activeAgent === "fiscal" ? SOURCES : []);
-
-  /* Titres des conversations récentes */
-  const recentConvs = conversations.slice(0, 5);
+  const hasMessages = activeConversation && activeConversation.messages.length > 0;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: SAIM.paper, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
+    <div style={{ display: "flex", height: "100vh", background: "#FBFAF7", fontFamily: "'Inter Tight', system-ui, sans-serif", overflow: "hidden" }}>
 
-      {/* ── Top bar ── */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 24px", background: SAIM.paperHi, borderBottom: `1px solid ${SAIM.border}`, flexShrink: 0 }}>
-        <SaimLogoH size={24} />
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: SAIM.muted }}>FR</span>
-          <div style={{ width: 32, height: 32, borderRadius: 999, background: SAIM.accentSoft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Fraunces', Georgia, serif", fontSize: 14, color: SAIM.accentDark, fontWeight: 500 }}>AI</div>
+      {/* ── Sidebar ── */}
+      <aside style={{
+        width: 256, flexShrink: 0,
+        background: "#FBFAF7",
+        borderRight: "1px solid #D9D8D5",
+        display: "flex", flexDirection: "column",
+        overflow: "hidden",
+      }}>
+        {/* Logo */}
+        <div style={{ padding: "18px 20px 10px" }}>
+          <SaimLogoH size={24} dark={true} />
         </div>
-      </div>
 
-      <div style={{ display: "flex", flex: 1, minHeight: 0 }}>
+        {/* Nouvelle tâche */}
+        <div style={{ padding: "0 12px 8px" }}>
+          <button
+            onClick={newTask}
+            style={{
+              width: "100%", display: "flex", alignItems: "center", gap: 10,
+              padding: "9px 14px", borderRadius: 10, cursor: "pointer",
+              background: "transparent", border: "none", textAlign: "left" as const,
+              fontSize: 14, fontWeight: 500, color: "#141413",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "rgba(20,20,19,0.05)")}
+            onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+          >
+            <span style={{ color: "#73726C" }}><EditSvg /></span>
+            Nouvelle tâche
+          </button>
+        </div>
 
-        {/* ── Sidebar agents ── */}
-        <div style={{ width: 260, background: SAIM.paperAlt, borderRight: `1px solid ${SAIM.border}`, display: "flex", flexDirection: "column", padding: "16px 12px", flexShrink: 0 }}>
-          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.muted, padding: "8px 12px", marginBottom: 8 }}>Agents disponibles</div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-            {AGENTS.map(a => (
-              <div key={a.id} onClick={() => setActiveAgent(a.id)} style={{
-                display: "flex", alignItems: "center", gap: 12,
-                padding: "12px 14px", borderRadius: 12, cursor: "pointer",
-                background: a.id === activeAgent ? SAIM.accentSoft : "transparent",
-                transition: "background 0.15s",
-              }}
-                onMouseEnter={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLDivElement).style.background = SAIM.paperHi; }}
-                onMouseLeave={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLDivElement).style.background = "transparent"; }}
-              >
-                <span style={{ fontSize: 20 }}>{a.icon}</span>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: a.id === activeAgent ? 600 : 400, color: a.id === activeAgent ? SAIM.accentDark : SAIM.ink }}>{a.name}</div>
-                  <div style={{ fontSize: 11, color: SAIM.faint, marginTop: 1 }}>{a.desc}</div>
-                </div>
-                {a.id === activeAgent && <div style={{ width: 6, height: 6, borderRadius: 999, background: SAIM.accent, flexShrink: 0 }} />}
-                {!a.live && a.id !== activeAgent && <div style={{ width: 6, height: 6, borderRadius: 999, background: SAIM.border, flexShrink: 0 }} />}
-              </div>
-            ))}
+        {/* Nav */}
+        <div style={{ padding: "0 12px 4px", display: "flex", flexDirection: "column", gap: 1 }}>
+          {NAV.map(item => (
+            <button key={item.label} style={{
+              width: "100%", display: "flex", alignItems: "center", gap: 12,
+              padding: "9px 14px", borderRadius: 10, cursor: "pointer",
+              background: "transparent", border: "none", textAlign: "left" as const,
+              fontSize: 14, color: "#141413",
+            }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(20,20,19,0.05)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+            >
+              <span style={{ color: "#73726C" }}>{item.icon}</span>
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ height: 1, background: "#D9D8D5", margin: "8px 16px" }} />
+
+        {/* Agents */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "0 12px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 14px 6px", marginBottom: 2 }}>
+            <span style={{ fontSize: 12, color: "#73726C", fontWeight: 500 }}>Agents</span>
+            <button style={{ background: "none", border: "none", color: "#73726C", fontSize: 18, cursor: "pointer", lineHeight: 1, padding: 0 }}>+</button>
           </div>
 
-          {/* Plan badge */}
-          <div style={{ background: SAIM.paperHi, border: `1px solid ${SAIM.border}`, borderRadius: 12, padding: 16, marginTop: 12 }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 6 }}>Plan Starter</div>
-            <div style={{ fontSize: 12, color: SAIM.muted }}>10 questions gratuites/jour</div>
-            <div style={{ height: 4, background: SAIM.border, borderRadius: 2, marginTop: 8 }}>
-              <div style={{ width: "40%", height: "100%", background: SAIM.accent, borderRadius: 2 }} />
+          {AGENTS.map(a => (
+            <button key={a.id} onClick={() => { setActiveAgent(a.id); setActiveConvId(null); }} style={{
+              width: "100%", display: "flex", alignItems: "center", gap: 10,
+              padding: "7px 14px", borderRadius: 10, cursor: "pointer",
+              background: a.id === activeAgent ? "rgba(20,20,19,0.07)" : "transparent",
+              border: "none", textAlign: "left" as const,
+            }}
+              onMouseEnter={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLButtonElement).style.background = "rgba(20,20,19,0.04)"; }}
+              onMouseLeave={e => { if (a.id !== activeAgent) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+            >
+              <div style={{
+                width: 22, height: 22, borderRadius: 6, background: a.color,
+                flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+                </svg>
+              </div>
+              <span style={{ flex: 1, fontSize: 13, color: "#141413", fontWeight: a.id === activeAgent ? 500 : 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+                {a.name}
+              </span>
+              {!a.live && (
+                <span style={{ fontSize: 10, color: "#73726C", background: "#EBEBEA", padding: "2px 7px", borderRadius: 999, flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" }}>
+                  bientôt
+                </span>
+              )}
+            </button>
+          ))}
+
+          {/* Conversations récentes */}
+          {conversations.length > 0 && (
+            <>
+              <div style={{ height: 1, background: "#D9D8D5", margin: "10px 4px" }} />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 14px", marginBottom: 2 }}>
+                <span style={{ fontSize: 12, color: "#73726C", fontWeight: 500 }}>Toutes les tâches</span>
+                <span style={{ color: "#73726C" }}><FilterSvg /></span>
+              </div>
+              {conversations.slice(0, 8).map(c => (
+                <button key={c.id} onClick={() => { setActiveConvId(c.id); setActiveAgent("fiscal"); }} style={{
+                  width: "100%", display: "flex", alignItems: "center", gap: 10,
+                  padding: "7px 14px", borderRadius: 10, cursor: "pointer",
+                  background: c.id === activeConvId ? "rgba(20,20,19,0.07)" : "transparent",
+                  border: "none", textAlign: "left" as const,
+                }}
+                  onMouseEnter={e => { if (c.id !== activeConvId) (e.currentTarget as HTMLButtonElement).style.background = "rgba(20,20,19,0.04)"; }}
+                  onMouseLeave={e => { if (c.id !== activeConvId) (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+                >
+                  <div style={{ width: 20, height: 20, borderRadius: 5, background: "#C2562C", flexShrink: 0, opacity: 0.85 }} />
+                  <span style={{ fontSize: 13, color: "#141413", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const, flex: 1 }}>
+                    {c.title}
+                  </span>
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+
+        {/* Bottom user */}
+        <div style={{ padding: "12px 16px", borderTop: "1px solid #D9D8D5", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
+            </svg>
+          </div>
+          <span style={{ fontSize: 13, fontWeight: 500, color: "#141413" }}>SAIM AI</span>
+        </div>
+      </aside>
+
+      {/* ── Main ── */}
+      <main style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, background: "#FBFAF7" }}>
+
+        {/* Top bar */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          padding: "12px 24px",
+          position: "relative" as const,
+          borderBottom: hasMessages ? "1px solid #D9D8D5" : "none",
+          flexShrink: 0,
+        }}>
+          {/* Plan badges - centered */}
+          <div style={{ display: "flex", gap: 4, background: "rgba(20,20,19,0.05)", borderRadius: 999, padding: 4 }}>
+            <span style={{ padding: "4px 14px", borderRadius: 999, fontSize: 13, color: "#73726C", cursor: "default" }}>Plan gratuit</span>
+            <Link href="/#tarifs" style={{
+              padding: "4px 14px", borderRadius: 999, fontSize: 13,
+              background: "#141413", color: "#FBFAF7",
+              textDecoration: "none", fontWeight: 500,
+            }}>
+              Mise à niveau
+            </Link>
+          </div>
+          {/* Avatar right */}
+          <div style={{ position: "absolute" as const, right: 24 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
             </div>
           </div>
         </div>
 
-        {/* ── Zone principale ── */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
-          {activeAgent === "fiscal" ? (
+        {/* Content */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+          {activeAgent !== "fiscal" ? (
+            <ComingSoon name={active.name} color={active.color} />
+          ) : (
             <ChatArea
               conversation={activeConversation}
               loading={loading}
@@ -171,48 +331,14 @@ export default function Dashboard() {
               onSend={sendMessage}
               onToggleSidebar={() => {}}
             />
-          ) : (
-            <ComingSoon agent={active} />
           )}
         </div>
-
-        {/* ── Panneau droit — contexte ── */}
-        <div style={{ width: 240, background: SAIM.paperAlt, borderLeft: `1px solid ${SAIM.border}`, padding: "20px 16px", display: "flex", flexDirection: "column", gap: 24, flexShrink: 0, overflowY: "auto" }}>
-          {activeAgent === "fiscal" && (
-            <div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.muted, marginBottom: 12 }}>Sources actives</div>
-              {displayedSources.map(s => (
-                <div key={s} style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderRadius: 8, background: SAIM.paperHi, border: `1px solid ${SAIM.border}`, marginBottom: 6, fontSize: 12, color: SAIM.inkSoft }}>
-                  <span style={{ color: SAIM.accent, fontSize: 10 }}>●</span> {s}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {recentConvs.length > 0 && (
-            <div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.muted, marginBottom: 12 }}>Conversations récentes</div>
-              {recentConvs.map(c => (
-                <div key={c.id} onClick={() => setActiveConvId(c.id)} style={{
-                  padding: "8px 10px", borderRadius: 8, fontSize: 12,
-                  color: c.id === activeConvId ? SAIM.accentDark : SAIM.muted,
-                  background: c.id === activeConvId ? SAIM.accentSoft : "transparent",
-                  cursor: "pointer", marginBottom: 4,
-                  whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis",
-                }}>{c.title}</div>
-              ))}
-            </div>
-          )}
-
-          <div style={{ marginTop: "auto" }}>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: SAIM.muted, marginBottom: 8 }}>Stack</div>
-            <div style={{ fontSize: 11, color: SAIM.faint, lineHeight: 1.6, fontFamily: "'JetBrains Mono', monospace" }}>
-              LLaMA 3.3 70B<br />ChromaDB · nomic-embed<br />RAG · Groq API
-            </div>
-          </div>
-        </div>
-
-      </div>
+      </main>
     </div>
   );
+}
+
+/* tiny Link shim for the upgrade button */
+function Link({ href, style, children }: { href: string; style?: React.CSSProperties; children: React.ReactNode }) {
+  return <a href={href} style={style}>{children}</a>;
 }
