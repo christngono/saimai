@@ -2,12 +2,13 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import dynamic from "next/dynamic";
 import { Conversation } from "@/lib/types";
-import MessageBubble from "./MessageBubble";
 import ChatInput from "./ChatInput";
 import WelcomeScreen from "./WelcomeScreen";
+
+const MessageBubble = dynamic(() => import("./MessageBubble"));
+const MarkdownRenderer = dynamic(() => import("./MarkdownRenderer"), { ssr: false });
 
 interface Props {
   conversation: Conversation | null;
@@ -28,7 +29,6 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
 
   return (
     <div className="flex flex-col h-full" style={{ background: "#ffffff" }}>
-      {/* Header minimal style Gemini */}
       <header
         style={{
           display: "flex",
@@ -52,7 +52,6 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
         <span style={{ fontSize: 12, color: "#aaa" }}>Agent fiscal</span>
       </header>
 
-      {/* Contenu principal */}
       {!hasMessages ? (
         <WelcomeScreen onSend={onSend} loading={loading} />
       ) : (
@@ -63,7 +62,6 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
                 <MessageBubble key={msg.id} message={msg} />
               ))}
 
-              {/* Streaming — pleine largeur, pas de bulle */}
               {loading && streamingText && (
                 <div className="message-appear" style={{ padding: "8px 0 24px 0" }}>
                   <div style={{ marginBottom: 16 }}>
@@ -76,9 +74,7 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
                     />
                   </div>
                   <div style={{ color: "#1a1a1a", fontSize: 16, lineHeight: 1.75 }}>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {streamingText}
-                    </ReactMarkdown>
+                    <MarkdownRenderer>{streamingText}</MarkdownRenderer>
                     <span
                       style={{
                         display: "inline-block",
@@ -95,7 +91,6 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
                 </div>
               )}
 
-              {/* Indicateur de chargement */}
               {loading && !streamingText && (
                 <div style={{ padding: "16px 0", display: "flex", gap: 6, alignItems: "center" }}>
                   <div className="typing-dot" />
