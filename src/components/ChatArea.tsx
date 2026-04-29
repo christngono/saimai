@@ -34,7 +34,7 @@ export default function ChatArea({ conversation, loading, streamingText, onSend 
       ) : (
         <>
           <div className="flex-1 overflow-y-auto">
-            <div style={{ maxWidth: 760, margin: "0 auto", padding: "40px 24px 16px" }}>
+            <div style={{ maxWidth: 760, margin: "0 auto", padding: "32px 16px 16px" }}>
 
               {conversation.messages.map((msg) => (
                 <MessageBubble key={msg.id} message={msg} />

@@ -139,17 +139,18 @@ export default function WelcomeScreen({ onSend, loading }: Props) {
     <div style={{
       flex: 1, display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center",
-      padding: "40px 24px", background: "#FBFAF7",
+      padding: "32px 16px", background: "#FBFAF7",
+      overflowY: "auto",
     }}>
 
       {/* Titre principal */}
       <h1 style={{
         fontFamily: "'Fraunces', Georgia, serif",
-        fontSize: "clamp(32px, 5vw, 52px)",
+        fontSize: "clamp(26px, 5vw, 52px)",
         fontWeight: 400, color: "#141413",
         letterSpacing: "-0.025em", lineHeight: 1.15,
         textAlign: "center" as const,
-        margin: "0 0 40px",
+        margin: "0 0 32px",
       }}>
         Que puis-je faire pour vous ?
       </h1>
@@ -240,8 +241,8 @@ export default function WelcomeScreen({ onSend, loading }: Props) {
 
         {/* Chips suggestions */}
         <div style={{
-          display: "flex", flexWrap: "wrap" as const, gap: 10,
-          marginTop: 20, justifyContent: "center",
+          display: "flex", flexWrap: "wrap" as const, gap: 8,
+          marginTop: 16, justifyContent: "center",
         }}>
           {CHIPS.map((chip, i) => (
             <button

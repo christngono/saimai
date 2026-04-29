@@ -4,6 +4,22 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { SAIM, SaimLogoH, SaimMark, Footer } from "./SaimUI";
 
+/* ─── Hook responsive ─── */
+function useResponsive() {
+  const [width, setWidth] = useState(0);
+  useEffect(() => {
+    const update = () => setWidth(window.innerWidth);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return {
+    isMobile: width > 0 && width < 768,
+    isTablet: width >= 768 && width < 1024,
+    isSmall: width > 0 && width < 1024,
+  };
+}
+
 /* ─── Icônes nav dropdown ─── */
 function IconAudit() {
   return (
@@ -87,15 +103,29 @@ function CursorSvg() {
 
 /* ─── Nav ─── */
 const SOLUTIONS = [
-  { label: "Audit et conseil en stratégie IA", desc: "Analyse et feuille de route IA",       href: "/services",                icon: <IconAudit /> },
-  { label: "Formation SAIM Course",             desc: "Apprenez l'IA à votre rythme",         href: "https://course.mysaim.cm", icon: <IconCourse />,  external: true },
-  { label: "Data Lab",                          desc: "Données synthétiques & annotation",    href: "/services",                icon: <IconDataLab /> },
-  { label: "SAIM AI",                           desc: "La plateforme complète pour les PME",  href: "/services",                icon: <IconSaimAI /> },
-  { label: "Agent IA",                          desc: "Six agents experts, disponibles 24h",  href: "/dashboard",               icon: <IconAgent /> },
+  { label: "Audit et conseil en stratégie IA", desc: "Analyse et feuille de route IA",       href: "/services",                   icon: <IconAudit /> },
+  { label: "Formation SAIM Course",             desc: "Apprenez l'IA à votre rythme",         href: "https://course.mysaim.com",   icon: <IconCourse />, external: true },
+  { label: "Data Lab",                          desc: "Données synthétiques & annotation",    href: "/services",                   icon: <IconDataLab /> },
+  { label: "SAIM AI",                           desc: "La plateforme complète pour les PME",  href: "/services",                   icon: <IconSaimAI /> },
+  { label: "Agent IA",                          desc: "Six agents experts, disponibles 24h",  href: "/dashboard",                  icon: <IconAgent /> },
 ];
+
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#141413" strokeWidth="1.8" strokeLinecap="round">
+      {open ? (
+        <><line x1="5" y1="5" x2="17" y2="17"/><line x1="17" y1="5" x2="5" y2="17"/></>
+      ) : (
+        <><line x1="3" y1="7" x2="19" y2="7"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="15" x2="19" y2="15"/></>
+      )}
+    </svg>
+  );
+}
 
 function LandingNav() {
   const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { isSmall } = useResponsive();
 
   const linkStyle = {
     fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -106,111 +136,223 @@ function LandingNav() {
   } as const;
 
   return (
-    <nav style={{
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "14px 48px",
-      background: "#FBFAF7",
-      borderBottom: "1px solid #DEDEDD",
-      position: "sticky", top: 0, zIndex: 100,
-    }}>
-      <SaimLogoH size={28} dark={true} />
+    <>
+      <nav style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: isSmall ? "14px 20px" : "14px 48px",
+        background: "#FBFAF7",
+        borderBottom: "1px solid #DEDEDD",
+        position: "sticky", top: 0, zIndex: 100,
+      }}>
+        <SaimLogoH size={28} dark={true} />
 
-      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-        <div
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
-          style={{ position: "relative", paddingBottom: 14, marginBottom: -14 }}
-        >
-          <button style={{
-            display: "flex", alignItems: "center", gap: 4,
-            background: "none", border: "none", cursor: "pointer",
-            ...linkStyle,
-            color: open ? "#1A1612" : "#73726C",
-          }}>
-            Solutions
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
-              <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+        {/* Desktop links */}
+        {!isSmall && (
+          <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
+            <div
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              style={{ position: "relative", paddingBottom: 14, marginBottom: -14 }}
+            >
+              <button style={{
+                display: "flex", alignItems: "center", gap: 4,
+                background: "none", border: "none", cursor: "pointer",
+                ...linkStyle,
+                color: open ? "#1A1612" : "#73726C",
+              }}>
+                Solutions
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+                  <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
 
-          {open && (
-            <div style={{
-              position: "absolute", top: "calc(100% + 4px)", left: "50%",
-              transform: "translateX(-50%)",
-              background: "#FBFAF7",
-              border: "1px solid #DEDEDD",
-              borderRadius: 16, padding: "8px", minWidth: 320,
-              boxShadow: "0 8px 40px rgba(26,22,18,0.10), 0 2px 8px rgba(26,22,18,0.04)",
-            }}>
-              <div style={{
-                position: "absolute", top: -5, left: "50%", transform: "translateX(-50%) rotate(45deg)",
-                width: 10, height: 10, background: "#FBFAF7",
-                border: "1px solid #DEDEDD", borderRight: "none", borderBottom: "none",
-              }}/>
-              {SOLUTIONS.map((s) => (
-                <Link
-                  key={s.label}
-                  href={s.href}
-                  prefetch={false}
-                  {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  style={{
-                    display: "flex", alignItems: "center", gap: 14,
-                    padding: "10px 12px", borderRadius: 10,
-                    textDecoration: "none", color: "#1A1612",
-                    transition: "background 0.12s",
-                  }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#F0EEE9"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
-                >
+              {open && (
+                <div style={{
+                  position: "absolute", top: "calc(100% + 4px)", left: "50%",
+                  transform: "translateX(-50%)",
+                  background: "#FBFAF7",
+                  border: "1px solid #DEDEDD",
+                  borderRadius: 16, padding: "8px", minWidth: 320,
+                  boxShadow: "0 8px 40px rgba(26,22,18,0.10), 0 2px 8px rgba(26,22,18,0.04)",
+                }}>
                   <div style={{
-                    width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-                    background: "#F0EEE9",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: SAIM.accent,
-                  }}>
-                    {s.icon}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1A1612", lineHeight: 1.3 }}>{s.label}</div>
-                    <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2, lineHeight: 1.3 }}>{s.desc}</div>
-                  </div>
-                  {s.external && (
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEDEDD" strokeWidth="2" strokeLinecap="round">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                      <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
-                    </svg>
-                  )}
-                </Link>
-              ))}
+                    position: "absolute", top: -5, left: "50%", transform: "translateX(-50%) rotate(45deg)",
+                    width: 10, height: 10, background: "#FBFAF7",
+                    border: "1px solid #DEDEDD", borderRight: "none", borderBottom: "none",
+                  }}/>
+                  {SOLUTIONS.map((s) => (
+                    <Link
+                      key={s.label}
+                      href={s.href}
+                      prefetch={false}
+                      {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                      style={{
+                        display: "flex", alignItems: "center", gap: 14,
+                        padding: "10px 12px", borderRadius: 10,
+                        textDecoration: "none", color: "#1A1612",
+                        transition: "background 0.12s",
+                      }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "#F0EEE9"; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}
+                    >
+                      <div style={{
+                        width: 40, height: 40, borderRadius: 10, flexShrink: 0,
+                        background: "#F0EEE9",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        color: SAIM.accent,
+                      }}>
+                        {s.icon}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1A1612", lineHeight: 1.3 }}>{s.label}</div>
+                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2, lineHeight: 1.3 }}>{s.desc}</div>
+                      </div>
+                      {s.external && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEDEDD" strokeWidth="2" strokeLinecap="round">
+                          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
+
+            <a href="#tarifs" style={linkStyle}>Tarifs</a>
+            <a href="#contact" style={linkStyle}>Contact</a>
+          </div>
+        )}
+
+        {/* Desktop CTA buttons */}
+        {!isSmall && (
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <Link href="/dashboard" prefetch={false} style={{
+              fontFamily: "'Inter Tight', system-ui, sans-serif",
+              fontSize: 14, fontWeight: 500,
+              color: "#73726C", textDecoration: "none",
+              padding: "9px 18px", borderRadius: 10,
+              border: "1px solid #DEDEDD",
+            }}>
+              Connexion
+            </Link>
+            <Link href="/dashboard" prefetch={false} style={{
+              fontFamily: "'Inter Tight', system-ui, sans-serif",
+              fontSize: 14, fontWeight: 600,
+              color: "#FBFAF7", textDecoration: "none",
+              padding: "9px 20px", borderRadius: 10,
+              background: "#1A1612",
+            }}>
+              Essayer SAIM
+            </Link>
+          </div>
+        )}
+
+        {/* Mobile hamburger */}
+        {isSmall && (
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <Link href="/dashboard" prefetch={false} style={{
+              fontFamily: "'Inter Tight', system-ui, sans-serif",
+              fontSize: 13, fontWeight: 600,
+              color: "#FBFAF7", textDecoration: "none",
+              padding: "8px 16px", borderRadius: 10,
+              background: "#1A1612",
+            }}>
+              Essayer
+            </Link>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, display: "flex", alignItems: "center" }}
+            >
+              <HamburgerIcon open={menuOpen} />
+            </button>
+          </div>
+        )}
+      </nav>
+
+      {/* Mobile full-screen menu overlay */}
+      {isSmall && menuOpen && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
+          background: "#FBFAF7", zIndex: 200,
+          display: "flex", flexDirection: "column",
+          padding: "14px 20px",
+          overflowY: "auto",
+        }}>
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+            <SaimLogoH size={28} dark={true} />
+            <button
+              onClick={() => setMenuOpen(false)}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
+            >
+              <HamburgerIcon open={true} />
+            </button>
+          </div>
+
+          {/* Links */}
+          <div style={{ borderTop: "1px solid #DEDEDD" }}>
+            {SOLUTIONS.map(s => (
+              <Link
+                key={s.label}
+                href={s.href}
+                prefetch={false}
+                {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 14,
+                  padding: "16px 0",
+                  borderBottom: "1px solid #DEDEDD",
+                  textDecoration: "none", color: "#1A1612",
+                }}
+              >
+                <div style={{
+                  width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                  background: "#F0EEE9",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: SAIM.accent,
+                }}>
+                  {s.icon}
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 600, color: "#1A1612" }}>{s.label}</div>
+                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2 }}>{s.desc}</div>
+                </div>
+              </Link>
+            ))}
+            <a href="#tarifs" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
+              Tarifs
+            </a>
+            <a href="#contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
+              Contact
+            </a>
+          </div>
+
+          <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 10 }}>
+            <Link href="/dashboard" prefetch={false} onClick={() => setMenuOpen(false)} style={{
+              textAlign: "center",
+              fontFamily: "'Inter Tight', system-ui, sans-serif",
+              fontSize: 15, fontWeight: 500,
+              color: "#73726C", textDecoration: "none",
+              padding: "13px 20px", borderRadius: 10,
+              border: "1px solid #DEDEDD",
+            }}>
+              Connexion
+            </Link>
+            <Link href="/dashboard" prefetch={false} onClick={() => setMenuOpen(false)} style={{
+              textAlign: "center",
+              fontFamily: "'Inter Tight', system-ui, sans-serif",
+              fontSize: 15, fontWeight: 600,
+              color: "#FBFAF7", textDecoration: "none",
+              padding: "13px 20px", borderRadius: 10,
+              background: "#1A1612",
+            }}>
+              Essayer SAIM gratuitement
+            </Link>
+          </div>
         </div>
-
-        <a href="#tarifs" style={linkStyle}>Tarifs</a>
-        <a href="#contact" style={linkStyle}>Contact</a>
-      </div>
-
-      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-        <Link href="/dashboard" prefetch={false} style={{
-          fontFamily: "'Inter Tight', system-ui, sans-serif",
-          fontSize: 14, fontWeight: 500,
-          color: "#73726C", textDecoration: "none",
-          padding: "9px 18px", borderRadius: 10,
-          border: "1px solid #DEDEDD",
-        }}>
-          Connexion
-        </Link>
-        <Link href="/dashboard" prefetch={false} style={{
-          fontFamily: "'Inter Tight', system-ui, sans-serif",
-          fontSize: 14, fontWeight: 600,
-          color: "#FBFAF7", textDecoration: "none",
-          padding: "9px 20px", borderRadius: 10,
-          background: "#1A1612",
-        }}>
-          Essayer SAIM
-        </Link>
-      </div>
-    </nav>
+      )}
+    </>
   );
 }
 
@@ -232,7 +374,6 @@ function PlatformDemo() {
     const T: ReturnType<typeof setTimeout>[] = [];
     const IVs: ReturnType<typeof setInterval>[] = [];
 
-    // Type intro
     const INTRO = "What do you manage today?";
     let ci = 0;
     const iv0 = setInterval(() => {
@@ -241,12 +382,11 @@ function PlatformDemo() {
     }, 52);
     IVs.push(iv0);
 
-    T.push(setTimeout(() => setPhase(1), 1500));   // buttons zoom in
-    T.push(setTimeout(() => setPhase(2), 2500));   // cursor hover Fiscal
-    T.push(setTimeout(() => setPhase(3), 3300));   // click Fiscal
-    T.push(setTimeout(() => setPhase(4), 3900));   // prompt field slides in
+    T.push(setTimeout(() => setPhase(1), 1500));
+    T.push(setTimeout(() => setPhase(2), 2500));
+    T.push(setTimeout(() => setPhase(3), 3300));
+    T.push(setTimeout(() => setPhase(4), 3900));
 
-    // Type Q1
     T.push(setTimeout(() => {
       setPhase(5);
       let ci2 = 0;
@@ -261,7 +401,6 @@ function PlatformDemo() {
     T.push(setTimeout(() => setRespLines(2), 7100));
     T.push(setTimeout(() => setRespLines(3), 7800));
 
-    // Type Q2
     T.push(setTimeout(() => {
       setPhase(7);
       let ci3 = 0;
@@ -272,8 +411,8 @@ function PlatformDemo() {
       IVs.push(iv2);
     }, 8800));
 
-    T.push(setTimeout(() => setPhase(8), 10300));  // success
-    T.push(setTimeout(() => setCycle(c => c + 1), 13500)); // restart
+    T.push(setTimeout(() => setPhase(8), 10300));
+    T.push(setTimeout(() => setCycle(c => c + 1), 13500));
 
     return () => { T.forEach(clearTimeout); IVs.forEach(clearInterval); };
   }, [cycle]);
@@ -330,7 +469,6 @@ function PlatformDemo() {
         {/* Category buttons + cursor */}
         {phase >= 1 && (
           <div style={{ position: "relative" as const }}>
-            {/* Cursor */}
             {phase === 2 && (
               <div className="demo-appear" style={{
                 position: "absolute" as const,
@@ -373,7 +511,6 @@ function PlatformDemo() {
         {phase >= 4 && (
           <div className="demo-slide-up" style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
 
-            {/* Agent tag */}
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#C2562C" }}/>
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "rgba(251,250,247,0.35)", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>
@@ -381,7 +518,6 @@ function PlatformDemo() {
               </span>
             </div>
 
-            {/* User Q1 */}
             {phase >= 5 && (
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <div className="demo-slide-right" style={{
@@ -398,7 +534,6 @@ function PlatformDemo() {
               </div>
             )}
 
-            {/* AI Response */}
             {phase >= 6 && (
               <div className="demo-appear" style={{ display: "flex", gap: 8 }}>
                 <div style={{
@@ -421,7 +556,6 @@ function PlatformDemo() {
               </div>
             )}
 
-            {/* User Q2 */}
             {phase >= 7 && (
               <div className="demo-slide-up" style={{ display: "flex", justifyContent: "flex-end" }}>
                 <div style={{
@@ -438,7 +572,6 @@ function PlatformDemo() {
               </div>
             )}
 
-            {/* Success */}
             {phase >= 8 && (
               <div className="demo-zoom-in" style={{
                 display: "flex", alignItems: "center", gap: 12,
@@ -484,40 +617,59 @@ function PlatformDemo() {
 
 /* ─── Hero ─── */
 function Hero() {
+  const { isMobile, isTablet, isSmall } = useResponsive();
+
+  const hPad = isMobile ? "60px 24px 72px" : isTablet ? "72px 36px 88px" : "88px 48px 104px";
+  const fontSize = isMobile ? 40 : isTablet ? 52 : 68;
+  const subFontSize = isMobile ? 16 : 18;
+
   return (
-    <section style={{ background: "#FBFAF7", padding: "88px 48px 104px" }}>
-      <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 72, alignItems: "center" }}>
+    <section style={{ background: "#FBFAF7", padding: hPad }}>
+      <div style={{
+        maxWidth: 1080, margin: "0 auto",
+        display: "grid",
+        gridTemplateColumns: isSmall ? "1fr" : "1.15fr 1fr",
+        gap: isSmall ? 48 : 72,
+        alignItems: "center",
+      }}>
         <div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 24 }}>
             Super Agent Intelligent Multimodal
           </div>
-          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px", color: "#141413" }}>
+          <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px", color: "#141413" }}>
             SAIM AI gère<br />votre entreprise.
           </h1>
-          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 68, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
+          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
             Vous, vous la<br />faites grandir.
           </h2>
-          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 8 }}>
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 8 }}>
             Fiscalité, RH, comptabilité — <strong style={{ color: "#141413", fontWeight: 500 }}>automatisés.</strong>
           </p>
-          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 18, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
+          <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
             Sans recruter. Sans exploser votre budget.
           </p>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" as const }}>
-            <Link href="/dashboard" prefetch={false} style={{
-              display: "inline-block",
-              background: "#141413", color: "#FBFAF7",
-              padding: "14px 28px", borderRadius: 12,
-              fontSize: 15, fontWeight: 600,
-              fontFamily: "'Inter Tight', system-ui, sans-serif",
-              textDecoration: "none",
-            }}>
-              Essayer gratuitement
-            </Link>
-          </div>
+          <Link href="/dashboard" prefetch={false} style={{
+            display: "inline-block",
+            background: "#141413", color: "#FBFAF7",
+            padding: isMobile ? "13px 24px" : "14px 28px", borderRadius: 12,
+            fontSize: 15, fontWeight: 600,
+            fontFamily: "'Inter Tight', system-ui, sans-serif",
+            textDecoration: "none",
+          }}>
+            Essayer gratuitement
+          </Link>
         </div>
-        <PlatformDemo />
+
+        {/* Demo card: visible on tablet+ */}
+        {!isMobile && <PlatformDemo />}
       </div>
+
+      {/* Demo card visible on mobile, below text */}
+      {isMobile && (
+        <div style={{ maxWidth: 480, margin: "0 auto", paddingTop: 0 }}>
+          <PlatformDemo />
+        </div>
+      )}
     </section>
   );
 }
@@ -525,6 +677,7 @@ function Hero() {
 /* ─── Foire aux questions ─── */
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { isMobile, isTablet } = useResponsive();
 
   const faqs = [
     {
@@ -541,14 +694,16 @@ function FAQSection() {
     },
   ];
 
+  const pad = isMobile ? "64px 24px" : isTablet ? "80px 36px" : "96px 48px";
+
   return (
-    <section id="faq" style={{ background: "#FBFAF7", padding: "96px 48px" }}>
+    <section id="faq" style={{ background: "#FBFAF7", padding: pad }}>
       <div style={{ maxWidth: 760, margin: "0 auto" }}>
         <h2 style={{
           textAlign: "center" as const,
           fontFamily: "'Fraunces', Georgia, serif",
-          fontSize: 42, fontWeight: 400, letterSpacing: "-0.03em",
-          color: "#141413", margin: "0 0 56px",
+          fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em",
+          color: "#141413", margin: "0 0 48px",
         }}>
           Foire aux <em style={{ fontStyle: "italic", color: SAIM.accent }}>questions.</em>
         </h2>
@@ -560,23 +715,23 @@ function FAQSection() {
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
                 style={{
                   width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "24px 0", background: "none", border: "none", cursor: "pointer",
+                  padding: "22px 0", background: "none", border: "none", cursor: "pointer",
                   textAlign: "left" as const,
                 }}
               >
-                <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 19, fontWeight: 400, letterSpacing: "-0.02em", color: "#141413" }}>
+                <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: isMobile ? 16 : 19, fontWeight: 400, letterSpacing: "-0.02em", color: "#141413" }}>
                   {f.q}
                 </span>
                 <span style={{
-                  fontSize: 22, color: "#141413", flexShrink: 0, marginLeft: 24,
+                  fontSize: 22, color: "#141413", flexShrink: 0, marginLeft: 16,
                   transition: "transform 0.2s",
                   transform: openIndex === i ? "rotate(45deg)" : "rotate(0deg)",
                   display: "inline-block",
                 }}>+</span>
               </button>
               {openIndex === i && (
-                <div style={{ paddingBottom: 24, paddingRight: 48 }}>
-                  <p style={{ fontSize: 16, lineHeight: 1.65, color: "#73726C", margin: 0 }}>{f.a}</p>
+                <div style={{ paddingBottom: 20, paddingRight: isMobile ? 16 : 48 }}>
+                  <p style={{ fontSize: 15, lineHeight: 1.65, color: "#73726C", margin: 0 }}>{f.a}</p>
                 </div>
               )}
             </div>
@@ -649,12 +804,16 @@ const PLANS = [
 
 function PricingSection() {
   const sym = useCurrency();
+  const { isMobile, isTablet } = useResponsive();
+
+  const pad = isMobile ? "64px 24px" : isTablet ? "80px 36px" : "96px 48px";
+  const cols = isMobile || isTablet ? "1fr" : "repeat(3, 1fr)";
 
   return (
-    <section id="tarifs" style={{ background: "#FBFAF7", padding: "96px 48px" }}>
+    <section id="tarifs" style={{ background: "#FBFAF7", padding: pad }}>
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
 
-        <div style={{ textAlign: "center" as const, marginBottom: 56 }}>
+        <div style={{ textAlign: "center" as const, marginBottom: 48 }}>
           <div style={{
             fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
             letterSpacing: "0.22em", textTransform: "uppercase" as const,
@@ -664,19 +823,19 @@ function PricingSection() {
           </div>
           <h2 style={{
             fontFamily: "'Fraunces', Georgia, serif",
-            fontSize: 42, fontWeight: 400, letterSpacing: "-0.03em",
+            fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em",
             color: "#141413", margin: 0,
           }}>
             Simple. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Accessible.</em>
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: cols, gap: 16 }}>
           {PLANS.map(p => (
             <div key={p.name} style={{
               background: "#ffffff",
               border: p.pop ? "2px solid #141413" : "1px solid #FBFAF7",
-              borderRadius: 18, padding: "32px 28px",
+              borderRadius: 18, padding: isMobile ? "24px 20px" : "32px 28px",
               display: "flex", flexDirection: "column" as const,
               position: "relative" as const,
               boxShadow: p.pop
