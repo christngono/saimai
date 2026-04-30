@@ -62,7 +62,6 @@ const NAV_LINKS = [
 
 export function Nav({ activePage = "home", dark = false }: { activePage?: string; dark?: boolean }) {
   const bg  = dark ? SAIM.ink : "rgba(245,241,232,0.95)";
-  const fg  = dark ? SAIM.paper : SAIM.ink;
   return (
     <nav style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -96,7 +95,7 @@ export function Nav({ activePage = "home", dark = false }: { activePage?: string
 /* ─── Footer ─── */
 const FOOTER_COLS = [
   { title: "Produits",   items: [{ label: "SAIM Platform", href: "/dashboard" }, { label: "SAIM Fiscal", href: "/dashboard" }, { label: "Services", href: "/services" }] },
-  { title: "Entreprise", items: [{ label: "À propos", href: "/about" }, { label: "Contact", href: "/#contact" }] },
+  { title: "Entreprise", items: [{ label: "À propos", href: "/about" }, { label: "Contact", href: "/contact" }] },
   { title: "Légal",      items: [{ label: "CGU", href: "#" }, { label: "Confidentialité", href: "#" }] },
 ];
 

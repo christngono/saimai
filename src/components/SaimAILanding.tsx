@@ -220,7 +220,7 @@ function LandingNav() {
             </div>
 
             <a href="#tarifs" style={linkStyle}>Tarifs</a>
-            <a href="#contact" style={linkStyle}>Contact</a>
+            <Link href="/contact" prefetch={false} style={linkStyle}>Contact</Link>
           </div>
         )}
 
@@ -323,9 +323,9 @@ function LandingNav() {
             <a href="#tarifs" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
               Tarifs
             </a>
-            <a href="#contact" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
+            <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
               Contact
-            </a>
+            </Link>
           </div>
 
           <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 10 }}>
