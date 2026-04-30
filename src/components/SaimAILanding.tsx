@@ -227,7 +227,7 @@ function LandingNav() {
         {/* Desktop CTA buttons */}
         {!isSmall && (
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <Link href="/dashboard" prefetch={false} style={{
+            <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 14, fontWeight: 500,
               color: "#73726C", textDecoration: "none",
@@ -236,7 +236,7 @@ function LandingNav() {
             }}>
               Connexion
             </Link>
-            <Link href="/dashboard" prefetch={false} style={{
+            <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 14, fontWeight: 600,
               color: "#FBFAF7", textDecoration: "none",
@@ -251,7 +251,7 @@ function LandingNav() {
         {/* Mobile hamburger */}
         {isSmall && (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <Link href="/dashboard" prefetch={false} style={{
+            <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 13, fontWeight: 600,
               color: "#FBFAF7", textDecoration: "none",
@@ -329,7 +329,7 @@ function LandingNav() {
           </div>
 
           <div style={{ marginTop: 32, display: "flex", flexDirection: "column", gap: 10 }}>
-            <Link href="/dashboard" prefetch={false} onClick={() => setMenuOpen(false)} style={{
+            <Link href="/auth" prefetch={false} onClick={() => setMenuOpen(false)} style={{
               textAlign: "center",
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 15, fontWeight: 500,
@@ -339,7 +339,7 @@ function LandingNav() {
             }}>
               Connexion
             </Link>
-            <Link href="/dashboard" prefetch={false} onClick={() => setMenuOpen(false)} style={{
+            <Link href="/auth" prefetch={false} onClick={() => setMenuOpen(false)} style={{
               textAlign: "center",
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 15, fontWeight: 600,
@@ -648,7 +648,7 @@ function Hero() {
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
             Sans recruter. Sans exploser votre budget.
           </p>
-          <Link href="/dashboard" prefetch={false} style={{
+          <Link href="/auth" prefetch={false} style={{
             display: "inline-block",
             background: "#141413", color: "#FBFAF7",
             padding: isMobile ? "13px 24px" : "14px 28px", borderRadius: 12,
@@ -875,7 +875,7 @@ function PricingSection() {
                 ))}
               </div>
 
-              <Link href="/dashboard" prefetch={false} style={{
+              <Link href="/auth" prefetch={false} style={{
                 textAlign: "center" as const, padding: "13px 0", borderRadius: 10, display: "block",
                 background: "#141413", color: "#FBFAF7",
                 fontSize: 14, fontWeight: 600, textDecoration: "none",

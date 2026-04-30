@@ -389,7 +389,11 @@ export default function Dashboard() {
       }
 
       const cost = estimateCredits(content, full.trim());
-      setCredits(prev => Math.max(0, prev - cost));
+      setCredits(prev => {
+        const next = Math.max(0, prev - cost);
+        updateUser({ credits: next });
+        return next;
+      });
 
       setConversations(prev => prev.map(c =>
         c.id === convId
@@ -420,6 +424,8 @@ export default function Dashboard() {
             activeAgent={activeAgent} setActiveAgent={setActiveAgent}
             conversations={conversations} activeConvId={activeConvId}
             setActiveConvId={setActiveConvId}
+            userName={user?.name}
+            onLogout={() => { logout(); router.replace("/auth"); }}
           />
         </aside>
       )}
@@ -451,6 +457,8 @@ export default function Dashboard() {
               conversations={conversations} activeConvId={activeConvId}
               setActiveConvId={setActiveConvId}
               onClose={() => setSidebarOpen(false)}
+              userName={user?.name}
+              onLogout={() => { logout(); router.replace("/auth"); }}
             />
           </aside>
         </>
