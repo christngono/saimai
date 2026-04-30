@@ -3,8 +3,10 @@
 import { useState, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SaimLogoH } from "@/components/SaimUI";
 import { Conversation, Message } from "@/lib/types";
+import { useAuth } from "@/lib/auth";
 
 const ChatArea = dynamic(() => import("@/components/ChatArea"));
 
@@ -158,6 +160,7 @@ function SidebarContent({
   activeAgent, setActiveAgent,
   conversations, activeConvId,
   setActiveConvId, onClose,
+  userName, onLogout,
 }: {
   activeAgent: string;
   setActiveAgent: (id: string) => void;
@@ -165,6 +168,8 @@ function SidebarContent({
   activeConvId: string | null;
   setActiveConvId: (id: string | null) => void;
   onClose?: () => void;
+  userName?: string;
+  onLogout?: () => void;
 }) {
   const pick = (fn: () => void) => { fn(); onClose?.(); };
 
@@ -279,14 +284,33 @@ function SidebarContent({
         )}
       </div>
 
-      {/* User */}
-      <div style={{ padding: "12px 16px", borderTop: "1px solid #D9D8D5", display: "flex", alignItems: "center", gap: 10 }}>
-        <div style={{ width: 30, height: 30, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/>
-          </svg>
+      {/* User + Logout */}
+      <div style={{ padding: "10px 12px", borderTop: "1px solid #D9D8D5" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 8px", borderRadius: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 999, background: "#141413", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span style={{ fontSize: 13, fontWeight: 500, color: "#141413", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>
+            {userName || "Mon compte"}
+          </span>
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              title="Se déconnecter"
+              style={{ background: "none", border: "none", cursor: "pointer", color: "#73726C", padding: 4, display: "flex", alignItems: "center", borderRadius: 6, flexShrink: 0 }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(20,20,19,0.07)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "none")}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          )}
         </div>
-        <span style={{ fontSize: 13, fontWeight: 500, color: "#141413" }}>SAIM AI</span>
       </div>
     </>
   );
@@ -294,6 +318,9 @@ function SidebarContent({
 
 /* ─── Dashboard ─── */
 export default function Dashboard() {
+  const router                            = useRouter();
+  const { user, loaded, logout, updateUser } = useAuth();
+
   const [activeAgent, setActiveAgent]     = useState("fiscal");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvId, setActiveConvId]   = useState<string | null>(null);
@@ -303,6 +330,14 @@ export default function Dashboard() {
   const [sidebarOpen, setSidebarOpen]     = useState(false);
 
   const { isSmall } = useResponsive();
+
+  /* Garde d'auth + init crédits */
+  useEffect(() => {
+    if (!loaded) return;
+    if (!user) { router.replace("/auth"); return; }
+    if (!user.setupDone) { router.replace("/auth"); return; }
+    setCredits(user.credits);
+  }, [loaded, user, router]);
 
   const activeConversation = conversations.find(c => c.id === activeConvId) ?? null;
   const active = AGENTS.find(a => a.id === activeAgent)!;
