@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SaimMark, SAIM } from "./SaimUI";
 import { useAuth, AuthUser } from "@/lib/auth";
@@ -154,19 +155,10 @@ export default function AuthPage() {
 
   const makeId = () => Math.random().toString(36).slice(2, 10);
 
-  /* ── Auth Google (simulée) ── */
+  /* ── Auth Google (OAuth réel) ── */
   const handleGoogle = () => {
     setLoading(true);
-    setTimeout(() => {
-      const u: AuthUser = {
-        id: makeId(), name: "Utilisateur Google", email: "user@gmail.com",
-        method: "google", credits: 20, setupDone: false,
-      };
-      setPendingUser(u);
-      login(u);
-      setScreen("wizard-1");
-      setLoading(false);
-    }, 900);
+    signIn("google", { callbackUrl: "/auth/google-callback" });
   };
 
   /* ── Soumission Email / WhatsApp ── */
