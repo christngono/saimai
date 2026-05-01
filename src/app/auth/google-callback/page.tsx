@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth";
@@ -8,38 +8,46 @@ import { SaimMark } from "@/components/SaimUI";
 
 export default function GoogleCallback() {
   const { data: session, status } = useSession();
-  const { user, login }           = useAuth();
+  const { login }                 = useAuth();
   const router                    = useRouter();
+  const processed                 = useRef(false);
 
   useEffect(() => {
     if (status === "loading") return;
+    if (processed.current) return;
 
     if (!session?.user) {
+      processed.current = true;
       router.replace("/auth");
       return;
     }
 
-    /* Utilisateur déjà connu → dashboard direct */
-    if (user?.setupDone) {
-      router.replace("/dashboard");
-      return;
-    }
+    /* Lire localStorage directement pour éviter la dépendance sur `user` */
+    try {
+      const raw = localStorage.getItem("saim_user");
+      if (raw) {
+        const existing = JSON.parse(raw);
+        if (existing.setupDone) {
+          processed.current = true;
+          router.replace("/dashboard");
+          return;
+        }
+      }
+    } catch {}
 
-    /* Nouveau compte Google → créer dans notre AuthContext */
-    const newUser = {
-      id:       session.user.email ?? Math.random().toString(36).slice(2),
-      name:     session.user.name  ?? "Utilisateur",
-      email:    session.user.email ?? undefined,
-      avatar:   session.user.image ?? undefined,
-      method:   "google" as const,
-      credits:  20,
+    /* Nouveau compte Google → créer dans AuthContext puis wizard */
+    processed.current = true;
+    login({
+      id:        session.user.email ?? Math.random().toString(36).slice(2),
+      name:      session.user.name  ?? "Utilisateur",
+      email:     session.user.email ?? undefined,
+      avatar:    session.user.image ?? undefined,
+      method:    "google",
+      credits:   20,
       setupDone: false,
-    };
-    login(newUser);
-
-    /* /auth détecte setupDone=false → affiche le wizard */
+    });
     router.replace("/auth");
-  }, [session, status, user, login, router]);
+  }, [session, status, login, router]);
 
   return (
     <div style={{
