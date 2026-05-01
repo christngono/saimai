@@ -388,12 +388,10 @@ export default function Dashboard() {
         setStreamingText(full);
       }
 
-      const cost = estimateCredits(content, full.trim());
-      setCredits(prev => {
-        const next = Math.max(0, prev - cost);
-        updateUser({ credits: next });
-        return next;
-      });
+      const cost       = estimateCredits(content, full.trim());
+      const newCredits = Math.max(0, credits - cost);
+      setCredits(newCredits);
+      updateUser({ credits: newCredits });
 
       setConversations(prev => prev.map(c =>
         c.id === convId
