@@ -103,11 +103,11 @@ function CursorSvg() {
 
 /* ─── Nav ─── */
 const SOLUTIONS = [
-  { label: "Audit et conseil en stratégie IA", desc: "Analyse et feuille de route IA",       href: "/services",                   icon: <IconAudit /> },
-  { label: "Formation SAIM Course",             desc: "Apprenez l'IA à votre rythme",         href: "https://course.mysaim.com",   icon: <IconCourse />, external: true },
-  { label: "Data Lab",                          desc: "Données synthétiques & annotation",    href: "/services",                   icon: <IconDataLab /> },
-  { label: "SAIM AI",                           desc: "La plateforme complète pour les PME",  href: "/services",                   icon: <IconSaimAI /> },
-  { label: "Agent IA",                          desc: "Six agents experts, disponibles 24h",  href: "/dashboard",                  icon: <IconAgent /> },
+  { label: "AI Strategy Audit & Consulting", desc: "AI analysis and roadmap",              href: "/services",                   icon: <IconAudit /> },
+  { label: "SAIM Course",                    desc: "Learn AI at your own pace",            href: "https://course.mysaim.com",   icon: <IconCourse />, external: true },
+  { label: "Data Lab",                       desc: "Synthetic data & annotation",          href: "/services",                   icon: <IconDataLab /> },
+  { label: "SAIM AI",                        desc: "The complete platform for SMEs",       href: "/services",                   icon: <IconSaimAI /> },
+  { label: "AI Agent",                       desc: "Six expert agents, available 24/7",   href: "/dashboard",                  icon: <IconAgent /> },
 ];
 
 function HamburgerIcon({ open }: { open: boolean }) {
@@ -219,7 +219,7 @@ function LandingNav() {
               )}
             </div>
 
-            <a href="#tarifs" style={linkStyle}>Tarifs</a>
+            <a href="#pricing" style={linkStyle}>Pricing</a>
             <Link href="/contact" prefetch={false} style={linkStyle}>Contact</Link>
           </div>
         )}
@@ -234,7 +234,7 @@ function LandingNav() {
               padding: "9px 18px", borderRadius: 10,
               border: "1px solid #DEDEDD",
             }}>
-              Connexion
+              Sign in
             </Link>
             <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -243,7 +243,7 @@ function LandingNav() {
               padding: "9px 20px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Essayer SAIM
+              Try SAIM
             </Link>
           </div>
         )}
@@ -258,7 +258,7 @@ function LandingNav() {
               padding: "8px 16px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Essayer
+              Try
             </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -320,8 +320,8 @@ function LandingNav() {
                 </div>
               </Link>
             ))}
-            <a href="#tarifs" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
-              Tarifs
+            <a href="#pricing" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
+              Pricing
             </a>
             <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
               Contact
@@ -337,7 +337,7 @@ function LandingNav() {
               padding: "13px 20px", borderRadius: 10,
               border: "1px solid #DEDEDD",
             }}>
-              Connexion
+              Sign in
             </Link>
             <Link href="/auth" prefetch={false} onClick={() => setMenuOpen(false)} style={{
               textAlign: "center",
@@ -347,7 +347,7 @@ function LandingNav() {
               padding: "13px 20px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Essayer SAIM gratuitement
+              Try SAIM for free
             </Link>
           </div>
         </div>
@@ -624,29 +624,41 @@ function Hero() {
   const subFontSize = isMobile ? 16 : 18;
 
   return (
-    <section style={{ background: "#FBFAF7", padding: hPad }}>
+    <section style={{ background: "#FBFAF7", padding: hPad, position: "relative", overflow: "hidden" }}>
+      {/* Watermark logo */}
+      {!isMobile && (
+        <img
+          src="/simplelogo.svg"
+          aria-hidden
+          style={{
+            position: "absolute", right: -80, top: "50%", transform: "translateY(-50%)",
+            width: 700, opacity: 0.045, pointerEvents: "none", userSelect: "none",
+          }}
+        />
+      )}
       <div style={{
         maxWidth: 1080, margin: "0 auto",
         display: "grid",
         gridTemplateColumns: isSmall ? "1fr" : "1.15fr 1fr",
         gap: isSmall ? 48 : 72,
         alignItems: "center",
+        position: "relative",
       }}>
         <div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 24 }}>
             Super Agent Intelligent Multimodal
           </div>
           <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px", color: "#141413" }}>
-            SAIM AI gère<br />votre entreprise.
+            SAIM AI runs<br />your business.
           </h1>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
-            Vous, vous la<br />faites grandir.
+            You focus on<br />growing it.
           </h2>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 8 }}>
-            Fiscalité, RH, comptabilité — <strong style={{ color: "#141413", fontWeight: 500 }}>automatisés.</strong>
+            Tax, HR, accounting — <strong style={{ color: "#141413", fontWeight: 500 }}>automated.</strong>
           </p>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
-            Sans recruter. Sans exploser votre budget.
+            No new hires. No budget explosion.
           </p>
           <Link href="/auth" prefetch={false} style={{
             display: "inline-block",
@@ -656,7 +668,7 @@ function Hero() {
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             textDecoration: "none",
           }}>
-            Essayer gratuitement
+            Try for free
           </Link>
         </div>
 
@@ -681,16 +693,16 @@ function FAQSection() {
 
   const faqs = [
     {
-      q: "C'est quoi SAIM AI et comment ça fonctionne ?",
-      a: "SAIM AI est une plateforme d'intelligence artificielle conçue pour les entrepreneurs et les PME. Elle regroupe plusieurs agents experts (fiscal, RH, commercial, juridique…) accessibles par simple chat. Vous posez votre question, l'agent analyse et vous répond avec précision en s'appuyant sur des textes officiels et des données réelles — sans hallucination.",
+      q: "What is SAIM AI and how does it work?",
+      a: "SAIM AI is an artificial intelligence platform built for entrepreneurs and SMEs. It brings together several expert agents (tax, HR, sales, legal…) accessible through a simple chat interface. Ask your question, the agent analyses it and responds accurately using official texts and real data — no hallucinations.",
     },
     {
-      q: "Peut-on utiliser SAIM gratuitement ?",
-      a: "Oui. L'offre gratuite donne accès à 10 questions par jour pendant 2 mois, sans carte bancaire requise. Au-delà, nos forfaits Starter (5$/mois) et Pro (24$/mois) offrent un accès illimité avec des fonctionnalités avancées.",
+      q: "Can I use SAIM for free?",
+      a: "Yes. The free plan gives you access to 10 questions per day for 2 months, no credit card required. Beyond that, our Starter ($5/mo) and Pro ($24/mo) plans offer unlimited access with advanced features.",
     },
     {
-      q: "Mes données sont-elles sécurisées ?",
-      a: "Oui. Nous utilisons des modèles open source hébergés sur notre propre infrastructure — vos données ne sont jamais transmises à des tiers. Souveraineté totale garantie.",
+      q: "Is my data secure?",
+      a: "Yes. We use open-source models hosted on our own infrastructure — your data is never shared with third parties. Full data sovereignty guaranteed.",
     },
   ];
 
@@ -705,7 +717,7 @@ function FAQSection() {
           fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em",
           color: "#141413", margin: "0 0 48px",
         }}>
-          Foire aux <em style={{ fontStyle: "italic", color: SAIM.accent }}>questions.</em>
+          Frequently asked <em style={{ fontStyle: "italic", color: SAIM.accent }}>questions.</em>
         </h2>
 
         <div style={{ borderTop: "1px solid #DEDEDD" }}>
@@ -765,38 +777,38 @@ const PLANS = [
   {
     name: "Starter", price: 5,
     items: [
-      "1 000 crédits IA / mois",
-      "Conseil fiscal (IRPP, IS, TVA)",
-      "Création de contenus marketing",
-      "Génération de devis & factures",
-      "Comptabilité de base",
-      "Gestion de projets",
-      "Support email",
+      "1,000 AI credits / month",
+      "Tax advice (IRPP, Corp. Tax, VAT)",
+      "Marketing content creation",
+      "Quote & invoice generation",
+      "Basic accounting",
+      "Project management",
+      "Email support",
     ],
     pop: false,
   },
   {
     name: "Pro", price: 24,
     items: [
-      "5 000 crédits IA / mois",
-      "Tout le plan Starter",
-      "Gestion RH complète (CDI, fiches de paie)",
-      "Rédaction de contrats commerciaux",
-      "Documents juridiques (CGV, statuts)",
-      "Stratégie commerciale",
-      "Support prioritaire",
+      "5,000 AI credits / month",
+      "Everything in Starter",
+      "Full HR management (contracts, payroll)",
+      "Commercial contract drafting",
+      "Legal documents (T&Cs, bylaws)",
+      "Sales strategy",
+      "Priority support",
     ],
     pop: true,
   },
   {
     name: "Business", price: 49,
     items: [
-      "Crédits illimités",
-      "6 agents IA spécialisés",
-      "Multi-utilisateurs (jusqu'à 5)",
-      "Tableau de bord analytique avancé",
-      "Option white-label",
-      "Support dédié + formation incluse",
+      "Unlimited credits",
+      "All 6 specialized AI agents",
+      "Multi-user (up to 5 seats)",
+      "Advanced analytics dashboard",
+      "White-label option",
+      "Dedicated support + onboarding",
     ],
     pop: false,
   },
@@ -810,7 +822,7 @@ function PricingSection() {
   const cols = isMobile || isTablet ? "1fr" : "repeat(3, 1fr)";
 
   return (
-    <section id="tarifs" style={{ background: "#FBFAF7", padding: pad }}>
+    <section id="pricing" style={{ background: "#FBFAF7", padding: pad }}>
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
 
         <div style={{ textAlign: "center" as const, marginBottom: 48 }}>
@@ -819,7 +831,7 @@ function PricingSection() {
             letterSpacing: "0.22em", textTransform: "uppercase" as const,
             color: "#141413", marginBottom: 16,
           }}>
-            Découvrir nos tarifs
+            Pricing
           </div>
           <h2 style={{
             fontFamily: "'Fraunces', Georgia, serif",
@@ -850,7 +862,7 @@ function PricingSection() {
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const,
                 }}>
-                  Populaire
+                  Popular
                 </div>
               )}
 
@@ -861,7 +873,7 @@ function PricingSection() {
                 {sym}{p.price}
               </div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#73726C", marginBottom: 28 }}>
-                / mois
+                / month
               </div>
 
               <div style={{ flex: 1, marginBottom: 24 }}>
@@ -881,14 +893,14 @@ function PricingSection() {
                 fontSize: 14, fontWeight: 600, textDecoration: "none",
                 fontFamily: "'Inter Tight', system-ui, sans-serif",
               }}>
-                Essayer gratuitement
+                Get started free
               </Link>
             </div>
           ))}
         </div>
 
         <p style={{ textAlign: "center" as const, marginTop: 28, fontSize: 13, color: "#73726C" }}>
-          Offre gratuite disponible — 10 questions/jour · Sans carte bancaire
+          Free plan available — 10 questions/day · No credit card required
         </p>
       </div>
     </section>
