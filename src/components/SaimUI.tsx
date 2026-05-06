@@ -40,24 +40,25 @@ export function SaimMark({ size = 32, fg = SAIM.accent }: { size?: number; fg?: 
 
 /* ─── Logo horizontal ─── */
 export function SaimLogoH({ size = 28, dark = true }: { size?: number; dark?: boolean }) {
-  const color = dark ? SAIM.ink : SAIM.paper;
+  const h = Math.round(size * 1.25);
   return (
-    <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: size * 0.32 }}>
-      <SaimMark size={size} fg={SAIM.accent} />
-      <div style={{ display: "flex", alignItems: "baseline", gap: size * 0.18 }}>
-        <span style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: size * 0.86, fontWeight: 400, letterSpacing: "-0.02em", color, fontStyle: "italic", lineHeight: 1 }}>saim</span>
-        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: size * 0.30, fontWeight: 500, color, opacity: 0.55, letterSpacing: "0.12em", textTransform: "uppercase" as const }}>ai</span>
-      </div>
+    <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+      <img
+        src="/simplelogo.svg"
+        height={h}
+        alt="SAIM AI"
+        style={{ display: "block", filter: dark ? "none" : "brightness(0) invert(1)" }}
+      />
     </Link>
   );
 }
 
 /* ─── Navigation ─── */
 const NAV_LINKS = [
-  { href: "/",          label: "Accueil",   id: "home" },
-  { href: "/about",     label: "À propos",  id: "about" },
-  { href: "/services",  label: "Services",  id: "services" },
-  { href: "/dashboard", label: "Agent IA",  id: "agent" },
+  { href: "/",          label: "Home",     id: "home" },
+  { href: "/about",     label: "About",    id: "about" },
+  { href: "/services",  label: "Services", id: "services" },
+  { href: "/dashboard", label: "AI Agent", id: "agent" },
 ];
 
 export function Nav({ activePage = "home", dark = false }: { activePage?: string; dark?: boolean }) {
@@ -86,7 +87,7 @@ export function Nav({ activePage = "home", dark = false }: { activePage?: string
           fontSize: 14, fontWeight: 500,
           fontFamily: "'Inter Tight', system-ui, sans-serif",
           textDecoration: "none",
-        }}>Essai gratuit</Link>
+        }}>Free trial</Link>
       </div>
     </nav>
   );
@@ -94,9 +95,9 @@ export function Nav({ activePage = "home", dark = false }: { activePage?: string
 
 /* ─── Footer ─── */
 const FOOTER_COLS = [
-  { title: "Produits",   items: [{ label: "SAIM Platform", href: "/dashboard" }, { label: "SAIM Fiscal", href: "/dashboard" }, { label: "Services", href: "/services" }] },
-  { title: "Entreprise", items: [{ label: "À propos", href: "/about" }, { label: "Contact", href: "/contact" }] },
-  { title: "Légal",      items: [{ label: "CGU", href: "#" }, { label: "Confidentialité", href: "#" }] },
+  { title: "Products", items: [{ label: "SAIM Platform", href: "/dashboard" }, { label: "SAIM Fiscal", href: "/dashboard" }, { label: "Services", href: "/services" }] },
+  { title: "Company",  items: [{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }] },
+  { title: "Legal",    items: [{ label: "Terms", href: "#" }, { label: "Privacy", href: "#" }] },
 ];
 
 export function Footer() {
@@ -107,7 +108,7 @@ export function Footer() {
           <div>
             <SaimLogoH size={28} dark={false} />
             <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontStyle: "italic", fontSize: 17, opacity: 0.65, marginTop: 20, lineHeight: 1.45, maxWidth: 320 }}>
-              L'intelligence artificielle au service de votre croissance.
+              Artificial intelligence powering your growth.
             </p>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, opacity: 0.4, marginTop: 16, lineHeight: 1.6 }}>
               partners@mysaim.cm

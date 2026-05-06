@@ -1,0 +1,21 @@
+<svg width="100%" viewBox="0 0 580 280" role="img" style="" xmlns="http://www.w3.org/2000/svg">
+  <title style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">SAIM AI Logo v4</title>
+  <desc style="fill:rgb(0, 0, 0);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">Logo SAIM AI avec octogone aux bords arrondis</desc>
+
+  <defs>
+    <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4BB8E8;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1A7DB5;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Octagon avec bords arrondis via path -->
+  <path d="&#10;    M 128,40&#10;    L 192,40&#10;    Q 200,40 206,46&#10;    L 234,74&#10;    Q 240,80 240,88&#10;    L 240,192&#10;    Q 240,200 234,206&#10;    L 206,234&#10;    Q 200,240 192,240&#10;    L 128,240&#10;    Q 120,240 114,234&#10;    L 86,206&#10;    Q 80,200 80,192&#10;    L 80,88&#10;    Q 80,80 86,74&#10;    L 114,46&#10;    Q 120,40 128,40&#10;    Z&#10;  " fill="url(#blueGrad)" style="stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, &quot;system-ui&quot;, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+
+  <!-- White S letter inside octagon -->
+  <text x="160" y="185" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="160" font-weight="900" fill="white" style="fill:rgb(255, 255, 255);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:Helvetica, Arial, sans-serif;font-size:160px;font-weight:900;text-anchor:middle;dominant-baseline:auto">S</text>
+
+  <!-- AIM text centré verticalement -->
+  <text x="255" y="140" dominant-baseline="central" font-family="Helvetica Rounded, Arial Rounded MT Bold, Arial, sans-serif" font-size="148" font-weight="900" fill="#111111" letter-spacing="2" style="fill:rgb(17, 17, 17);stroke:none;color:rgb(255, 255, 255);stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Helvetica Rounded&quot;, &quot;Arial Rounded MT Bold&quot;, Arial, sans-serif;font-size:148px;font-weight:900;text-anchor:start;dominant-baseline:central">AIM</text>
+
+</svg>
