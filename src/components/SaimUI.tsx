@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLang, useT } from "@/lib/i18n";
 
 /* ─── Design tokens ─── */
 export const SAIM = {
@@ -18,7 +19,7 @@ export const SAIM = {
   accentSoft:  "#F4D9C8",
 };
 
-/* ─── SaimMark — 3 pièces L, 16 cellules ─── */
+/* ─── SaimMark — icône grille ─── */
 export function SaimMark({ size = 32, fg = SAIM.accent }: { size?: number; fg?: string }) {
   const gap = 5, rx = 6, N = 5;
   const cs = (200 - gap * (N + 1)) / N;
@@ -38,13 +39,13 @@ export function SaimMark({ size = 32, fg = SAIM.accent }: { size?: number; fg?: 
   );
 }
 
-/* ─── Logo horizontal ─── */
+/* ─── Logo horizontal (nouveau SVG) ─── */
 export function SaimLogoH({ size = 28, dark = true }: { size?: number; dark?: boolean }) {
-  const h = Math.round(size * 1.25);
+  const h = Math.round(size * 1.35);
   return (
     <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
       <img
-        src="/simplelogo.svg"
+        src="/saim-logo-new.svg"
         height={h}
         alt="SAIM AI"
         style={{ display: "block", filter: dark ? "none" : "brightness(0) invert(1)" }}
@@ -53,16 +54,53 @@ export function SaimLogoH({ size = 28, dark = true }: { size?: number; dark?: bo
   );
 }
 
+/* ─── LangSwitcher ─── */
+export function LangSwitcher({ dark = false }: { dark?: boolean }) {
+  const { lang, setLang } = useLang();
+  const bg      = dark ? "rgba(255,255,255,0.10)" : "#F0EEE9";
+  const activeBg = dark ? "rgba(255,255,255,0.18)" : "#ffffff";
+  const activeColor = dark ? "#FBFAF7" : "#141413";
+  const inactiveColor = dark ? "rgba(251,250,247,0.45)" : "#73726C";
+
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 2,
+      background: bg, borderRadius: 8, padding: "3px 4px",
+    }}>
+      {(["fr", "en"] as const).map(l => (
+        <button
+          key={l}
+          onClick={() => setLang(l)}
+          style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 11, fontWeight: 700,
+            letterSpacing: "0.08em", textTransform: "uppercase",
+            padding: "4px 8px", borderRadius: 6,
+            border: "none", cursor: "pointer",
+            background: lang === l ? activeBg : "transparent",
+            color: lang === l ? activeColor : inactiveColor,
+            transition: "all 0.15s",
+            boxShadow: lang === l ? "0 1px 3px rgba(0,0,0,0.10)" : "none",
+          }}
+        >
+          {l.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /* ─── Navigation ─── */
-const NAV_LINKS = [
-  { href: "/",          label: "Home",     id: "home" },
-  { href: "/about",     label: "About",    id: "about" },
-  { href: "/services",  label: "Services", id: "services" },
-  { href: "/dashboard", label: "AI Agent", id: "agent" },
+const NAV_IDS = [
+  { href: "/",          id: "home" },
+  { href: "/about",     id: "about" },
+  { href: "/services",  id: "services" },
+  { href: "/dashboard", id: "agent" },
 ];
 
 export function Nav({ activePage = "home", dark = false }: { activePage?: string; dark?: boolean }) {
-  const bg  = dark ? SAIM.ink : "rgba(245,241,232,0.95)";
+  const t  = useT();
+  const bg = dark ? SAIM.ink : "rgba(245,241,232,0.95)";
   return (
     <nav style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -72,35 +110,60 @@ export function Nav({ activePage = "home", dark = false }: { activePage?: string
       position: "sticky", top: 0, zIndex: 100,
     }}>
       <SaimLogoH size={28} dark={!dark} />
+
       <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-        {NAV_LINKS.map(p => (
+        {NAV_IDS.map(p => (
           <Link key={p.id} href={p.href} style={{
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             fontSize: 14, fontWeight: 500,
             color: p.id === activePage ? SAIM.accent : (dark ? "rgba(245,241,232,0.7)" : SAIM.muted),
             textDecoration: "none", letterSpacing: "-0.01em",
-          }}>{p.label}</Link>
+          }}>{t(`nav.${p.id}`)}</Link>
         ))}
+        <LangSwitcher dark={dark} />
         <Link href="/dashboard" prefetch={false} style={{
           background: SAIM.accent, color: SAIM.paper,
           padding: "10px 20px", borderRadius: 10,
           fontSize: 14, fontWeight: 500,
           fontFamily: "'Inter Tight', system-ui, sans-serif",
           textDecoration: "none",
-        }}>Free trial</Link>
+        }}>{t("nav.free.trial")}</Link>
       </div>
     </nav>
   );
 }
 
 /* ─── Footer ─── */
-const FOOTER_COLS = [
-  { title: "Products", items: [{ label: "SAIM Platform", href: "/dashboard" }, { label: "SAIM Fiscal", href: "/dashboard" }, { label: "Services", href: "/services" }] },
-  { title: "Company",  items: [{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }] },
-  { title: "Legal",    items: [{ label: "Terms", href: "#" }, { label: "Privacy", href: "#" }] },
-];
-
 export function Footer() {
+  const t = useT();
+  const cols = [
+    {
+      key: "products",
+      title: t("footer.products"),
+      items: [
+        { label: t("footer.platform"), href: "/dashboard" },
+        { label: t("footer.fiscal"),   href: "/dashboard" },
+        { label: "Services",           href: "/services" },
+      ],
+    },
+    {
+      key: "company",
+      title: t("footer.company"),
+      items: [
+        { label: t("footer.about"),   href: "/about" },
+        { label: t("nav.contact"),    href: "/contact" },
+      ],
+    },
+    {
+      key: "legal",
+      title: t("footer.legal"),
+      items: [
+        { label: t("footer.terms"),   href: "#" },
+        { label: t("footer.privacy"), href: "#" },
+      ],
+    },
+  ];
+
   return (
     <footer style={{ background: SAIM.ink, color: SAIM.paper, padding: "64px 48px 40px" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
@@ -108,14 +171,17 @@ export function Footer() {
           <div>
             <SaimLogoH size={28} dark={false} />
             <p style={{ fontFamily: "'Fraunces', Georgia, serif", fontStyle: "italic", fontSize: 17, opacity: 0.65, marginTop: 20, lineHeight: 1.45, maxWidth: 320 }}>
-              Artificial intelligence powering your growth.
+              {t("footer.tagline")}
             </p>
             <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, opacity: 0.4, marginTop: 16, lineHeight: 1.6 }}>
               partners@mysaim.cm
             </div>
+            <div style={{ marginTop: 16 }}>
+              <LangSwitcher dark={true} />
+            </div>
           </div>
-          {FOOTER_COLS.map(col => (
-            <div key={col.title}>
+          {cols.map(col => (
+            <div key={col.key}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.22em", textTransform: "uppercase", opacity: 0.4, marginBottom: 16 }}>{col.title}</div>
               {col.items.map(item => (
                 <Link key={item.label} href={item.href} style={{ display: "block", fontSize: 14, opacity: 0.7, marginBottom: 10, color: SAIM.paper, textDecoration: "none" }}>{item.label}</Link>

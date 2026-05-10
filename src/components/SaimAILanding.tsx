@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { SAIM, SaimLogoH, SaimMark, Footer } from "./SaimUI";
+import { SAIM, SaimLogoH, SaimMark, Footer, LangSwitcher } from "./SaimUI";
+import { useT } from "@/lib/i18n";
 
 /* ─── Hook responsive ─── */
 function useResponsive() {
@@ -101,15 +102,6 @@ function CursorSvg() {
   );
 }
 
-/* ─── Nav ─── */
-const SOLUTIONS = [
-  { label: "AI Strategy Audit & Consulting", desc: "AI analysis and roadmap",              href: "/services",                   icon: <IconAudit /> },
-  { label: "SAIM Course",                    desc: "Learn AI at your own pace",            href: "https://course.mysaim.com",   icon: <IconCourse />, external: true },
-  { label: "Data Lab",                       desc: "Synthetic data & annotation",          href: "/services",                   icon: <IconDataLab /> },
-  { label: "SAIM AI",                        desc: "The complete platform for SMEs",       href: "/services",                   icon: <IconSaimAI /> },
-  { label: "AI Agent",                       desc: "Six expert agents, available 24/7",   href: "/dashboard",                  icon: <IconAgent /> },
-];
-
 function HamburgerIcon({ open }: { open: boolean }) {
   return (
     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#141413" strokeWidth="1.8" strokeLinecap="round">
@@ -122,10 +114,20 @@ function HamburgerIcon({ open }: { open: boolean }) {
   );
 }
 
+/* ─── Nav ─── */
 function LandingNav() {
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { isSmall } = useResponsive();
+  const t = useT();
+
+  const SOLUTIONS = [
+    { labelKey: "nav.sol.audit",   descKey: "nav.sol.audit.desc",   href: "/services",                 icon: <IconAudit /> },
+    { labelKey: "nav.sol.course",  descKey: "nav.sol.course.desc",  href: "https://course.mysaim.com", icon: <IconCourse />, external: true },
+    { labelKey: "nav.sol.datalab", descKey: "nav.sol.datalab.desc", href: "/services",                 icon: <IconDataLab /> },
+    { labelKey: "nav.sol.saimai",  descKey: "nav.sol.saimai.desc",  href: "/services",                 icon: <IconSaimAI /> },
+    { labelKey: "nav.sol.agent",   descKey: "nav.sol.agent.desc",   href: "/dashboard",                icon: <IconAgent /> },
+  ];
 
   const linkStyle = {
     fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -160,7 +162,7 @@ function LandingNav() {
                 ...linkStyle,
                 color: open ? "#1A1612" : "#73726C",
               }}>
-                Solutions
+                {t("nav.solutions")}
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
                   <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -182,7 +184,7 @@ function LandingNav() {
                   }}/>
                   {SOLUTIONS.map((s) => (
                     <Link
-                      key={s.label}
+                      key={s.labelKey}
                       href={s.href}
                       prefetch={false}
                       {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -204,8 +206,8 @@ function LandingNav() {
                         {s.icon}
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1A1612", lineHeight: 1.3 }}>{s.label}</div>
-                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2, lineHeight: 1.3 }}>{s.desc}</div>
+                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 600, color: "#1A1612", lineHeight: 1.3 }}>{t(s.labelKey)}</div>
+                        <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2, lineHeight: 1.3 }}>{t(s.descKey)}</div>
                       </div>
                       {s.external && (
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#DEDEDD" strokeWidth="2" strokeLinecap="round">
@@ -219,14 +221,15 @@ function LandingNav() {
               )}
             </div>
 
-            <a href="#pricing" style={linkStyle}>Pricing</a>
-            <Link href="/contact" prefetch={false} style={linkStyle}>Contact</Link>
+            <a href="#pricing" style={linkStyle}>{t("nav.pricing")}</a>
+            <Link href="/contact" prefetch={false} style={linkStyle}>{t("nav.contact")}</Link>
           </div>
         )}
 
-        {/* Desktop CTA buttons */}
+        {/* Desktop CTA + langue */}
         {!isSmall && (
           <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <LangSwitcher />
             <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 14, fontWeight: 500,
@@ -234,7 +237,7 @@ function LandingNav() {
               padding: "9px 18px", borderRadius: 10,
               border: "1px solid #DEDEDD",
             }}>
-              Sign in
+              {t("nav.signin")}
             </Link>
             <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
@@ -243,7 +246,7 @@ function LandingNav() {
               padding: "9px 20px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Try SAIM
+              {t("nav.try")}
             </Link>
           </div>
         )}
@@ -251,6 +254,7 @@ function LandingNav() {
         {/* Mobile hamburger */}
         {isSmall && (
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <LangSwitcher />
             <Link href="/auth" prefetch={false} style={{
               fontFamily: "'Inter Tight', system-ui, sans-serif",
               fontSize: 13, fontWeight: 600,
@@ -258,7 +262,7 @@ function LandingNav() {
               padding: "8px 16px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Try
+              {t("nav.try.short")}
             </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
@@ -270,7 +274,7 @@ function LandingNav() {
         )}
       </nav>
 
-      {/* Mobile full-screen menu overlay */}
+      {/* Mobile overlay */}
       {isSmall && menuOpen && (
         <div style={{
           position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
@@ -279,22 +283,17 @@ function LandingNav() {
           padding: "14px 20px",
           overflowY: "auto",
         }}>
-          {/* Header */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
             <SaimLogoH size={28} dark={true} />
-            <button
-              onClick={() => setMenuOpen(false)}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}
-            >
+            <button onClick={() => setMenuOpen(false)} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
               <HamburgerIcon open={true} />
             </button>
           </div>
 
-          {/* Links */}
           <div style={{ borderTop: "1px solid #DEDEDD" }}>
             {SOLUTIONS.map(s => (
               <Link
-                key={s.label}
+                key={s.labelKey}
                 href={s.href}
                 prefetch={false}
                 {...(s.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
@@ -315,16 +314,16 @@ function LandingNav() {
                   {s.icon}
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 600, color: "#1A1612" }}>{s.label}</div>
-                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2 }}>{s.desc}</div>
+                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 600, color: "#1A1612" }}>{t(s.labelKey)}</div>
+                  <div style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 12, color: "#73726C", marginTop: 2 }}>{t(s.descKey)}</div>
                 </div>
               </Link>
             ))}
             <a href="#pricing" onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
-              Pricing
+              {t("nav.pricing")}
             </a>
             <Link href="/contact" prefetch={false} onClick={() => setMenuOpen(false)} style={{ display: "block", padding: "16px 0", borderBottom: "1px solid #DEDEDD", fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
-              Contact
+              {t("nav.contact")}
             </Link>
           </div>
 
@@ -337,7 +336,7 @@ function LandingNav() {
               padding: "13px 20px", borderRadius: 10,
               border: "1px solid #DEDEDD",
             }}>
-              Sign in
+              {t("nav.signin")}
             </Link>
             <Link href="/auth" prefetch={false} onClick={() => setMenuOpen(false)} style={{
               textAlign: "center",
@@ -347,7 +346,7 @@ function LandingNav() {
               padding: "13px 20px", borderRadius: 10,
               background: "#1A1612",
             }}>
-              Try SAIM for free
+              {t("nav.try.free")}
             </Link>
           </div>
         </div>
@@ -361,12 +360,13 @@ const Q1 = "What is the fiscal status of my client this month?";
 const Q2 = "Generate an invoice for Mike";
 
 function PlatformDemo() {
-  const [cycle, setCycle]       = useState(0);
-  const [phase, setPhase]       = useState(0);
+  const [cycle, setCycle]         = useState(0);
+  const [phase, setPhase]         = useState(0);
   const [introText, setIntroText] = useState("");
-  const [q1Text, setQ1Text]     = useState("");
-  const [q2Text, setQ2Text]     = useState("");
+  const [q1Text, setQ1Text]       = useState("");
+  const [q2Text, setQ2Text]       = useState("");
   const [respLines, setRespLines] = useState(0);
+  const t = useT();
 
   useEffect(() => {
     setPhase(0); setIntroText(""); setQ1Text(""); setQ2Text(""); setRespLines(0);
@@ -418,9 +418,9 @@ function PlatformDemo() {
   }, [cycle]);
 
   const BTNS = [
-    { label: "Fiscal",    icon: <FiscalSvg />,    isTarget: true },
-    { label: "Marketing", icon: <MarketingSvg /> },
-    { label: "Invoice",   icon: <InvoiceSvg /> },
+    { label: "Fiscal",          icon: <FiscalSvg />,    isTarget: true },
+    { label: "Marketing",       icon: <MarketingSvg /> },
+    { label: t("demo.btn.invoice"), icon: <InvoiceSvg /> },
   ];
 
   return (
@@ -444,7 +444,7 @@ function PlatformDemo() {
         </div>
         <div style={{ flex: 1, textAlign: "center" as const }}>
           <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "rgba(251,250,247,0.28)", letterSpacing: "0.1em" }}>
-            SAIM AI — Agent Platform
+            {t("demo.bar")}
           </span>
         </div>
         <div style={{ width: 42 }}/>
@@ -452,8 +452,6 @@ function PlatformDemo() {
 
       {/* Content */}
       <div style={{ padding: "28px 20px 6px", minHeight: 340 }}>
-
-        {/* Intro */}
         <div style={{ textAlign: "center" as const, marginBottom: 22 }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.18em", color: "rgba(251,250,247,0.28)", textTransform: "uppercase" as const, marginBottom: 12 }}>
             SAIM AI
@@ -466,7 +464,6 @@ function PlatformDemo() {
           </div>
         </div>
 
-        {/* Category buttons + cursor */}
         {phase >= 1 && (
           <div style={{ position: "relative" as const }}>
             {phase === 2 && (
@@ -479,7 +476,6 @@ function PlatformDemo() {
                 <CursorSvg />
               </div>
             )}
-
             <div className="demo-zoom-in" style={{ display: "flex", gap: 10, justifyContent: "center", marginBottom: 20 }}>
               {BTNS.map(btn => (
                 <div key={btn.label} style={{
@@ -507,10 +503,8 @@ function PlatformDemo() {
           </div>
         )}
 
-        {/* Chat area */}
         {phase >= 4 && (
           <div className="demo-slide-up" style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
-
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
               <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#C2562C" }}/>
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "rgba(251,250,247,0.35)", letterSpacing: "0.12em", textTransform: "uppercase" as const }}>
@@ -582,8 +576,8 @@ function PlatformDemo() {
               }}>
                 <CheckCircleSvg/>
                 <div>
-                  <div style={{ fontSize: 12.5, fontWeight: 600, color: "#22c55e" }}>Invoice sent successfully</div>
-                  <div style={{ fontSize: 11, color: "rgba(251,250,247,0.38)", marginTop: 2 }}>Mike · PDF generated · $1,250.00</div>
+                  <div style={{ fontSize: 12.5, fontWeight: 600, color: "#22c55e" }}>{t("demo.success")}</div>
+                  <div style={{ fontSize: 11, color: "rgba(251,250,247,0.38)", marginTop: 2 }}>{t("demo.details")}</div>
                 </div>
               </div>
             )}
@@ -600,7 +594,7 @@ function PlatformDemo() {
         borderRadius: 12,
         display: "flex", alignItems: "center", gap: 10,
       }}>
-        <span style={{ flex: 1, fontSize: 12, color: "rgba(251,250,247,0.18)", fontStyle: "italic" }}>Ask anything…</span>
+        <span style={{ flex: 1, fontSize: 12, color: "rgba(251,250,247,0.18)", fontStyle: "italic" }}>{t("demo.placeholder")}</span>
         <div style={{
           width: 26, height: 26, borderRadius: 8,
           background: "#141413", border: "1px solid rgba(251,250,247,0.10)",
@@ -618,6 +612,7 @@ function PlatformDemo() {
 /* ─── Hero ─── */
 function Hero() {
   const { isMobile, isTablet, isSmall } = useResponsive();
+  const t = useT();
 
   const hPad = isMobile ? "60px 24px 72px" : isTablet ? "72px 36px 88px" : "88px 48px 104px";
   const fontSize = isMobile ? 40 : isTablet ? 52 : 68;
@@ -625,7 +620,6 @@ function Hero() {
 
   return (
     <section style={{ background: "#FBFAF7", padding: hPad, position: "relative", overflow: "hidden" }}>
-      {/* Watermark logo */}
       {!isMobile && (
         <img
           src="/simplelogo.svg"
@@ -646,19 +640,19 @@ function Hero() {
       }}>
         <div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 24 }}>
-            Super Agent Intelligent Multimodal
+            {t("hero.kicker")}
           </div>
           <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 12px", color: "#141413" }}>
-            SAIM AI runs<br />your business.
+            {t("hero.h1.l1")}<br />{t("hero.h1.l2")}
           </h1>
           <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1.0, margin: "0 0 32px", color: SAIM.accent, fontStyle: "italic" }}>
-            You focus on<br />growing it.
+            {t("hero.h2.l1")}<br />{t("hero.h2.l2")}
           </h2>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 8 }}>
-            Tax, HR, accounting — <strong style={{ color: "#141413", fontWeight: 500 }}>automated.</strong>
+            {t("hero.sub1")} <strong style={{ color: "#141413", fontWeight: 500 }}>{t("hero.sub1.bold")}</strong>
           </p>
           <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: subFontSize, lineHeight: 1.6, color: "#73726C", maxWidth: 440, marginBottom: 40 }}>
-            No new hires. No budget explosion.
+            {t("hero.sub2")}
           </p>
           <Link href="/auth" prefetch={false} style={{
             display: "inline-block",
@@ -668,15 +662,11 @@ function Hero() {
             fontFamily: "'Inter Tight', system-ui, sans-serif",
             textDecoration: "none",
           }}>
-            Try for free
+            {t("hero.cta")}
           </Link>
         </div>
-
-        {/* Demo card: visible on tablet+ */}
         {!isMobile && <PlatformDemo />}
       </div>
-
-      {/* Demo card visible on mobile, below text */}
       {isMobile && (
         <div style={{ maxWidth: 480, margin: "0 auto", paddingTop: 0 }}>
           <PlatformDemo />
@@ -686,24 +676,16 @@ function Hero() {
   );
 }
 
-/* ─── Foire aux questions ─── */
+/* ─── FAQ ─── */
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { isMobile, isTablet } = useResponsive();
+  const t = useT();
 
   const faqs = [
-    {
-      q: "What is SAIM AI and how does it work?",
-      a: "SAIM AI is an artificial intelligence platform built for entrepreneurs and SMEs. It brings together several expert agents (tax, HR, sales, legal…) accessible through a simple chat interface. Ask your question, the agent analyses it and responds accurately using official texts and real data — no hallucinations.",
-    },
-    {
-      q: "Can I use SAIM for free?",
-      a: "Yes. The free plan gives you access to 10 questions per day for 2 months, no credit card required. Beyond that, our Starter ($5/mo) and Pro ($24/mo) plans offer unlimited access with advanced features.",
-    },
-    {
-      q: "Is my data secure?",
-      a: "Yes. We use open-source models hosted on our own infrastructure — your data is never shared with third parties. Full data sovereignty guaranteed.",
-    },
+    { q: t("faq.1.q"), a: t("faq.1.a") },
+    { q: t("faq.2.q"), a: t("faq.2.a") },
+    { q: t("faq.3.q"), a: t("faq.3.a") },
   ];
 
   const pad = isMobile ? "64px 24px" : isTablet ? "80px 36px" : "96px 48px";
@@ -717,7 +699,7 @@ function FAQSection() {
           fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em",
           color: "#141413", margin: "0 0 48px",
         }}>
-          Frequently asked <em style={{ fontStyle: "italic", color: SAIM.accent }}>questions.</em>
+          {t("faq.title")} <em style={{ fontStyle: "italic", color: SAIM.accent }}>{t("faq.title.em")}</em>
         </h2>
 
         <div style={{ borderTop: "1px solid #DEDEDD" }}>
@@ -754,7 +736,7 @@ function FAQSection() {
   );
 }
 
-/* ─── Hook détection devise ─── */
+/* ─── Devise auto ─── */
 function useCurrency() {
   const [sym, setSym] = useState("$");
   useEffect(() => {
@@ -772,73 +754,39 @@ function useCurrency() {
   return sym;
 }
 
-/* ─── Tarifs ─── */
-const PLANS = [
-  {
-    name: "Starter", price: 5,
-    items: [
-      "1,000 AI credits / month",
-      "Tax advice (IRPP, Corp. Tax, VAT)",
-      "Marketing content creation",
-      "Quote & invoice generation",
-      "Basic accounting",
-      "Project management",
-      "Email support",
-    ],
-    pop: false,
-  },
-  {
-    name: "Pro", price: 24,
-    items: [
-      "5,000 AI credits / month",
-      "Everything in Starter",
-      "Full HR management (contracts, payroll)",
-      "Commercial contract drafting",
-      "Legal documents (T&Cs, bylaws)",
-      "Sales strategy",
-      "Priority support",
-    ],
-    pop: true,
-  },
-  {
-    name: "Business", price: 49,
-    items: [
-      "Unlimited credits",
-      "All 6 specialized AI agents",
-      "Multi-user (up to 5 seats)",
-      "Advanced analytics dashboard",
-      "White-label option",
-      "Dedicated support + onboarding",
-    ],
-    pop: false,
-  },
-];
-
+/* ─── Pricing ─── */
 function PricingSection() {
   const sym = useCurrency();
   const { isMobile, isTablet } = useResponsive();
+  const t = useT();
 
-  const pad = isMobile ? "64px 24px" : isTablet ? "80px 36px" : "96px 48px";
+  const PLANS = [
+    {
+      name: "Starter", price: 5, pop: false,
+      items: ["plan.starter.i1","plan.starter.i2","plan.starter.i3","plan.starter.i4","plan.starter.i5","plan.starter.i6","plan.starter.i7"],
+    },
+    {
+      name: "Pro", price: 24, pop: true,
+      items: ["plan.pro.i1","plan.pro.i2","plan.pro.i3","plan.pro.i4","plan.pro.i5","plan.pro.i6","plan.pro.i7"],
+    },
+    {
+      name: "Business", price: 49, pop: false,
+      items: ["plan.biz.i1","plan.biz.i2","plan.biz.i3","plan.biz.i4","plan.biz.i5","plan.biz.i6"],
+    },
+  ];
+
+  const pad  = isMobile ? "64px 24px" : isTablet ? "80px 36px" : "96px 48px";
   const cols = isMobile || isTablet ? "1fr" : "repeat(3, 1fr)";
 
   return (
     <section id="pricing" style={{ background: "#FBFAF7", padding: pad }}>
       <div style={{ maxWidth: 960, margin: "0 auto" }}>
-
         <div style={{ textAlign: "center" as const, marginBottom: 48 }}>
-          <div style={{
-            fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
-            letterSpacing: "0.22em", textTransform: "uppercase" as const,
-            color: "#141413", marginBottom: 16,
-          }}>
-            Pricing
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#141413", marginBottom: 16 }}>
+            {t("pricing.kicker")}
           </div>
-          <h2 style={{
-            fontFamily: "'Fraunces', Georgia, serif",
-            fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em",
-            color: "#141413", margin: 0,
-          }}>
-            Simple. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Accessible.</em>
+          <h2 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: isMobile ? 32 : 42, fontWeight: 400, letterSpacing: "-0.03em", color: "#141413", margin: 0 }}>
+            {t("pricing.title")} <em style={{ fontStyle: "italic", color: SAIM.accent }}>{t("pricing.title.em")}</em>
           </h2>
         </div>
 
@@ -850,9 +798,7 @@ function PricingSection() {
               borderRadius: 18, padding: isMobile ? "24px 20px" : "32px 28px",
               display: "flex", flexDirection: "column" as const,
               position: "relative" as const,
-              boxShadow: p.pop
-                ? "0 8px 32px rgba(26,22,18,0.10)"
-                : "0 2px 12px rgba(26,22,18,0.06)",
+              boxShadow: p.pop ? "0 8px 32px rgba(26,22,18,0.10)" : "0 2px 12px rgba(26,22,18,0.06)",
             }}>
               {p.pop && (
                 <div style={{
@@ -862,7 +808,7 @@ function PricingSection() {
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" as const,
                 }}>
-                  Popular
+                  {t("pricing.popular")}
                 </div>
               )}
 
@@ -873,16 +819,16 @@ function PricingSection() {
                 {sym}{p.price}
               </div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: "#73726C", marginBottom: 28 }}>
-                / month
+                {t("pricing.month")}
               </div>
 
               <div style={{ flex: 1, marginBottom: 24 }}>
-                {p.items.map(it => (
-                  <div key={it} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13.5, lineHeight: 1.45, marginBottom: 10, color: "#73726C" }}>
+                {p.items.map(key => (
+                  <div key={key} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13.5, lineHeight: 1.45, marginBottom: 10, color: "#73726C" }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#141413" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
-                    {it}
+                    {t(key)}
                   </div>
                 ))}
               </div>
@@ -893,14 +839,14 @@ function PricingSection() {
                 fontSize: 14, fontWeight: 600, textDecoration: "none",
                 fontFamily: "'Inter Tight', system-ui, sans-serif",
               }}>
-                Get started free
+                {t("pricing.cta")}
               </Link>
             </div>
           ))}
         </div>
 
         <p style={{ textAlign: "center" as const, marginTop: 28, fontSize: 13, color: "#73726C" }}>
-          Free plan available — 10 questions/day · No credit card required
+          {t("pricing.free")}
         </p>
       </div>
     </section>

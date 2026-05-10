@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { SaimLogoH, Footer, SAIM } from "./SaimUI";
+import { SaimLogoH, Footer, SAIM, LangSwitcher } from "./SaimUI";
+import { useT } from "@/lib/i18n";
 
 /* ─── Hook responsive ─── */
 function useResponsive() {
@@ -55,44 +56,10 @@ function WhatsAppSvg() {
   );
 }
 
-const SOCIALS = [
-  {
-    name: "LinkedIn",
-    desc: "Suivez notre actualité professionnelle",
-    href: "https://linkedin.com/company/saim-ai",
-    icon: <LinkedInSvg />,
-    color: "#0A66C2",
-    bg: "#EBF3FB",
-  },
-  {
-    name: "Facebook",
-    desc: "Rejoignez notre communauté",
-    href: "https://facebook.com/saimai",
-    icon: <FacebookSvg />,
-    color: "#1877F2",
-    bg: "#EBF1FE",
-  },
-  {
-    name: "TikTok",
-    desc: "Tips IA & coulisses en vidéo",
-    href: "https://tiktok.com/@saimai",
-    icon: <TikTokSvg />,
-    color: "#141413",
-    bg: "#F0EEE9",
-  },
-  {
-    name: "WhatsApp",
-    desc: "Discutez directement avec nous",
-    href: "https://wa.me/237690000000",
-    icon: <WhatsAppSvg />,
-    color: "#25D366",
-    bg: "#EAFBF1",
-  },
-];
-
 /* ─── Nav simplifiée ─── */
 function ContactNav() {
   const { isSmall } = useResponsive();
+  const t = useT();
   return (
     <nav style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -104,11 +71,16 @@ function ContactNav() {
       <SaimLogoH size={28} dark={true} />
       {!isSmall && (
         <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
-          <Link href="/#tarifs" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "#73726C", textDecoration: "none" }}>Tarifs</Link>
-          <Link href="/contact" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "#141413", textDecoration: "none" }}>Contact</Link>
+          <Link href="/#pricing" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "#73726C", textDecoration: "none" }}>
+            {t("contact.nav.pricing")}
+          </Link>
+          <Link href="/contact" style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 14, fontWeight: 500, color: "#141413", textDecoration: "none" }}>
+            {t("nav.contact")}
+          </Link>
         </div>
       )}
-      <div style={{ display: "flex", gap: 10 }}>
+      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        <LangSwitcher />
         <Link href="/dashboard" prefetch={false} style={{
           fontFamily: "'Inter Tight', system-ui, sans-serif",
           fontSize: 14, fontWeight: 600,
@@ -116,7 +88,7 @@ function ContactNav() {
           padding: isSmall ? "8px 16px" : "9px 20px", borderRadius: 10,
           background: "#1A1612",
         }}>
-          Essayer SAIM
+          {t("contact.nav.try")}
         </Link>
       </div>
     </nav>
@@ -170,8 +142,16 @@ export default function ContactPage() {
   const { isMobile, isSmall } = useResponsive();
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const t = useT();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const SOCIALS = [
+    { name: "LinkedIn",  descKey: "contact.social.li", href: "https://linkedin.com/company/saim-ai", icon: <LinkedInSvg />, color: "#0A66C2", bg: "#EBF3FB" },
+    { name: "Facebook",  descKey: "contact.social.fb", href: "https://facebook.com/saimai",           icon: <FacebookSvg />, color: "#1877F2", bg: "#EBF1FE" },
+    { name: "TikTok",    descKey: "contact.social.tt", href: "https://tiktok.com/@saimai",            icon: <TikTokSvg />,   color: "#141413", bg: "#F0EEE9" },
+    { name: "WhatsApp",  descKey: "contact.social.wa", href: "https://wa.me/237690000000",            icon: <WhatsAppSvg />, color: "#25D366", bg: "#EAFBF1" },
+  ];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSending(true);
     setTimeout(() => { setSending(false); setSent(true); }, 1200);
@@ -185,7 +165,7 @@ export default function ContactPage() {
       <section style={{ background: "#FBFAF7", padding: isMobile ? "56px 24px 48px" : "80px 48px 72px" }}>
         <div style={{ maxWidth: 760, margin: "0 auto", textAlign: "center" as const }}>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 20 }}>
-            Nous contacter
+            {t("contact.kicker")}
           </div>
           <h1 style={{
             fontFamily: "'Fraunces', Georgia, serif",
@@ -193,12 +173,11 @@ export default function ContactPage() {
             fontWeight: 300, letterSpacing: "-0.03em", lineHeight: 1.05,
             color: "#141413", margin: "0 0 20px",
           }}>
-            Parlons de votre<br />
-            <em style={{ fontStyle: "italic", color: SAIM.accent }}>projet.</em>
+            {t("contact.h1.l1")}<br />
+            <em style={{ fontStyle: "italic", color: SAIM.accent }}>{t("contact.h1.em")}</em>
           </h1>
           <p style={{ fontSize: 17, lineHeight: 1.65, color: "#73726C", margin: 0 }}>
-            Une question, un partenariat, ou simplement envie d'en savoir plus ?<br />
-            Notre équipe vous répond sous 24 h.
+            {t("contact.sub.l1")}<br />{t("contact.sub.l2")}
           </p>
         </div>
       </section>
@@ -229,26 +208,26 @@ export default function ContactPage() {
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
                   </div>
-                  <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: "#141413", margin: "0 0 10px" }}>Message envoyé !</h3>
+                  <h3 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 24, fontWeight: 400, color: "#141413", margin: "0 0 10px" }}>{t("contact.sent.t")}</h3>
                   <p style={{ fontSize: 15, color: "#73726C", lineHeight: 1.6, margin: "0 0 24px" }}>
-                    Merci pour votre message. Nous vous répondrons dans les 24 heures.
+                    {t("contact.sent.d")}
                   </p>
                   <button
                     onClick={() => setSent(false)}
                     style={{ background: "none", border: "1px solid #D9D8D5", borderRadius: 10, padding: "10px 20px", fontSize: 14, color: "#73726C", cursor: "pointer", fontFamily: "'Inter Tight', system-ui, sans-serif" }}
                   >
-                    Envoyer un autre message
+                    {t("contact.sent.again")}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
                   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 16 }}>
-                    <Field label="Prénom" placeholder="Marie" required />
-                    <Field label="Nom" placeholder="Dupont" required />
+                    <Field label={t("contact.fname")} placeholder={t("contact.fname.ph")} required />
+                    <Field label={t("contact.lname")} placeholder={t("contact.lname.ph")} required />
                   </div>
-                  <Field label="Email" type="email" placeholder="marie@exemple.com" required />
-                  <Field label="Objet" placeholder="Partenariat, question, démo…" required />
-                  <Field label="Message" placeholder="Décrivez votre projet ou question en quelques lignes…" rows={5} required />
+                  <Field label={t("contact.email")} type="email" placeholder={t("contact.email.ph")} required />
+                  <Field label={t("contact.subject")} placeholder={t("contact.subject.ph")} required />
+                  <Field label={t("contact.message")} placeholder={t("contact.message.ph")} rows={5} required />
 
                   <button
                     type="submit"
@@ -268,21 +247,21 @@ export default function ContactPage() {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FBFAF7" strokeWidth="2" strokeLinecap="round" style={{ animation: "spin 1s linear infinite" }}>
                           <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
                         </svg>
-                        Envoi en cours…
+                        {t("contact.sending")}
                       </>
                     ) : (
                       <>
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
                         </svg>
-                        Envoyer le message
+                        {t("contact.submit")}
                       </>
                     )}
                   </button>
 
                   <p style={{ fontSize: 12, color: "#A8A5A0", textAlign: "center" as const, margin: 0, lineHeight: 1.5 }}>
-                    En soumettant ce formulaire, vous acceptez notre{" "}
-                    <Link href="#" style={{ color: "#73726C", textDecoration: "underline" }}>politique de confidentialité</Link>.
+                    {t("contact.privacy")}{" "}
+                    <Link href="#" style={{ color: "#73726C", textDecoration: "underline" }}>{t("contact.privacy.link")}</Link>.
                   </p>
                 </form>
               )}
@@ -295,7 +274,7 @@ export default function ContactPage() {
             {/* Email direct */}
             <div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "#73726C", marginBottom: 16 }}>
-                Contact direct
+                {t("contact.direct")}
               </div>
               <a href="mailto:partners@mysaim.cm" style={{
                 display: "flex", alignItems: "center", gap: 14,
@@ -321,7 +300,7 @@ export default function ContactPage() {
             {/* Réseaux sociaux */}
             <div>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: "#73726C", marginBottom: 16 }}>
-                Nos réseaux sociaux
+                {t("contact.socials")}
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {SOCIALS.map(s => (
@@ -357,7 +336,7 @@ export default function ContactPage() {
                     </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: 600, color: "#141413", marginBottom: 2 }}>{s.name}</div>
-                      <div style={{ fontSize: 12, color: "#73726C" }}>{s.desc}</div>
+                      <div style={{ fontSize: 12, color: "#73726C" }}>{t(s.descKey)}</div>
                     </div>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#D9D8D5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -375,16 +354,16 @@ export default function ContactPage() {
               border: "1px solid rgba(194,86,44,0.15)",
             }}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 12 }}>
-                Disponibilité
+                {t("contact.hours")}
               </div>
               <div style={{ fontSize: 14, color: "#141413", lineHeight: 1.7 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ color: "#73726C" }}>Lundi – Vendredi</span>
+                  <span style={{ color: "#73726C" }}>{t("contact.weekdays")}</span>
                   <span style={{ fontWeight: 500 }}>8h – 18h</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between" }}>
                   <span style={{ color: "#73726C" }}>SAIM AI (agent)</span>
-                  <span style={{ fontWeight: 500, color: SAIM.accent }}>24h / 7j</span>
+                  <span style={{ fontWeight: 500, color: SAIM.accent }}>{t("contact.247")}</span>
                 </div>
               </div>
             </div>

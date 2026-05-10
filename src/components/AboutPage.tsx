@@ -1,8 +1,18 @@
 "use client";
 
 import { SAIM, SaimMark, Nav, Footer, SectionBlock } from "./SaimUI";
+import { useT } from "@/lib/i18n";
 
 export default function AboutPage() {
+  const t = useT();
+
+  const vision = [
+    { t: t("about.v1.t"), d: t("about.v1.d") },
+    { t: t("about.v2.t"), d: t("about.v2.d") },
+    { t: t("about.v3.t"), d: t("about.v3.d") },
+    { t: t("about.v4.t"), d: t("about.v4.d") },
+  ];
+
   return (
     <div style={{ background: SAIM.paper, fontFamily: "'Inter Tight', system-ui, sans-serif" }}>
       <Nav activePage="about" />
@@ -11,12 +21,14 @@ export default function AboutPage() {
       <section style={{ padding: "80px 48px 96px", background: SAIM.paper }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 80, alignItems: "center" }}>
           <div>
-            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 20 }}>About</div>
+            <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase" as const, color: SAIM.accent, marginBottom: 20 }}>
+              {t("about.kicker")}
+            </div>
             <h1 style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 64, fontWeight: 300, letterSpacing: "-0.035em", lineHeight: 1, margin: 0, marginBottom: 28 }}>
-              Built for <em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>every business.</em>
+              {t("about.h1")} <em style={{ fontStyle: "italic", color: SAIM.accent, fontWeight: 400 }}>{t("about.h1.em")}</em>
             </h1>
             <p style={{ fontFamily: "'Inter Tight', system-ui, sans-serif", fontSize: 19, lineHeight: 1.6, color: SAIM.inkSoft, maxWidth: 520 }}>
-              SAIM AI is an artificial intelligence platform built for entrepreneurs and SMEs. Our mission: make AI accessible, practical and cost-effective for every business, everywhere in the world.
+              {t("about.intro")}
             </p>
           </div>
           <div style={{
@@ -31,18 +43,13 @@ export default function AboutPage() {
 
       {/* ── Vision ── */}
       <SectionBlock
-        kicker="Our vision"
-        title={<>The go-to AI partner <em style={{ fontStyle: "italic", color: SAIM.accent }}>for your business.</em></>}
-        lead="Giving every SME access to world-class AI tools, adapted to real-world constraints and budgets."
+        kicker={t("about.vision.kicker")}
+        title={<>{t("about.vision.title")} <em style={{ fontStyle: "italic", color: SAIM.accent }}>{t("about.vision.em")}</em></>}
+        lead={t("about.vision.lead")}
         bg={SAIM.paperAlt}
       >
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
-          {[
-            { t: "Accessibility",      d: "AI within reach of every business — not just multinationals." },
-            { t: "Business relevance", d: "Solutions that embed local regulations and sector-specific realities." },
-            { t: "Open source first",  d: "Open models to guarantee data sovereignty and reduce costs." },
-            { t: "Measurable impact",  d: "Every solution delivers a concrete, measurable productivity gain." },
-          ].map((v, i) => (
+          {vision.map((v, i) => (
             <div key={i} style={{ background: SAIM.paperHi, border: `1px solid ${SAIM.border}`, borderRadius: 16, padding: 28 }}>
               <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: SAIM.accent, letterSpacing: "0.14em", marginBottom: 12 }}>0{i + 1}</div>
               <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 22, fontWeight: 400, letterSpacing: "-0.02em", marginBottom: 10 }}>{v.t}</div>
@@ -54,9 +61,9 @@ export default function AboutPage() {
 
       {/* ── Founder ── */}
       <SectionBlock
-        kicker="Founder"
+        kicker={t("about.founder.kicker")}
         title="Christina Ngono"
-        lead="CEO & Founder of SAIM AI."
+        lead={t("about.founder.lead")}
       >
         <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: 40, alignItems: "center" }}>
           <div style={{
@@ -67,13 +74,13 @@ export default function AboutPage() {
           }}>CN</div>
           <div>
             <p style={{ fontSize: 17, lineHeight: 1.65, color: SAIM.inkSoft, margin: 0, maxWidth: 640 }}>
-              Convinced that every SME deserves the same tools as large corporations, Christina founded SAIM AI with a clear philosophy: open-source, effective and affordable solutions, adapted to the reality of each business.
+              {t("about.founder.desc")}
             </p>
             <div style={{ display: "flex", gap: 32, marginTop: 28 }}>
               {[
-                { n: "300 000", l: "businesses targeted" },
-                { n: "6",       l: "specialized agents" },
-                { n: "24/7",    l: "uptime" },
+                { n: "300 000", l: t("about.stat1") },
+                { n: "6",       l: t("about.stat2") },
+                { n: "24/7",    l: t("about.stat3") },
               ].map(s => (
                 <div key={s.l}>
                   <div style={{ fontFamily: "'Fraunces', Georgia, serif", fontSize: 28, fontWeight: 400, color: SAIM.accent }}>{s.n}</div>
@@ -87,9 +94,9 @@ export default function AboutPage() {
 
       {/* ── Tech stack ── */}
       <SectionBlock
-        kicker="Stack"
-        title={<>Open source. <em style={{ fontStyle: "italic", color: SAIM.accent }}>Sovereign.</em></>}
-        lead="We favour open-source models and tools — no proprietary lock-in, full data sovereignty."
+        kicker={t("about.stack.kicker")}
+        title={<>{t("about.stack.title")} <em style={{ fontStyle: "italic", color: SAIM.accent }}>{t("about.stack.em")}</em></>}
+        lead={t("about.stack.lead")}
         bg={SAIM.ink}
         color={SAIM.paper}
       >
