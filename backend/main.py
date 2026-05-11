@@ -1,7 +1,8 @@
 """
-FastAPI backend pour SAIM Conseil RAG.
-Expose /api/chat (streaming) et /api/status.
-Fallback : Groq → Ollama local si quota dépassé.
+FastAPI backend SAIM AI.
+- /api/chat        : IA streaming (RAG + Groq/Ollama)
+- /auth/*          : inscription, connexion, refresh, profil (JWT)
+- /api/sessions/*  : historique des conversations par utilisateur
 """
 
 import os
@@ -12,13 +13,19 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from typing import Optional
 from groq import AsyncGroq
 from rag import build_messages_with_rag, is_db_ready
+
+# ─── Auth + BDD ─────────────────────────────────────────────────────────────
+from database import create_tables, User
+from auth_utils import get_optional_user
+from routers import auth as auth_router
+from routers import history as history_router
 
 _api_key = os.environ.get("GROQ_API_KEY")
 if not _api_key:
@@ -28,16 +35,41 @@ groq_client = AsyncGroq(api_key=_api_key)
 
 GROQ_MODEL = "llama-3.3-70b-versatile"
 OLLAMA_URL = "http://localhost:11434/api/chat"
-OLLAMA_MODELS = ["qwen3:8b", "llama3.1:latest"]  # fallback local gratuit
+OLLAMA_MODELS = ["qwen3:8b", "llama3.1:latest"]
 
-app = FastAPI(title="SAIM Conseil RAG Backend")
+# ─── App ────────────────────────────────────────────────────────────────────
 
+app = FastAPI(
+    title="SAIM AI Backend",
+    version="2.0.0",
+    description="API IA + Authentification + Historique",
+)
+
+# CORS : autorise localhost (web) ET les appels mobiles (ngrok / IP locale / prod)
+_ALLOWED_ORIGINS = [
+    "http://localhost:3000",        # Next.js dev
+    "http://localhost:8081",        # Expo web
+    "http://127.0.0.1:3000",
+    # En production, remplacer "*" par votre domaine : "https://mysaim.cm"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=_ALLOWED_ORIGINS,
+    allow_origin_regex=r"https?://.*\.mysaim\.cm",  # sous-domaines prod
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
+
+# ─── Routers ────────────────────────────────────────────────────────────────
+app.include_router(auth_router.router)
+app.include_router(history_router.router)
+
+# ─── Démarrage : créer les tables BDD si nécessaire ─────────────────────────
+@app.on_event("startup")
+def on_startup():
+    create_tables()
+    print("[SAIM] Tables BDD vérifiées/créées ✓")
 
 
 class ChatRequest(BaseModel):
@@ -175,7 +207,10 @@ def status():
 
 
 @app.post("/api/invoice/extract")
-async def extract_invoice(req: InvoiceRequest):
+async def extract_invoice(
+    req: InvoiceRequest,
+    current_user: Optional[User] = Depends(get_optional_user),
+):
     """Extrait les données de facturation depuis un prompt texte (+ image optionnelle)."""
     from datetime import date, timedelta
     import random
@@ -317,7 +352,10 @@ async def extract_invoice(req: InvoiceRequest):
 
 
 @app.post("/api/marketing")
-async def marketing(req: MarketingRequest):
+async def marketing(
+    req: MarketingRequest,
+    current_user: Optional[User] = Depends(get_optional_user),
+):
     from datetime import date, timedelta
     today = date.today()
 
@@ -530,7 +568,10 @@ async def export_marketing_strategy(req: dict):
 
 
 @app.post("/api/commercial")
-async def commercial(req: CommercialRequest):
+async def commercial(
+    req: CommercialRequest,
+    current_user: Optional[User] = Depends(get_optional_user),
+):
     if req.mode == "analyse":
         system = """Tu es un analyste commercial expert des PME africaines et camerounaises.
 Analyse le prospect décrit. Retourne UNIQUEMENT un JSON valide:
@@ -569,7 +610,10 @@ Adapte : respect des aînés, relation avant transaction, confiance, Mobile Mone
 
 
 @app.post("/api/projects")
-async def projects_ai(req: ProjectRequest):
+async def projects_ai(
+    req: ProjectRequest,
+    current_user: Optional[User] = Depends(get_optional_user),
+):
     from datetime import date
     today_str = date.today().strftime("%d/%m/%Y")
 
@@ -613,7 +657,10 @@ async def projects_ai(req: ProjectRequest):
 
 
 @app.post("/api/chat")
-async def chat(req: ChatRequest):
+async def chat(
+    req: ChatRequest,
+    current_user: Optional[User] = Depends(get_optional_user),
+):
     result = build_messages_with_rag(req.messages)
     enriched_messages, sources = result if isinstance(result, tuple) else (result, [])
 
